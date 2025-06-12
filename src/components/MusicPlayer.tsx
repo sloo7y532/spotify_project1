@@ -8,11 +8,13 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import DevicesIcon from "@mui/icons-material/Devices";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import musicPlaceholder from "../assets/music-player.png";
 
 const MusicPlayer = () => {
   const { currentSong, isPlaying } = useSelector(
@@ -23,6 +25,7 @@ const MusicPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     if (audioRef.current && currentSong?.audioUrl) {
@@ -30,7 +33,7 @@ const MusicPlayer = () => {
       audioRef.current.play();
       dispatch(setIsPlaying(true));
     }
-  }, [currentSong]);
+  }, [currentSong, dispatch]);
 
   const togglePlayPause = () => {
     if (!audioRef.current) return;
@@ -56,6 +59,12 @@ const MusicPlayer = () => {
       audioRef.current.volume = value;
     }
   };
+  const toggleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!audioRef.current) return;
@@ -63,10 +72,8 @@ const MusicPlayer = () => {
   };
 
   const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60)
-      .toString()
-      .padStart(2, "0");
+    const minutes = Math.floor(time / 60) || "0";
+    const seconds = Math.floor(time % 60) || "00";
     return `${minutes}:${seconds}`;
   };
 
@@ -82,11 +89,19 @@ const MusicPlayer = () => {
 
       {/* Left: Song info */}
       <div className="music-player-left">
-        <img
-          src={currentSong?.image}
-          alt="cover"
-          className="music-player-cover"
-        />
+        {currentSong?.image ? (
+          <img
+            src={currentSong?.image}
+            alt="cover"
+            className="music-player-cover"
+          />
+        ) : (
+          <img
+            src={musicPlaceholder}
+            alt="cover"
+            className="music-player-cover"
+          />
+        )}
         <div>
           <p className="music-player-title">
             {currentSong?.title || "No Song"}
@@ -115,13 +130,19 @@ const MusicPlayer = () => {
         </div>
         <div className="music-player-progress">
           <span>{formatTime(currentTime)}</span>
-          <input
-            type="range"
-            value={currentTime}
-            max={duration || 0}
-            onChange={handleSeek}
-            className="music-player-progress-bar"
-          />
+          <div className="music-player-progress-bar-container">
+            <div
+              className="music-player-progress-bar-fill"
+              style={{ width: `${(currentTime / duration) * 100}%` }}
+            />
+            <input
+              type="range"
+              value={currentTime}
+              max={duration || 0}
+              onChange={handleSeek}
+              className="music-player-progress-bar"
+            />
+          </div>
           <span>{formatTime(duration)}</span>
         </div>
       </div>
@@ -130,16 +151,32 @@ const MusicPlayer = () => {
       <div className="music-player-right">
         <QueueMusicIcon />
         <DevicesIcon />
-        <VolumeUpIcon />
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="music-player-volume-bar"
-        />
+        {isMuted ? (
+          <VolumeOffIcon
+            onClick={toggleMute}
+            className="music-player-volume-icon"
+          />
+        ) : (
+          <VolumeUpIcon
+            onClick={toggleMute}
+            className="music-player-volume-icon"
+          />
+        )}
+        <div className="music-player-volume-container">
+          <div
+            className="music-player-volume-fill"
+            style={{ width: `${volume * 100}%` }}
+          />
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="music-player-volume-bar"
+          />
+        </div>
         <FullscreenIcon />
       </div>
     </div>
