@@ -1,12 +1,13 @@
-// src/components/auth/EmailOrPhoneStep.tsx
+// src/components/login/EmailOrPhoneStep.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-import { setLoginIdentifier, clearError } from '../../store/slices/authSlice.ts'; // استيراد الأكشن الجديد و clearError
+// تم استيراد setError من authSlice.ts
+import { setLoginIdentifier, clearError, setError } from '../../store/slices/authSlice.ts';
 
 const EmailOrPhoneStep: React.FC = () => {
-  const [identifier, setIdentifier] = useState(''); // يمكن أن يكون بريد إلكتروني أو اسم مستخدم أو رقم هاتف
+  const [identifier, setIdentifier] = useState(''); // يمكن أن يكون بريد إلكتروني أو اسم مستخدم
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector(state => state.auth);
@@ -17,13 +18,10 @@ const EmailOrPhoneStep: React.FC = () => {
 
     if (identifier.trim()) {
       dispatch(setLoginIdentifier(identifier.trim())); // حفظ المعرف في Redux
-      // هنا يمكنك إضافة منطق للتحقق من نوع المعرف (بريد إلكتروني، رقم هاتف، اسم مستخدم)
-      // وتوجيه المستخدم إما لخطوة كلمة المرور أو خطوة الرمز.
-      // حالياً، سنفترض أننا ننتقل إلى خطوة إدخال كلمة المرور أو الرمز
       navigate('password-or-code');
     } else {
-      dispatch(clearError());
-      dispatch(setLoginIdentifier("الرجاء إدخال بريدك الإلكتروني أو اسم المستخدم أو رقم هاتفك."));
+      // استخدام أكشن setError لوضع رسالة الخطأ
+      dispatch(setError("الرجاء إدخال بريدك الإلكتروني أو اسم المستخدم."));
     }
   };
 
@@ -38,7 +36,6 @@ const EmailOrPhoneStep: React.FC = () => {
 
       {/* أزرار تسجيل الدخول الاجتماعي */}
       <button onClick={() => handleSocialLogin('Google')} className="social-login-button">
-        {/* تأكد من مسار الأيقونات */}
         <img src="/assets/google-icon.png" alt="Google" />
         المتابعة باستخدام Google
       </button>
@@ -50,10 +47,7 @@ const EmailOrPhoneStep: React.FC = () => {
         <img src="/assets/apple-icon.png" alt="Apple" />
         تابع باستخدام Apple
       </button>
-      <button onClick={() => handleSocialLogin('Phone')} className="social-login-button">
-        <img src="/assets/phone-icon.png" alt="Phone" /> {/* أيقونة افتراضية للهاتف */}
-        استمر باستخدام رقم الهاتف
-      </button>
+      {/* تم حذف زر "استمر باستخدام رقم الهاتف" */}
 
       <div className="separator">أو</div>
 
@@ -61,7 +55,7 @@ const EmailOrPhoneStep: React.FC = () => {
         <label htmlFor="identifier" className="input-label">البريد الإلكتروني أو اسم المستخدم</label>
         <input
           id="identifier"
-          type="text" // يمكن أن يكون نصًا لأنه قد يكون اسم مستخدم
+          type="text"
           placeholder="البريد الإلكتروني أو اسم المستخدم"
           className="input-field"
           value={identifier}
