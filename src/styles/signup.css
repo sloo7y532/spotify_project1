@@ -1,0 +1,602 @@
+/* src/styles/main.css */
+
+/* ================================ */
+/* ===== Global Resets & Typography ===== */
+/* ================================ */
+*, *::before, *::after {
+    box-sizing: border-box; /* يجعل التعامل مع الـ padding والـ border أسهل */
+  }
+  
+  html, body, #root { /* تأكد أن الـ root div يأخذ الارتفاع الكامل أيضاً */
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    direction: rtl; /* لضمان دعم اللغة العربية من اليمين لليسار */
+    text-align: right; /* محاذاة النص لليمين افتراضياً */
+  }
+  body, #root {
+    display: flex;
+    flex-direction: column; /* للسماح بالترتيب العمودي للعناصر إذا كان هناك أكثر من عنصر في الـ root */
+    align-items: center; /* لتوسيط المحتوى أفقياً */
+    min-height: 100vh; /* ليأخذ كامل ارتفاع الشاشة */
+    background-color: #000; /* لون خلفية الصفحة بالكامل */
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif; /* استخدم الخط اللي تبغاه، يفضل استيراد خطوط Spotify */
+    background-color: #121212; /* خلفية سوداء */
+    color: #fff; /* لون الخط أبيض */
+    display: flex;
+    justify-content: center; /* لمحاذاة المحتوى في المنتصف أفقياً */
+    align-items: flex-start; /* لمحاذاة المحتوى من الأعلى رأسياً (عكس center السابق) */
+    min-height: 100vh;
+    padding: 20px; /* مسافة داخلية للهاتف */
+    overflow-y: auto; /* للسماح بالتمرير إذا كان المحتوى طويلاً */
+  }
+  
+  .spotify-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 40px;
+    display: block; /* لضمان أخذ سطر كامل */
+    margin-left: auto; /* لمحاذاة الشعار لليمين في وضع RTL */
+    margin-right: auto; /* لمحاذاة الشعار لليمين في وضع RTL */
+  }
+  
+  /* ================================ */
+  /* ===== Shared Components Styles ===== */
+  /* ================================ */
+  .input-label {
+      display: block; /* لضمان أخذ سطر كامل */
+      font-size: 14px;
+      color: #a7a7a7;
+      margin-bottom: 8px;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .input-field:focus {
+      outline: none;
+      border-color: #1DB954; /* لون أخضر عند التركيز */
+  }
+  
+  .input-hint {
+      font-size: 12px;
+      color: #a7a7a7;
+      margin-top: -15px; /* لتقريبها من حقل الإدخال */
+      margin-bottom: 20px;
+  }
+  
+  .primary-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #1DB954;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* مسافة من العناصر التي قبلها */
+  }
+  
+  .primary-button:hover {
+    background-color: #1ED760;
+  }
+  
+  .primary-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+    color: #a7a7a7;
+    font-size: 14px;
+  }
+  
+  .separator::before,
+  .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #555;
+  }
+  
+  .separator:not(:empty)::before {
+    margin-left: .25em; /* مسافة قبل النص */
+  }
+  
+  .separator:not(:empty)::after {
+    margin-right: .25em; /* مسافة بعد النص */
+  }
+  
+  .social-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background-color: transparent;
+    border: 1px solid #555;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .social-login-button img {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px; /* المسافة على اليسار لأيقونة تظهر قبل النص في RTL */
+    margin-right: 0;
+  }
+  
+  .login-link {
+    color: #a7a7a7;
+    font-size: 14px;
+    margin-top: 30px;
+    text-align: center; /* مركزة الرابط في الأسفل */
+  }
+  
+  .login-link a {
+    color: #1DB954;
+    text-decoration: none;
+  }
+  
+  .error-message {
+    color: #ff4d4f; /* لون أحمر للخطأ */
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  
+  .loading-message {
+    color: #1DB954;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  
+  /* ================================ */
+  /* ===== Signup Flow & Steps Layout ===== */
+  /* ================================ */
+  .signup-flow-container {
+    background-color: #121212;
+    padding: 40px;
+    border-radius: 8px;
+    text-align: right;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    /* التعديل هنا لجعله في الوسط */
+    margin: 50px auto; /* 50px للهامش العلوي والسفلي، auto لتوسيط الهامش الأيسر والأيمن */
+  }
+  
+  .signup-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: right; /* محاذاة لليمين */
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: #555;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  
+  .progress-bar-fill {
+    height: 100%;
+    background-color: #1DB954;
+    border-radius: 2px;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .signup-step-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .back-arrow {
+    font-size: 30px;
+    color: #a7a7a7;
+    cursor: pointer;
+    margin-left: 15px; /* مسافة على اليسار للسهم في RTL */
+    font-weight: bold;
+  }
+  
+  .step-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0; /* إزالة الهوامش الافتراضية */
+  }
+  
+  
+  /* ================================ */
+  /* ===== Password Step Specific Styles ===== */
+  /* ================================ */
+  .password-input-wrapper {
+    position: relative;
+  }
+  
+  .password-input-wrapper .input-field {
+    padding-left: 40px; /* مسافة للأيقونة على اليسار في RTL */
+    padding-right: 12px;
+  }
+  
+  .password-toggle-icon {
+    position: absolute;
+    left: 15px; /* تحديد الموضع على اليسار في RTL */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #a7a7a7;
+  }
+  
+  .password-requirements {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .password-requirements li {
+    font-size: 14px;
+    color: #a7a7a7;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* محاذاة العناصر لليمين في RTL */
+  }
+  
+  .password-requirements li.valid {
+    color: #1DB954;
+  }
+  
+  .password-requirements li .check-icon {
+    margin-left: 8px; /* مسافة بين النص والأيقونة في RTL */
+    font-weight: bold;
+  }
+  
+  /* ================================ */
+  /* ===== Profile Info Step Specific Styles ===== */
+  /* ================================ */
+  .date-pickers {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .date-pickers select {
+    flex: 1;
+    padding: 12px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: left 10px top 50%; /* سهم مخصص على اليسار في RTL */
+    background-size: 20px auto;
+  }
+  
+  .gender-options {
+    display: flex;
+    justify-content: space-around; /* توزيع متساوٍ للمسافة */
+    gap: 20px; /* لضمان وجود مسافة حتى لو اختلفت الأحجام */
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* للسماح بلف العناصر في الشاشات الصغيرة */
+  }
+  
+  .gender-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .gender-option input[type="radio"] {
+    display: none;
+  }
+  
+  .gender-option span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    margin-right: 8px; /* مسافة بين النص والدائرة في RTL */
+    position: relative;
+    flex-shrink: 0; /* لضمان عدم انكماش الدائرة */
+  }
+  
+  .gender-option input[type="radio"]:checked + span {
+    border-color: #1DB954;
+  }
+  
+  .gender-option input[type="radio"]:checked + span::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #1DB954;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* ================================ */
+  /* ===== Terms & Conditions Step Specific Styles ===== */
+  /* ================================ */
+  .checkbox-option {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .checkbox-option input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 10px; /* مسافة على اليسار للمربع في RTL */
+    margin-right: 0;
+    background-color: transparent;
+    position: relative;
+    top: 2px;
+  }
+  
+  .checkbox-option input[type="checkbox"]:checked {
+    background-color: #1DB954;
+    border-color: #1DB954;
+  }
+  
+  .checkbox-option input[type="checkbox"]:checked::after {
+    content: '✓';
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .checkbox-option label {
+    font-size: 14px;
+    color: #a7a7a7;
+    cursor: pointer;
+  }
+  
+  .terms-text {
+    font-size: 12px;
+    color: #a7a7a7;
+    margin-top: 20px;
+    line-height: 1.5;
+  }
+  
+  .terms-text a {
+    color: #1DB954;
+    text-decoration: underline;
+  }
+  
+  .recapcha-text {
+    font-size: 12px;
+    color: #a7a7a7;
+    margin-top: 50px;
+    text-align: center;
+  }
+  
+  .recapcha-text a {
+    color: #a7a7a7;
+    text-decoration: underline;
+  }
+  
+  /* ================================ */
+  /* ===== Responsive Adjustments (مثال بسيط) ===== */
+  /* ================================ */
+  @media (max-width: 600px) {
+    .signup-flow-container {
+      padding: 20px;
+      margin: 10px; /* مسافة على الجوانب في الشاشات الصغيرة */
+    }
+    .signup-title {
+      font-size: 28px;
+    }
+    .step-title {
+      font-size: 20px;
+    }
+  }
+
+  /* src/styles/main.css */
+
+/* ... (جميع التنسيقات السابقة للـ signup flow و الـ general components) ... */
+
+
+/* ================================ */
+/* ===== Login Flow & Steps Layout ===== */
+/* ================================ */
+.login-flow-container { /* حاوية جديدة لـ Login Flow */
+    background-color: #121212;
+    padding: 40px;
+    border-radius: 8px;
+    text-align: right; /* محاذاة عامة لليمين داخل الكونتينر */
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-top: 50px; /* لإعطاء مسافة من أعلى الصفحة */
+    margin-bottom: 50px; /* لإعطاء مسافة من أسفل الصفحة */
+  }
+  
+  .login-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center; /* العنوان في المنتصف */
+    color: #fff;
+  }
+  
+  /* تنسيق أزرار تسجيل الدخول الاجتماعي (تأكد من إعادة استخدام .social-login-button الموجود) */
+  .social-login-button {
+    /* هذه التنسيقات موجودة بالفعل في الكود السابق، للتذكير */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background-color: transparent;
+    border: 1px solid #555;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+  
+  .social-login-button:hover {
+    border-color: #fff; /* Border أبيض عند التحويم */
+  }
+  
+  .social-login-button img {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px; /* المسافة على اليسار لأيقونة تظهر قبل النص في RTL */
+    margin-right: 0;
+  }
+  
+  /* تنسيقات حقول OTP (الرمز) */
+  .otp-input-container {
+    display: flex;
+    justify-content: center; /* توسيط حقول الرمز */
+    gap: 10px; /* مسافة بين الحقول */
+    margin-bottom: 20px;
+  }
+  
+  .otp-input {
+    width: 45px; /* حجم مناسب للحقل */
+    height: 45px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #fff;
+    -moz-appearance: textfield; /* لإزالة أسهم حقل الرقم في Firefox */
+  }
+  
+  .otp-input::-webkit-outer-spin-button,
+  .otp-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .otp-input:focus {
+    outline: none;
+    border-color: #1DB954;
+  }
+  
+  .resend-code-button {
+    background: none;
+    border: none;
+    color: #a7a7a7;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    width: 100%;
+    text-align: center; /* توسيط زر إعادة إرسال الرمز */
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .resend-code-button:hover {
+    color: #fff;
+  }
+  
+  /* تنسيق زر "هل نسيت كلمة المرور؟" */
+  .forgot-password-button {
+    background: none;
+    border: none;
+    color: #a7a7a7;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    width: 100%;
+    text-align: center; /* توسيط الزر */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 5px 0;
+  }
+  
+  .forgot-password-button:hover {
+    color: #fff;
+  }
+  
+  /* تنسيق رسالة "ليس لديك حساب؟" */
+  .signup-prompt {
+    color: #a7a7a7;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .signup-prompt a {
+    color: #1DB954;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  /* ================================ */
+  /* ===== Responsive Adjustments for Login Flow ===== */
+  /* ================================ */
+  @media (max-width: 600px) {
+    .login-flow-container {
+        background-color: #121212;
+        padding: 40px;
+        border-radius: 8px;
+        text-align: right;
+        max-width: 450px;
+        width: 100%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        /* التعديل هنا لجعله في الوسط */
+        margin: 50px auto; /* 50px للهامش العلوي والسفلي، auto لتوسيط الهامش الأيسر والأيمن */
+      }
+    .login-title {
+      font-size: 28px;
+    }
+    .otp-input {
+      width: 35px;
+      height: 35px;
+      font-size: 20px;
+    }
+  }
