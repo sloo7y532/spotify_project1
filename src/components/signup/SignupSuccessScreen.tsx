@@ -1,14 +1,16 @@
 // src/components/auth/SignupSuccessScreen.tsx
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignupSuccessScreen: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="success-container">
       <img src="/path/to/success-icon.png" alt="Success" className="success-icon" />
-      <h1 className="success-title">تم التسجيل بنجاح!</h1>
-      <p className="success-message">أهلاً بك في Spotify. يمكنك الآن البدء بالاستماع.</p>
-      <button className="primary-button" onClick={() => { /* navigate to dashboard */ }}>ابدأ الاستماع</button>
+      <h1 className="success-title">Welcome to Spotify. You can now start listening.</h1>
+      <p className="success-message">Welcome to Spotify. You can now start listening.</p>
+      <button className="primary-button" onClick={() => { navigate('/home') }}>Start listening</button>
     </div>
   );
 };

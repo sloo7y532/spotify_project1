@@ -17,25 +17,22 @@ const EmailSignupStep: React.FC = () => {
       navigate('/signup/password');
     } else {
       // يمكنك استخدام Redux أيضاً لإظهار رسالة خطأ، أو ببساطة alert
-      alert('الرجاء إدخال بريد إلكتروني صحيح.');
+      alert('Please enter a valid email.');
     }
   };
 
-  const handleSocialSignup = (provider: string) => {
-    console.log(`Signing up with ${provider}`);
-    // منطق التسجيل الاجتماعي
-  };
+
 
   return (
     <div className="signup-step-content">
       {/* ... باقي الـ JSX كما هو ... */}
-      <h1 className="signup-title">سجل الاشتراك لبدء الاستماع</h1>
+      <h1 className="signup-title">Sign up to start listening</h1>
 
-      <label htmlFor="email" className="input-label">عنوان البريد الإلكتروني</label>
+      <label htmlFor="email" className="input-label">Email address      </label>
       <input
         id="email"
         type="email"
-        placeholder="name@domain.com"
+        placeholder="Email address"
         className="input-field"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -47,26 +44,10 @@ const EmailSignupStep: React.FC = () => {
         className="primary-button"
         disabled={loading || !email.trim()}
       >
-        {loading ? 'جاري التحقق...' : 'التالي'}
+        {loading ? '...Loading' : 'Next'}
       </button>
-
-      <div className="separator">أو</div>
-
-      <button onClick={() => handleSocialSignup('Google')} className="social-login-button">
-        <img src="/assets/google-icon.png" alt="Google" />
-        التسجيل الاشتراك من خلال Google
-      </button>
-      <button onClick={() => handleSocialSignup('Facebook')} className="social-login-button">
-        <img src="/assets/facebook-icon.png" alt="Facebook" />
-        التسجيل باستخدام Facebook
-      </button>
-      <button onClick={() => handleSocialSignup('Apple')} className="social-login-button">
-        <img src="/assets/apple-icon.png" alt="Apple" />
-        التسجيل الاشتراك باستخدام Apple
-      </button>
-
       <p className="login-link">
-        هل لديك حساب حاليًا؟ <a href="/login">سجل الدخول هنا.</a>
+      Already have an account ? <a href="/login">Log in here.</a>
       </p>
     </div>
   );

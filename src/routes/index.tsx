@@ -9,7 +9,6 @@ import LoginFlow from "../components/login/LoginFlow.tsx"; // غيرت الاس�
 import SignupFlow from "../components/signup/SignupFlow.tsx";
 import PremiumPage from "../pages/Premium-Page.tsx";
 import DownloadPage from "../pages/Download-Page.tsx";
-import SignupSuccessScreen from "../components/signup/SignupSuccessScreen.tsx";
 import CreatePlaylistPage from "../pages/CreatePlaylist-Page.tsx";
 import Navbar from "./Navbar.tsx"; // مسار الاستيراد الصحيح للـ Navbar
 
@@ -26,7 +25,6 @@ export default function AppRoutes() {
         <Route path="/signup/*" element={<SignupFlow />} />
         <Route path="/premium" element={<PremiumPage />} />
         <Route path="/download" element={<DownloadPage />} />
-        <Route path="/signup/success" element={<SignupSuccessScreen />} />
         <Route path="/create-playlist" element={<CreatePlaylistPage />} /> {/* صححت اسم المسار */}
       </Routes>
     </BrowserRouter>

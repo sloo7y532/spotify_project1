@@ -181,7 +181,6 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 70px;
-  direction: rtl;
 }
 
 .arabic-plan-card {

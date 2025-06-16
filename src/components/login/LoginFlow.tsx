@@ -1,9 +1,10 @@
 // src/pages/LoginFlow.tsx
 // هذا الملف أصبح الآن هو "LoginFlow"
 import React, { useEffect } from 'react';
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store/hooks.ts';
 import { clearError, clearLoginData } from '../../store/slices/authSlice.ts';
+
 
 // استيراد المكونات الفرعية لخطوات تسجيل الدخول
 import EmailOrPhoneStep from './EmailOrPhoneStep.tsx';
@@ -11,7 +12,6 @@ import PasswordOrCodeStep from './PasswordOrCodeStep.tsx';
 
 const LoginFlow: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth);
 

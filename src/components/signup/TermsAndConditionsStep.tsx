@@ -10,14 +10,14 @@ import { app } from '../../firebase/firebase.js';
 const TermsAndConditionsStep: React.FC = () => {
   const [receiveMarketing, setReceiveMarketing] = useState(false);
   const [shareData, setShareData] = useState(false);
-  const { loading, error, signupEmail, signupPassword } = useAppSelector(state => state.auth); // <--- جلب البيانات من Redux
+  const { loading, signupEmail, signupPassword } = useAppSelector(state => state.auth); // <--- جلب البيانات من Redux
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleSignup = async () => {
     // التحقق من وجود البريد الإلكتروني وكلمة المرور قبل محاولة التسجيل
     if (!signupEmail || !signupPassword) {
-      dispatch(signupFailure("الرجاء إكمال جميع الخطوات السابقة."));
+      dispatch(signupFailure("Please complete all previous steps."));
       return;
     }
 
@@ -34,13 +34,13 @@ const TermsAndConditionsStep: React.FC = () => {
       // الـ useEffect في SignupFlow سيعيد توجيه المستخدم بعد هذا النجاح
     } catch (err: any) {
       console.error("Firebase Signup Error:", err.message);
-      let errorMessage = "حدث خطأ أثناء التسجيل. الرجاء المحاولة مرة أخرى.";
+      let errorMessage = "An error occurred during signup. Please try again.";
       if (err.code === 'auth/email-already-in-use') {
-        errorMessage = "هذا البريد الإلكتروني مستخدم بالفعل. الرجاء تسجيل الدخول أو استخدام بريد آخر.";
+        errorMessage = "This email is already in use. Please log in or use another email.";
       } else if (err.code === 'auth/invalid-email') {
-        errorMessage = "البريد الإلكتروني المدخل غير صحيح.";
+        errorMessage = "The email entered is invalid.";
       } else if (err.code === 'auth/weak-password') {
-        errorMessage = "كلمة المرور ضعيفة جداً.";
+        errorMessage = "The password is too weak.";
       }
       dispatch(signupFailure(errorMessage));
     }
@@ -51,7 +51,7 @@ const TermsAndConditionsStep: React.FC = () => {
       {/* ... باقي الـ JSX كما هو ... */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/signup/profile')} className="back-arrow">&#8249;</span>
-        <h2 className="step-title">الخطوة 3 من 3<br/>الشروط والأحكام</h2>
+          <h2 className="step-title">Step 3 of 3<br/>Terms and Conditions</h2>
       </div>
 
       <div className="checkbox-option">
@@ -61,7 +61,7 @@ const TermsAndConditionsStep: React.FC = () => {
           checked={receiveMarketing}
           onChange={(e) => setReceiveMarketing(e.target.checked)}
         />
-        <label htmlFor="receiveMarketing">لا أرغب في تلقي الرسائل التسويقية من Spotify</label>
+        <label htmlFor="receiveMarketing">I do not want to receive marketing messages from Spotify</label>
       </div>
 
       <div className="checkbox-option">
@@ -71,14 +71,14 @@ const TermsAndConditionsStep: React.FC = () => {
           checked={shareData}
           onChange={(e) => setShareData(e.target.checked)}
         />
-        <label htmlFor="shareData">أسمح بمشاركة بيانات التسجيل الخاصة بي مع موفري محتوى Spotify لأغراض التسويق.</label>
+        <label htmlFor="shareData">I agree to let Spotify share my registration data with content providers for marketing purposes.</label>
       </div>
 
       <p className="terms-text">
-        بعد النقر على زر التسجيل الاشتراك موافقة منك على{' '}
-        <a href="/terms-of-use">شروط الاستخدام وأحكامه لدى Spotify</a>.{' '}
-        لمعرفة المزيد عن كيفية جمع Spotify لبياناتك الشخصية واستخدامها ومشاركتها وحمايتها، يرجى الاطلاع على{' '}
-        <a href="/privacy-policy">سياسة الخصوصية لدى Spotify</a>.
+        After clicking the signup button, you agree to{' '}
+        <a href="/terms-of-use">Spotify's Terms of Use and Conditions</a>.{' '}
+        For more information on how Spotify collects, uses, and protects your personal data, please refer to{' '}
+        <a href="/privacy-policy">Spotify's Privacy Policy</a>.
       </p>
 
       <button
@@ -86,11 +86,8 @@ const TermsAndConditionsStep: React.FC = () => {
         className="primary-button"
         disabled={loading}
       >
-        {loading ? 'جاري التسجيل...' : 'سجل'}
+        {loading ? 'Signing up...' : 'Sign up'}
       </button>
-
-      {error && <p className="error-message">{error}</p>}
-
       <p className="recapcha-text">
         This site is protected by reCAPTCHA and the Google{' '}
         <a href="https://policies.google.com/privacy">Privacy Policy</a> and{' '}

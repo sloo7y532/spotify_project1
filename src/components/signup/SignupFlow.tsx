@@ -1,26 +1,24 @@
 // src/components/auth/SignupFlow.tsx
 
 import React from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks.ts'; 
 
 import EmailSignupStep from './EmailSignupStep.tsx';
 import PasswordStep from './PasswordStep.tsx';
 import ProfileInfoStep from './ProfileInfoStep.tsx';
 import TermsAndConditionsStep from './TermsAndConditionsStep.tsx';
-import SignupSuccessScreen from './SignupSuccessScreen.tsx';
 
 const SignupFlow: React.FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { loading, error, user } = useAppSelector(state => state.auth);
+  const { loading, error } = useAppSelector(state => state.auth);
 
   // منطق إعادة التوجيه بعد تسجيل الدخول بنجاح
-  React.useEffect(() => {
-    if (user) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [user, navigate]);
+  // React.useEffect(() => {
+  //   if (user) {
+  //     navigate('/home', { replace: true });
+  //   }
+  // }, [user, navigate]);
 
   // تحديد الخطوة الحالية لعرض شريط التقدم
   let currentStepIndex = 0;
@@ -45,7 +43,7 @@ const SignupFlow: React.FC = () => {
       )}
 
       {/* رسائل التحميل والخطأ يمكن أن تظهر هنا في المكون الأب */}
-      {loading && <p className="loading-message">جاري المعالجة...</p>}
+      {loading && <p className="loading-message">...Loading</p>}
       {error && <p className="error-message">{error}</p>}
 
       {/* المسارات الفرعية لكل خطوة */}
@@ -54,7 +52,6 @@ const SignupFlow: React.FC = () => {
         <Route path="password" element={<PasswordStep />} />
         <Route path="profile" element={<ProfileInfoStep />} />
         <Route path="terms" element={<TermsAndConditionsStep />} />
-        <Route path="success" element={<SignupSuccessScreen />} />
         <Route path="*" element={<EmailSignupStep />} />
       </Routes>
     </div>

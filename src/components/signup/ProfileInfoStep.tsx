@@ -25,10 +25,10 @@ const ProfileInfoStep: React.FC = () => {
 
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
   const months = [
-    { value: '1', label: 'يناير' }, { value: '2', label: 'فبراير' }, { value: '3', label: 'مارس' },
-    { value: '4', label: 'أبريل' }, { value: '5', label: 'مايو' }, { value: '6', label: 'يونيو' },
-    { value: '7', label: 'يوليو' }, { value: '8', label: 'أغسطس' }, { value: '9', label: 'سبتمبر' },
-    { value: '10', label: 'أكتوبر' }, { value: '11', label: 'نوفمبر' }, { value: '12', label: 'ديسمبر' }
+    { value: '1', label: 'January' }, { value: '2', label: 'February' }, { value: '3', label: 'March' },
+    { value: '4', label: 'April' }, { value: '5', label: 'May' }, { value: '6', label: 'June' },
+    { value: '7', label: 'July' }, { value: '8', label: 'August' }, { value: '9', label: 'September' },
+    { value: '10', label: 'October' }, { value: '11', label: 'November' }, { value: '12', label: 'December' }
   ];
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 100 }, (_, i) => currentYear - i).reverse();
@@ -38,38 +38,38 @@ const ProfileInfoStep: React.FC = () => {
       {/* ... باقي الـ JSX كما هو ... */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/signup/password')} className="back-arrow">&#8249;</span>
-        <h2 className="step-title">الخطوة 2 من 3<br/>عرّفنا عن نفسك</h2>
+        <h2 className="step-title">Step 2 of 3<br/>Tell us about yourself</h2>
       </div>
 
-      <label htmlFor="name" className="input-label">الاسم</label>
+      <label htmlFor="name" className="input-label">Name</label>
       <input
         id="name"
         type="text"
-        placeholder="اسمك"
+        placeholder="Name"
         className="input-field"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <p className="input-hint">سيظهر هذا الاسم في صفحتك الشخصية</p>
+      <p className="input-hint">This will be shown on your profile</p>
 
-      <label htmlFor="dob-day" className="input-label">تاريخ الميلاد</label>
+      <label htmlFor="dob-day" className="input-label">Date of birth</label>
       <div className="date-pickers">
         <select id="dob-day" className="input-field" value={day} onChange={(e) => setDay(e.target.value)}>
-          <option value="">اليوم</option>
+          <option value="">Day</option>
           {days.map(d => <option key={d} value={d}>{d}</option>)}
         </select>
         <select id="dob-month" className="input-field" value={month} onChange={(e) => setMonth(e.target.value)}>
-          <option value="">الشهر</option>
+          <option value="">Month</option>
           {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
         </select>
         <select id="dob-year" className="input-field" value={year} onChange={(e) => setYear(e.target.value)}>
-          <option value="">العام</option>
+          <option value="">Year</option>
           {years.map(y => <option key={y} value={y}>{y}</option>)}
         </select>
       </div>
-      <p className="input-hint">لماذا نحتاج إلى معرفة تاريخ ميلادك؟</p>
+      <p className="input-hint">Why do we need to know your date of birth?</p>
 
-      <label className="input-label">النوع</label>
+      <label className="input-label">Gender</label>
       <div className="gender-options">
         <label className="gender-option">
           <input
@@ -80,7 +80,7 @@ const ProfileInfoStep: React.FC = () => {
             onChange={(e) => setGender(e.target.value)}
           />
           <span></span>
-          امرأة
+          Female
         </label>
         <label className="gender-option">
           <input
@@ -91,7 +91,7 @@ const ProfileInfoStep: React.FC = () => {
             onChange={(e) => setGender(e.target.value)}
           />
           <span></span>
-          رجل
+          Male
         </label>
         <label className="gender-option">
           <input
@@ -102,7 +102,7 @@ const ProfileInfoStep: React.FC = () => {
             onChange={(e) => setGender(e.target.value)}
           />
           <span></span>
-          أفضل عدم الإجابة
+          Prefer not to say
         </label>
       </div>
 
@@ -111,7 +111,7 @@ const ProfileInfoStep: React.FC = () => {
         className="primary-button"
         disabled={!isFormValid}
       >
-        التالي
+        Next
       </button>
     </div>
   );

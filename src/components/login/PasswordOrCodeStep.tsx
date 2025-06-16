@@ -25,7 +25,7 @@ const PasswordOrCodeStep: React.FC = () => {
     try {
       console.log("Attempting login with identifier:", loginIdentifier); // <--- أضف هذا
       if (!loginIdentifier || !password) {
-        dispatch(loginFailure("الرجاء إدخال البريد الإلكتروني/اسم المستخدم وكلمة المرور."));
+        dispatch(loginFailure("Please enter your email/username and password."));
         return;
       }
       const userCredential = await signInWithEmailAndPassword(authInstance, loginIdentifier, password);
@@ -37,13 +37,13 @@ const PasswordOrCodeStep: React.FC = () => {
       console.error("Firebase Login Error caught in component:", err);
       console.error("Firebase Login Error message:", err.message);
 
-      let errorMessage = "حدث خطأ أثناء تسجيل الدخول. الرجاء المحاولة مرة أخرى.";
+      let errorMessage = "An error occurred during login. Please try again.";
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        errorMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+        errorMessage = "The email or password is incorrect.";
       } else if (err.code === 'auth/invalid-email') {
-        errorMessage = "صيغة البريد الإلكتروني غير صحيحة.";
+        errorMessage = "The email format is invalid.";
       } else if (err.code === 'auth/too-many-requests') {
-        errorMessage = "لقد حاولت تسجيل الدخول عدة مرات. الرجاء الانتظار قليلاً أو إعادة تعيين كلمة المرور.";
+        errorMessage = "You have tried to login multiple times. Please wait a moment or reset your password.";
       }
       dispatch(loginFailure(errorMessage));
     }
@@ -55,7 +55,7 @@ const PasswordOrCodeStep: React.FC = () => {
       <div className="signup-step-header">
         <span onClick={() => navigate('/login')} className="back-arrow">&#8249;</span>
         <h2 className="step-title">
-          <>إدخال كلمة المرور لـ<br />{loginIdentifier}</>
+        <span>Enter your password for</span><br />{loginIdentifier}
         </h2>
       </div>
 
@@ -63,7 +63,7 @@ const PasswordOrCodeStep: React.FC = () => {
         <div className="password-input-wrapper">
           <input
             type={showPassword ? 'text' : 'password'}
-            placeholder="كلمة المرور"
+            placeholder="Password"
             className="input-field"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -78,14 +78,14 @@ const PasswordOrCodeStep: React.FC = () => {
         </div>
 
         {error && <p className="error-message">{error}</p>}
-        {loading && <p className="loading-message">جاري التحقق...</p>}
+        {loading && <p className="loading-message">...Loading</p>}
 
         <button
           type="submit"
           className="primary-button"
           disabled={loading || !password.trim()}
         >
-          تسجيل الدخول
+          Login
         </button>
       </form>
     </div>

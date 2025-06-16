@@ -21,42 +21,22 @@ const EmailOrPhoneStep: React.FC = () => {
       navigate('password-or-code');
     } else {
       // استخدام أكشن setError لوضع رسالة الخطأ
-      dispatch(setError("الرجاء إدخال بريدك الإلكتروني أو اسم المستخدم."));
+      dispatch(setError("Please enter your email or username."));
     }
   };
 
-  const handleSocialLogin = (provider: string) => {
-    console.log(`Login with ${provider}`);
-    // منطق Firebase للمصادقة الاجتماعية
-  };
 
   return (
     <div className="login-step-content">
-      <h1 className="login-title">قم بتسجيل الدخول إلى Spotify</h1>
+      <h1 className="login-title">Log in to Spotify
+      </h1>
 
-      {/* أزرار تسجيل الدخول الاجتماعي */}
-      <button onClick={() => handleSocialLogin('Google')} className="social-login-button">
-        <img src="/assets/google-icon.png" alt="Google" />
-        المتابعة باستخدام Google
-      </button>
-      <button onClick={() => handleSocialLogin('Facebook')} className="social-login-button">
-        <img src="/assets/facebook-icon.png" alt="Facebook" />
-        تابع باستخدام Facebook
-      </button>
-      <button onClick={() => handleSocialLogin('Apple')} className="social-login-button">
-        <img src="/assets/apple-icon.png" alt="Apple" />
-        تابع باستخدام Apple
-      </button>
-      {/* تم حذف زر "استمر باستخدام رقم الهاتف" */}
-
-      <div className="separator">أو</div>
-
-      <form onSubmit={handleContinue}>
-        <label htmlFor="identifier" className="input-label">البريد الإلكتروني أو اسم المستخدم</label>
+        <form onSubmit={handleContinue}>
+          <label htmlFor="identifier" className="input-label">Email or Username</label>
         <input
           id="identifier"
           type="text"
-          placeholder="البريد الإلكتروني أو اسم المستخدم"
+          placeholder="Email or Username"
           className="input-field"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
@@ -64,19 +44,19 @@ const EmailOrPhoneStep: React.FC = () => {
         />
 
         {error && <p className="error-message">{error}</p>}
-        {loading && <p className="loading-message">جاري التحقق...</p>}
+        {loading && <p className="loading-message">...Loading</p>}
 
         <button
           type="submit"
           className="primary-button"
           disabled={loading || !identifier.trim()}
         >
-          متابعة
+          Continue
         </button>
       </form>
 
       <p className="signup-prompt">
-        ليس لديك حساب؟ <a href="/signup">سجل في Spotify</a>
+      Don't have an account ? <a href="/signup">Sign up for Spotify</a>
       </p>
     </div>
   );

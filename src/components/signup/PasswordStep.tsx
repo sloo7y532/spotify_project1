@@ -30,10 +30,11 @@ const PasswordStep: React.FC = () => {
       {/* ... باقي الـ JSX كما هو ... */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/signup')} className="back-arrow">&#8249;</span>
-        <h2 className="step-title">الخطوة 1 من 3<br/>إنشاء كلمة مرور</h2>
+        <h2 className="step-title">Step 1 of 3<br/>Create a password</h2>
       </div>
 
-      <label htmlFor="password" className="input-label">كلمة المرور</label>
+      <label htmlFor="password" className="input-label">Password
+      </label>
       <div className="password-input-wrapper">
         <input
           id="password"
@@ -53,15 +54,15 @@ const PasswordStep: React.FC = () => {
       <ul className="password-requirements">
         <li className={hasChar ? 'valid' : ''}>
           <span className="check-icon">{hasChar ? '✓' : ''}</span>
-          حرف واحدًا (A-Z أو a-z)
+          One letter (A-Z or a-z)
         </li>
         <li className={hasNumberOrSpecial ? 'valid' : ''}>
           <span className="check-icon">{hasNumberOrSpecial ? '✓' : ''}</span>
-          رقم واحد (0-9) أو حرف خاص (مثال: !? &%)
+          One number or special character (example: !? &%)
         </li>
         <li className={hasMinLength ? 'valid' : ''}>
           <span className="check-icon">{hasMinLength ? '✓' : ''}</span>
-          10 أحرف على الأقل
+          At least 10 characters
         </li>
       </ul>
 
@@ -70,7 +71,7 @@ const PasswordStep: React.FC = () => {
         className="primary-button"
         disabled={!isFormValid}
       >
-        التالي
+        Next
       </button>
     </div>
   );

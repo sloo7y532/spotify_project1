@@ -72,7 +72,7 @@ const LoginPromptModal = ({
         />
 
         <Typography variant="h6" fontWeight="bold">
-          Join to keep listening
+          Sign in to Spotify
         </Typography>
 
         <Typography
@@ -80,8 +80,7 @@ const LoginPromptModal = ({
           align="center"
           sx={{ color: "#ccc", mt: 1 }}
         >
-          Log in to enjoy unlimited music, playlists, and your favorite artists
-          — all in one place.
+          Sign in to access your music, playlists, and favorite artists — all in one place.
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
@@ -97,7 +96,7 @@ const LoginPromptModal = ({
               "&:hover": { bgcolor: "#1ed760" },
             }}
           >
-            Log In
+            Sign In
           </Button>
           <Button
             variant="outlined"
@@ -110,7 +109,7 @@ const LoginPromptModal = ({
               "&:hover": { borderColor: "#1ed760", color: "#1ed760" },
             }}
           >
-            Not Now
+            Maybe Later
           </Button>
         </Box>
       </Box>
