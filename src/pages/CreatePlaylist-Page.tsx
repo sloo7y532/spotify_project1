@@ -1,76 +1,182 @@
-import React from "react";
+import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import "../styles/CreatePlaylist.css";
-// import { FaUserPlus, FaEllipsisH } from 'react-icons/fa';
-import musicPlaceholder from "../assets/music-player-removebg.png";
-// import { useDispatch, useSelector } from "react-redux";
-// import { RootState } from "../store/index";
-// import { setPlaylist } from "../store/slices/musicSlice.ts";
-// import { addPlaylistToFirebase } from "../firebase/playlistService.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/index.ts";
+import {
+  addPlaylistToFirebase,
+  fetchSongsFromFirebase,
+  uploadPlaylistImage,
+} from "../firebase/playlistService.ts";
+import { setPlaylist } from "../store/slices/musicSlice.ts";
+import { Song } from "../store/slices/musicSlice.ts";
 
-// Icons
-import AddIcon from "@mui/icons-material/Add";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+export default function CreatePlaylistPage() {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
 
-const CreatePlaylist = () => {
-  // const dispatch = useDispatch();
-  // const playlist = useSelector((state: RootState) => state.music.playlist);
+  const [playlistName, setPlaylistName] = useState("");
+  const [playlistDesc, setPlaylistDesc] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Song[]>([]);
+  const [selectedSongs, setSelectedSongs] = useState<Song[]>([]);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Load songs when query changes
+  useEffect(() => {
+    const loadSongs = async () => {
+      if (searchQuery.trim()) {
+        const songs = await fetchSongsFromFirebase(searchQuery.trim());
+        setSearchResults(songs);
+      } else {
+        setSearchResults([]);
+      }
+    };
+    loadSongs();
+  }, [searchQuery]);
+
+  const handleAddSong = (song: Song) => {
+    if (!selectedSongs.find((s) => s.id === song.id)) {
+      setSelectedSongs((prev) => [...prev, song]);
+    }
+  };
+
+  const handleRemoveSong = (id?: string) => {
+    setSelectedSongs((prev) => prev.filter((s) => s.id !== id));
+  };
+
+  const handleCoverChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setCoverFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCoverPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setCoverPreview(null);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setIsSaving(true);
+
+    try {
+      // Upload cover image if provided
+      let coverUrl: string | undefined;
+      if (coverFile) {
+        coverUrl = await uploadPlaylistImage(coverFile, user.id);
+      }
+
+      const newPlaylist = {
+        name: playlistName,
+        description: playlistDesc,
+        userId: user.id,
+        songs: selectedSongs,
+        coverUrl,
+      };
+
+      await addPlaylistToFirebase(newPlaylist);
+      dispatch(setPlaylist([]));
+      // Reset form
+      setPlaylistName("");
+      setPlaylistDesc("");
+      setSelectedSongs([]);
+      setCoverFile(null);
+      setCoverPreview(null);
+      alert("Playlist created successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create playlist.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
-    <div className="playlist-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <p className="sidebar-title">Your Library</p>
-          <button className="add-button">
-            <AddIcon />
-            Create
-          </button>
-        </div>
+    <div className="create-playlist-page">
+      <form className="playlist-form" onSubmit={handleSubmit}>
+        <h2>Create New Playlist</h2>
 
-        <div className="playlist-section">
-          <h3 className="playlist-heading">Playlists</h3>
-          <div className="playlist-item-container">
-            <div className="playlist-item">
-              <img src={musicPlaceholder} alt="music" className="music-icon" />
-              <PlayArrowIcon className="play-icon" />
-              <div>
-                <p className="playlist-name">My Playlist #1</p>
-                <p className="playlist-owner">صالح العتيبي • Playlist</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="main-content">
-        <div className="playlist-header">
-          <div className="cover-photo">Choose photo</div>
-          <div className="playlist-info">
-            <p className="playlist-type">Public Playlist</p>
-            <h1 className="playlist-title">My Playlist #1</h1>
-            <p className="playlist-user">صالح العتيبي •</p>
-          </div>
-        </div>
-
-        {/* <div className="playlist-controls">
-          <FaUserPlus className="icon" />
-          <FaEllipsisH className="icon" />
-        </div> */}
-
-        <div className="search-section">
-          <h2 className="search-text">
-            Let's find something for your playlist
-          </h2>
+        <label>
+          Name
           <input
             type="text"
-            placeholder="Search for songs or episodes"
-            className="search-input"
+            value={playlistName}
+            onChange={(e) => setPlaylistName(e.target.value)}
+            placeholder="Playlist name"
+            required
+          />
+        </label>
+
+        <label>
+          Description
+          <textarea
+            value={playlistDesc}
+            onChange={(e) => setPlaylistDesc(e.target.value)}
+            placeholder="Add a description (optional)"
+          />
+        </label>
+
+        <label className="cover-input">
+          Cover Image
+          <input type="file" accept="image/*" onChange={handleCoverChange} />
+        </label>
+
+        {coverPreview && (
+          <div className="cover-preview">
+            <img src={coverPreview} alt="Cover preview" />
+          </div>
+        )}
+
+        <div className="search-bar">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search songs to add..."
           />
         </div>
-      </main>
+
+        {searchResults.length > 0 && (
+          <ul className="search-results">
+            {searchResults.map((song) => (
+              <li key={song.id}>
+                <span>
+                  {song.title} - {song.artist}
+                </span>
+                <button type="button" onClick={() => handleAddSong(song)}>
+                  Add
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {selectedSongs.length > 0 && (
+          <div className="selected-songs">
+            <h3>Selected Songs</h3>
+            <ul>
+              {selectedSongs.map((song) => (
+                <li key={song.id}>
+                  {song.title}
+                  <button type="button" onClick={() => handleRemoveSong(song.id)}>
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <button type="submit" disabled={isSaving || !playlistName}>
+          {isSaving ? "Saving..." : "Create Playlist"}
+        </button>
+      </form>
     </div>
   );
-};
-
-export default CreatePlaylist;
+}

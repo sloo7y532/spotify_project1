@@ -4,6 +4,7 @@ import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
  
+ 
 const firebaseConfig = {
   apiKey: 'AIzaSyAk47u4hPSgspFvNaLwc-JfjC_kHwU7A1E',
   authDomain: 'spotify-project-123.firebaseapp.com',

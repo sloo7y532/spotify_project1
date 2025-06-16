@@ -6,9 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/index.ts";
 import BrowsePodcasts from "../components/BrowsePodcasts.tsx";
 import { useNavigate } from "react-router-dom";
-import { fetchPlaylistsFromFirebase } from "../firebase/playlistService.ts";
 import { setPlaylist } from "../store/slices/musicSlice.ts";
 import LoginPromptModal from "../components/LoginPrompt.tsx";
+import { fetchSongsFromFirebase } from "../firebase/playlistService.ts";
 
 // Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -21,10 +21,10 @@ export default function DashboardPage() {
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
 
   const handleCreatePlaylist = () => {
-    if (!user) {
-      setIsLoginPromptOpen(true);
-      return;
-    }
+    // if (!user) {
+    //   setIsLoginPromptOpen(true);
+    //   return;
+    // }
     navigate("/CreatePlaylist-Page");
   };
 
@@ -39,7 +39,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const loadPlaylists = async () => {
       if (user) {
-        const data = await fetchPlaylistsFromFirebase(user.id);
+        const data = await fetchSongsFromFirebase(user.id);
         dispatch(setPlaylist(data));
       }
     };
