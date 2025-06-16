@@ -16,21 +16,14 @@ const Navbar = () => {
   };
 
   return (
-    // العنصر الجذر (root element) للمكون يجب أن يكون واحدًا فقط
-    <nav className="navbar"> {/* دمجت الـ <nav> مع الـ <div> الخارجي */}
+    <nav className="navbar"> 
       <div className="navbar-left">
         <div className="logo">
-          <Link to="/"> {/* عادةً الشعار يكون رابط للصفحة الرئيسية */}
+          <Link to="/"> 
             <img src={logo} alt="Spotify Logo" />
           </Link>
         </div>
-        {/*
-          إذا كان هذا الجزء يمثل الشريط الجانبي أو عناصر التنقل الرئيسية للصفحة
-          فيمكن أن يكون هنا. لكن يجب أن يكون متناسقًا مع الـ Navbar الرئيسي.
-          عادةً شريط البحث والعناصر الجانبية تكون في مكونات منفصلة أو جزء من تخطيط الصفحة الرئيسية
-          وليس جزءًا من الـ Navbar العلوي.
-          إذا كنت تقصد هذا شريط بحث دائم في الـ Navbar، هذا مكانه.
-        */}
+
         <div className="home-icon-container">
           <Link to="/">
             <svg
@@ -58,17 +51,15 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-right">
-        {/* زر قائمة الجوال (للعرض على الشاشات الصغيرة) */}
         <button className="mobile-menu-button" onClick={toggleMobileMenu}>
           <MenuIcon />
         </button>
         
-        {/* روابط التنقل الرئيسية */}
         <ul className={`nav-links ${isMobileMenuOpen ? "mobile-menu-open" : ""}`}>
-          <li><Link to="/">Home</Link></li> {/* أضفت رابط Home هنا لأنه مهم */}
+          <li><Link to="/">Home</Link></li>
           <li><Link to="/premium">Premium</Link></li>
           <li><Link to="/download">Download</Link></li>
-          <hr className="nav-divider" /> {/* فاصل مرئي */}
+          <hr className="nav-divider" />
           <li><Link to="/signup">Signup</Link></li>
           <li>
             <Link to="/login">

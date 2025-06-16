@@ -101,7 +101,7 @@ export default function DashboardPage() {
             <a href="#" className="dashboard-main-container-header-title">
               Trending songs
             </a>
-            <a href="#" className="dashboard-main-container-header-see-all">
+            <a href="" className="dashboard-main-container-header-see-all">
               See all
             </a>
           </div>

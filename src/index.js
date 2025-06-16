@@ -12,7 +12,7 @@ import { store } from "./store/index.ts";
 
 const queryClient = new QueryClient();
 
-const root = ReactDOM.createRoot(document.getElementById("root")); // ! لتأكيد أن العنصر موجود، وهو شائع في React 18+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <QueryClientProvider client={queryClient}>
