@@ -15,7 +15,6 @@ const TermsAndConditionsStep: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    // التحقق من وجود البريد الإلكتروني وكلمة المرور قبل محاولة التسجيل
     if (!signupEmail || !signupPassword) {
       dispatch(signupFailure("Please complete all previous steps."));
       return;
@@ -25,13 +24,12 @@ const TermsAndConditionsStep: React.FC = () => {
     const auth = getAuth(app);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, signupEmail, signupPassword); // <--- استخدام البيانات من Redux
+      const userCredential = await createUserWithEmailAndPassword(auth, signupEmail, signupPassword); 
       const user = userCredential.user;
 
 
 
       dispatch(signupSuccess({ id: user.uid, email: user.email, token: await user.getIdToken() }));
-      // الـ useEffect في SignupFlow سيعيد توجيه المستخدم بعد هذا النجاح
     } catch (err: any) {
       console.error("Firebase Signup Error:", err.message);
       let errorMessage = "An error occurred during signup. Please try again.";
@@ -48,7 +46,6 @@ const TermsAndConditionsStep: React.FC = () => {
 
   return (
     <div className="signup-step-content">
-      {/* ... باقي الـ JSX كما هو ... */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/signup/profile')} className="back-arrow">&#8249;</span>
           <h2 className="step-title">Step 3 of 3<br/>Terms and Conditions</h2>

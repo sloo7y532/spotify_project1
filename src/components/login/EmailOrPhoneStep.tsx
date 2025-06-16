@@ -3,24 +3,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-// تم استيراد setError من authSlice.ts
 import { setLoginIdentifier, clearError, setError } from '../../store/slices/authSlice.ts';
 
 const EmailOrPhoneStep: React.FC = () => {
-  const [identifier, setIdentifier] = useState(''); // يمكن أن يكون بريد إلكتروني أو اسم مستخدم
+  const [identifier, setIdentifier] = useState(''); 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector(state => state.auth);
 
   const handleContinue = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(clearError()); // مسح أي أخطاء سابقة
+    dispatch(clearError()); 
 
     if (identifier.trim()) {
-      dispatch(setLoginIdentifier(identifier.trim())); // حفظ المعرف في Redux
+      dispatch(setLoginIdentifier(identifier.trim())); 
       navigate('password-or-code');
     } else {
-      // استخدام أكشن setError لوضع رسالة الخطأ
       dispatch(setError("Please enter your email or username."));
     }
   };

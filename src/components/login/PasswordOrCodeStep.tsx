@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-import { loginStart, loginSuccess, loginFailure, clearError } from '../../store/slices/authSlice.ts';
+import { loginSuccess, loginFailure, clearError } from '../../store/slices/authSlice.ts';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { app } from '../../firebase/firebase.js';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -17,13 +17,12 @@ const PasswordOrCodeStep: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginStart());
     dispatch(clearError());
 
     const authInstance = getAuth(app);
 
     try {
-      console.log("Attempting login with identifier:", loginIdentifier); // <--- أضف هذا
+      console.log("Attempting login with identifier:", loginIdentifier); 
       if (!loginIdentifier || !password) {
         dispatch(loginFailure("Please enter your email/username and password."));
         return;
@@ -33,7 +32,6 @@ const PasswordOrCodeStep: React.FC = () => {
       dispatch(loginSuccess({ id: user.uid, email: user.email, token: await user.getIdToken() }));
       navigate('/dashboard', { replace: true });
     } catch (err: any) {
-      // <--- تأكد أن الـ console.error هذا موجود هنا
       console.error("Firebase Login Error caught in component:", err);
       console.error("Firebase Login Error message:", err.message);
 
@@ -51,7 +49,6 @@ const PasswordOrCodeStep: React.FC = () => {
 
   return (
     <div className="login-step-content">
-      {/* سهم الرجوع للمرحلة الأولى */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/login')} className="back-arrow">&#8249;</span>
         <h2 className="step-title">

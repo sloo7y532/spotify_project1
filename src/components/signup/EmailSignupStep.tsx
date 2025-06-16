@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-import { setSignupEmail } from '../../store/slices/authSlice.ts'; // استيراد الأكشن الجديد
+import { setSignupEmail } from '../../store/slices/authSlice.ts'; 
 
 const EmailSignupStep: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -13,10 +13,9 @@ const EmailSignupStep: React.FC = () => {
 
   const handleNext = () => {
     if (email.trim() && email.includes('@')) {
-      dispatch(setSignupEmail(email)); // <--- حفظ البريد الإلكتروني في Redux
+      dispatch(setSignupEmail(email)); 
       navigate('/signup/password');
     } else {
-      // يمكنك استخدام Redux أيضاً لإظهار رسالة خطأ، أو ببساطة alert
       alert('Please enter a valid email.');
     }
   };
@@ -25,7 +24,6 @@ const EmailSignupStep: React.FC = () => {
 
   return (
     <div className="signup-step-content">
-      {/* ... باقي الـ JSX كما هو ... */}
       <h1 className="signup-title">Sign up to start listening</h1>
 
       <label htmlFor="email" className="input-label">Email address      </label>

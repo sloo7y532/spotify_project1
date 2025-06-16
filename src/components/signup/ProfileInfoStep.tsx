@@ -18,7 +18,7 @@ const ProfileInfoStep: React.FC = () => {
 
   const handleNext = () => {
     if (isFormValid) {
-      dispatch(setSignupProfile({ name, day, month, year, gender })); // <--- حفظ معلومات الملف الشخصي
+      dispatch(setSignupProfile({ name, day, month, year, gender })); 
       navigate('/signup/terms');
     }
   };
@@ -35,7 +35,6 @@ const ProfileInfoStep: React.FC = () => {
 
   return (
     <div className="signup-step-content">
-      {/* ... باقي الـ JSX كما هو ... */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/signup/password')} className="back-arrow">&#8249;</span>
         <h2 className="step-title">Step 2 of 3<br/>Tell us about yourself</h2>

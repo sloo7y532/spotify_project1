@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAppDispatch } from '../../store/hooks.ts';
-import { setSignupPassword } from '../../store/slices/authSlice.ts'; // استيراد الأكشن الجديد
+import { setSignupPassword } from '../../store/slices/authSlice.ts'; 
 
 const PasswordStep: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useAppDispatch(); // تهيئة dispatch
+  const dispatch = useAppDispatch(); 
   const navigate = useNavigate();
 
   const hasMinLength = password.length >= 10;
@@ -19,15 +19,14 @@ const PasswordStep: React.FC = () => {
   const isFormValid = hasMinLength && hasChar && hasNumberOrSpecial;
 
   const handleNext = () => {
-    if (isFormValid) {
-      dispatch(setSignupPassword(password)); // <--- حفظ كلمة المرور في Redux
+    if (isFormValid && password.length >= 10 && hasChar && hasNumberOrSpecial) {
+      dispatch(setSignupPassword(password)); 
       navigate('/signup/profile');
     }
   };
 
   return (
     <div className="signup-step-content">
-      {/* ... باقي الـ JSX كما هو ... */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/signup')} className="back-arrow">&#8249;</span>
         <h2 className="step-title">Step 1 of 3<br/>Create a password</h2>
