@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/NavBar.css";
 import logo from "../assets/spotify-icon.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/index.ts";
+
 
 // material ui icons
 import SearchIcon from "@mui/icons-material/Search";
@@ -10,6 +13,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

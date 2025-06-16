@@ -3,6 +3,7 @@
 import React from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/hooks.ts";
+import spotifyLogo from '../../assets/spotify-icon-green.png';
 
 import EmailSignupStep from "./EmailSignupStep.tsx";
 import PasswordStep from "./PasswordStep.tsx";
@@ -16,7 +17,7 @@ const SignupFlow: React.FC = () => {
 
   React.useEffect(() => {
     if (user) {
-      navigate("/home", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [user, navigate]);
 
@@ -32,7 +33,7 @@ const SignupFlow: React.FC = () => {
   return (
     <div className="signup-flow-container">
       <img
-        src="/path/to/spotify-logo.png"
+        src={spotifyLogo}
         alt="Spotify Logo"
         className="spotify-logo"
       />

@@ -21,11 +21,13 @@ export default function DashboardPage() {
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
 
   const handleCreatePlaylist = () => {
-    // if (!user) {
-    //   setIsLoginPromptOpen(true);
-    //   return;
-    // }
-    navigate("/CreatePlaylist-Page");
+    if (!user) {
+      setIsLoginPromptOpen(true);
+      console.log(isLoginPromptOpen);
+
+      return;
+    }
+    navigate("/create-playlist");
   };
 
   const handleBrowsePodcasts = () => {
@@ -101,7 +103,7 @@ export default function DashboardPage() {
             <a href="#" className="dashboard-main-container-header-title">
               Trending songs
             </a>
-            <a href="" className="dashboard-main-container-header-see-all">
+            <a href="#" className="dashboard-main-container-header-see-all">
               See all
             </a>
           </div>
@@ -111,8 +113,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* {user && <MusicPlayer />} */}
-      <MusicPlayer />
+      {user && <MusicPlayer />}
     </div>
   );
 }

@@ -8,19 +8,25 @@ import PremiumPage from "../pages/Premium-Page.tsx";
 import DownloadPage from "../pages/Download-Page.tsx";
 import CreatePlaylistPage from "../pages/CreatePlaylist-Page.tsx";
 import Navbar from "./Navbar.tsx";
+import { useLocation } from "react-router-dom";
 
 export default function AppRoutes() {
+  const location = useLocation();
+  const hideNavbarOn = ["/login", "/signup"];
+
+  const shouldHideNavbar = hideNavbarOn.includes(location.pathname);
+
   return (
-    <BrowserRouter>
-      <Navbar /> 
+    <>
+      {!shouldHideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<DashboardPage />} />
-        <Route path="/login/*" element={<LoginFlow />} /> 
+        <Route path="/login/*" element={<LoginFlow />} />
         <Route path="/signup/*" element={<SignupFlow />} />
         <Route path="/premium" element={<PremiumPage />} />
         <Route path="/download" element={<DownloadPage />} />
-        <Route path="/create-playlist" element={<CreatePlaylistPage />} /> 
+        <Route path="/create-playlist" element={<CreatePlaylistPage />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
