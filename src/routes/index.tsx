@@ -5,7 +5,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import { loginSuccess, logout } from "../store/slices/authSlice.ts";
 
-// استيراد المكونات الخاصة بك
 import DashboardPage from "../pages/Dashboard-Page.tsx";
 import LoginFlow from "../components/login/LoginFlow.tsx";
 import SignupFlow from "../components/signup/SignupFlow.tsx";

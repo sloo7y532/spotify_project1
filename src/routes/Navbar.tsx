@@ -24,14 +24,14 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logoutUser(dispatch); 
-    navigate('/dashboard', { replace: true }); 
+    navigate('/login', { replace: true }); 
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-left">
         <div className="logo">
-          <Link to="/">
+          <Link to="/"> 
             <img src={logo} alt="Spotify Logo" />
           </Link>
         </div>
@@ -50,11 +50,12 @@ const Navbar = () => {
             </svg>
           </Link>
         </div>
+
         <div className="search-container">
           <SearchIcon className="search-icon" />
           <input
             type="text"
-            placeholder="what do you want to listen to?"
+            placeholder="What do you want to listen to?"
             className="search-input"
           />
           <hr className="search-divider" />
@@ -77,7 +78,7 @@ const Navbar = () => {
             <li>
               <button
                 onClick={handleLogout}
-                className="login-button" 
+                className="login-button"
               >
                 Logout
               </button>

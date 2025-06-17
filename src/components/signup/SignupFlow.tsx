@@ -1,42 +1,47 @@
 // src/components/auth/SignupFlow.tsx
 
 import React from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks.ts'; 
 
 import EmailSignupStep from './EmailSignupStep.tsx';
 import PasswordStep from './PasswordStep.tsx';
 import ProfileInfoStep from './ProfileInfoStep.tsx';
 import TermsAndConditionsStep from './TermsAndConditionsStep.tsx';
-import spotifyLogo from '../../assets/spotify-icon-green.png';
 
 const SignupFlow: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { loading, error, user } = useAppSelector(state => state.auth);
+  const { loading, error } = useAppSelector(state => state.auth);
 
-  React.useEffect(() => {
-    if (user) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [user, navigate]);
+  // منطق إعادة التوجيه بعد تسجيل الدخول بنجاح
+  // React.useEffect(() => {
+  //   if (user) {
+  //     navigate('/home', { replace: true });
+  //   }
+  // }, [user, navigate]);
 
   let currentStepIndex = 0;
-  if (location.pathname.includes('/signup/password')) {
+  if (location.pathname.includes("/signup/password")) {
     currentStepIndex = 1;
-  } else if (location.pathname.includes('/signup/profile')) {
+  } else if (location.pathname.includes("/signup/profile")) {
     currentStepIndex = 2;
-  } else if (location.pathname.includes('/signup/terms')) {
+  } else if (location.pathname.includes("/signup/terms")) {
     currentStepIndex = 3;
   }
 
   return (
     <div className="signup-flow-container">
-      <img src={spotifyLogo} alt="Spotify Logo" className="spotify-logo" />
+      {/* الشعار */}
+      <img src="/path/to/spotify-logo.png" alt="Spotify Logo" className="spotify-logo" />
 
+      {/* شريط التقدم يظهر فقط للخطوات 1-3 */}
       {currentStepIndex > 0 && currentStepIndex <= 3 && (
         <div className="progress-bar">
-          <div className="progress-bar-fill" style={{ width: `${(currentStepIndex / 3) * 100}%` }}></div>
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${(currentStepIndex / 3) * 100}%` }}
+          ></div>
         </div>
       )}
 
