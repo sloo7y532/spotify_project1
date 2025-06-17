@@ -8,6 +8,7 @@ import EmailSignupStep from './EmailSignupStep.tsx';
 import PasswordStep from './PasswordStep.tsx';
 import ProfileInfoStep from './ProfileInfoStep.tsx';
 import TermsAndConditionsStep from './TermsAndConditionsStep.tsx';
+import spotifyLogo from '../../assets/spotify-icon-green.png';
 
 const SignupFlow: React.FC = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const SignupFlow: React.FC = () => {
 
   return (
     <div className="signup-flow-container">
-      <img src="/path/to/spotify-logo.png" alt="Spotify Logo" className="spotify-logo" />
+      <img src={spotifyLogo} alt="Spotify Logo" className="spotify-logo" />
 
       {currentStepIndex > 0 && currentStepIndex <= 3 && (
         <div className="progress-bar">

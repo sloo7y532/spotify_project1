@@ -3,7 +3,6 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
- 
 const firebaseConfig = {
   apiKey: 'AIzaSyAk47u4hPSgspFvNaLwc-JfjC_kHwU7A1E',
   authDomain: 'spotify-project-123.firebaseapp.com',
@@ -14,9 +13,8 @@ const firebaseConfig = {
   measurementId: 'G-4FP7WP09E4',
 };
 
- 
 export const app = initializeApp(firebaseConfig);
- 
-export const auth = getAuth(app);
+
+export const auth = getAuth(app); 
 export const db = getFirestore(app);
 export const storage = getStorage(app);

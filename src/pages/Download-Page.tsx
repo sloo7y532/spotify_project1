@@ -1,5 +1,5 @@
 import React from 'react';
-import './Download-Page.css';
+  import '../styles/Download-Page.css';
 
 export default function DownloadPage() {
   return (

@@ -1,243 +1,98 @@
-:root {
-    --bg-main: #121212;
-    --bg-hover: #3e3e3e;
-    --bg-secondary: #242424;
-    --bg-accent: #2d2d2ddf;
-    --text-muted: #b3b3b3;
-    --accent-green: #1f1f1f;
-    --text-light: #ffffff;
-    --transition-fast: 0.3s;
-    --transition-slow: 0.6s;
-  }
-  
-  body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Layout */
-  .playlist-container {
-    display: flex;
-    height: 100vh;
-    background-color: black;
-    color: var(--text-light);
-    font-family: sans-serif;
-  }
-  
-  /* Sidebar */
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    width: 28%;
-    height: 100%;
-    background: var(--bg-main);
-    border-radius: 10px;
-    padding: 15px;
-  }
-  
-  .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    position: relative;
-  }
-  
-  .sidebar-title {
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  .add-button {
-    background-color: var(--accent-green);
-    color: var(--text-light);
-    border: none;
-    padding: 6px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    transition: background-color var(--transition-fast);
-  }
-  
-  .add-button:hover {
-    background-color: #2a2a2a;
-  }
-  
-  .playlist-section {
-    margin-top: 20px;
-  }
-  
-  .playlist-heading {
-    font-size: 14px;
-    margin-bottom: 10px;
-    color: var(--text-muted);
-  }
-  
-  .playlist-item {
-    display: flex;
-    align-items: center;
-    background-color: var(--bg-secondary);
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-    position: relative;
-  }
-  
-  .music-icon,
-  .play-icon {
-    font-size: 20px;
-    width: 45px !important;
-    height: 45px !important;
-    background-color: var(--bg-accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    flex-shrink: 0;
-    transition: opacity var(--transition-fast);
-  }
-  
-  .play-icon {
-    position: absolute;
-    left: 10px;
-    opacity: 0;
-  }
-  
-  .music-icon {
-    margin-right: 20px;
-  }
-  
-  .playlist-item:hover {
-    background-color: var(--bg-hover);
-  }
-  
-  .playlist-item:hover .play-icon {
-    opacity: 1;
-  }
-  
-  .playlist-item:hover .music-icon {
-    opacity: 0;
-  }
-  
-  .playlist-name {
-    font-weight: 600;
-    font-size: 14px;
-    margin: 0 0 4px 0;
-  }
-  
-  .playlist-owner {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin: 0;
-  }
-  
-  /* Main Content */
-  .main-content {
-    flex: 1;
-    background: linear-gradient(to bottom, #333 0%, #000 100%);
-    padding: 40px;
-    overflow-y: auto;
-  }
-  
-  .playlist-header {
-    display: flex;
-    gap: 30px;
-    align-items: flex-end;
-  }
-  
-  .cover-photo {
-    width: 192px;
-    height: 192px;
-    background-color: #3a3a3a;
-    color: #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-    padding: 10px;
-    transition: background-color var(--transition-fast);
-  }
-  
-  .cover-photo:hover {
-    background-color: #4a4a4a;
-  }
-  
-  .playlist-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .playlist-type {
-    font-size: 12px;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-  }
-  
-  .playlist-title {
-    font-size: 48px;
-    font-weight: bold;
-    margin: 0;
-  }
-  
-  .playlist-user {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-top: 5px;
-  }
-  
-  /* Controls */
-  .playlist-controls {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-    color: var(--text-muted);
-  }
-  
-  .icon {
-    font-size: 20px;
-    cursor: pointer;
-    transition: color var(--transition-fast);
-  }
-  
-  .icon:hover {
-    color: var(--text-light);
-  }
-  
-  /* Search Section */
-  .search-section {
-    margin-top: 60px;
-  }
-  
-  .search-text {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 12px;
-    background-color: #2a2a2a;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: background-color var(--transition-fast);
-  }
-  
-  .search-input:focus {
-    outline: none;
-    background-color: #3a3a3a;
-  }
-  .playlist-item-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+.create-playlist-page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.playlist-form {
+  width: 100%;
+  max-width: 600px;
+  background: #121212;
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.playlist-form h2 {
+  margin-bottom: 1rem;
+}
+
+.playlist-form label {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.playlist-form input,
+.playlist-form textarea {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  background: #282828;
+  color: #fff;
+}
+
+.cover-input input {
+  margin-top: 0.5rem;
+}
+
+.cover-preview {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.cover-preview img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.search-bar {
+  margin-bottom: 1rem;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  background: #282828;
+  color: #fff;
+}
+
+.search-results,
+.selected-songs {
+  margin-bottom: 1rem;
+}
+
+.search-results li,
+.selected-songs li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: #181818;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.playlist-form button[type="submit"] {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #1db954;
+  color: #fff;
+  font-weight: bold;
+}
+
+.search-results button,
+.selected-songs button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #1db954;
+}

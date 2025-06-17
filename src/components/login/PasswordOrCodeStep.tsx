@@ -3,9 +3,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-import { loginSuccess, loginFailure, clearError } from '../../store/slices/authSlice.ts';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { app } from '../../firebase/firebase.js';
+import { clearError } from '../../store/slices/authSlice.ts';
+import { loginUser } from '../../services/authService.ts'; 
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const PasswordOrCodeStep: React.FC = () => {
@@ -19,31 +18,15 @@ const PasswordOrCodeStep: React.FC = () => {
     e.preventDefault();
     dispatch(clearError());
 
-    const authInstance = getAuth(app);
+    if (!loginIdentifier || !password) {
+      return;
+    }
 
     try {
-      console.log("Attempting login with identifier:", loginIdentifier); 
-      if (!loginIdentifier || !password) {
-        dispatch(loginFailure("Please enter your email/username and password."));
-        return;
-      }
-      const userCredential = await signInWithEmailAndPassword(authInstance, loginIdentifier, password);
-      const user = userCredential.user;
-      dispatch(loginSuccess({ id: user.uid, email: user.email, token: await user.getIdToken() }));
-      navigate('/dashboard', { replace: true });
-    } catch (err: any) {
-      console.error("Firebase Login Error caught in component:", err);
-      console.error("Firebase Login Error message:", err.message);
-
-      let errorMessage = "An error occurred during login. Please try again.";
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        errorMessage = "The email or password is incorrect.";
-      } else if (err.code === 'auth/invalid-email') {
-        errorMessage = "The email format is invalid.";
-      } else if (err.code === 'auth/too-many-requests') {
-        errorMessage = "You have tried to login multiple times. Please wait a moment or reset your password.";
-      }
-      dispatch(loginFailure(errorMessage));
+      await loginUser(loginIdentifier, password, dispatch); 
+      navigate('/dashboard', { replace: true }); 
+    } catch (err) {
+      console.error("Failed to login:", err);
     }
   };
 
@@ -52,7 +35,7 @@ const PasswordOrCodeStep: React.FC = () => {
       <div className="signup-step-header">
         <span onClick={() => navigate('/login')} className="back-arrow">&#8249;</span>
         <h2 className="step-title">
-        <span>Enter your password for</span><br />{loginIdentifier}
+          <span>Enter your password for</span><br />{loginIdentifier}
         </h2>
       </div>
 

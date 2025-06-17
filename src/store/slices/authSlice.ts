@@ -6,7 +6,6 @@ interface AuthState {
   user: { id: string; email: string | null; token: string | null } | null;
   loading: boolean;
   error: string | null;
-  // --- حقول لتخزين بيانات التسجيل المؤقتة (لـ Signup) ---
   signupEmail: string;
   signupPassword: string;
   signupProfile: {
@@ -84,30 +83,32 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload;
       state.error = null;
-      state.loginIdentifier = ''; // مسح معرف الدخول بعد النجاح
+      state.loginIdentifier = ''; 
     },
     loginFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
       state.user = null;
     },
-    logout(state) {
+    logout(state) { 
       state.user = null;
       state.error = null;
       state.loading = false;
+      state.loginIdentifier = '';
+      state.signupEmail = '';
+      state.signupPassword = '';
+      state.signupProfile = { name: '', day: '', month: '', year: '', gender: '' };
     },
     clearError(state) {
       state.error = null;
     },
-    // --- أكشن جديد لوضع رسالة خطأ محددة ---
     setError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
     },
-    // --- أكشن لتخزين معرف تسجيل الدخول (البريد الإلكتروني/اسم المستخدم) ---
     setLoginIdentifier(state, action: PayloadAction<string>) {
       state.loginIdentifier = action.payload;
     },
-    clearLoginData(state) { // لمسح بيانات تسجيل الدخول المؤقتة
+    clearLoginData(state) { 
       state.loginIdentifier = '';
     }
   },
@@ -124,9 +125,9 @@ export const {
   loginStart,
   loginSuccess,
   loginFailure,
-  logout,
+  logout, 
   clearError,
-  setError, // <--- تم تصدير أكشن setError هنا
+  setError,
   setLoginIdentifier,
   clearLoginData,
 } = authSlice.actions;

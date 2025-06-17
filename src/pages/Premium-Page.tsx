@@ -3,7 +3,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectPlan } from "../store/slices/premiumSlice.ts";
 import { RootState } from "../store";
-import "./Premium-Page.css";
+import "../styles/Premium-Page.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Accordion from "react-bootstrap/Accordion";
 import '@fortawesome/fontawesome-free/css/all.min.css';
