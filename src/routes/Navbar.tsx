@@ -1,12 +1,12 @@
 // src/components/Navbar.tsx
 
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavBar.css";
 import logo from "../assets/spotify-icon.png";
-import { useSelector, useDispatch } from "react-redux"; 
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/index.ts";
-import { logoutUser } from '../services/authService.ts'; 
+import { logoutUser } from "../services/authService.ts";
 
 import SearchIcon from "@mui/icons-material/Search";
 import SplitscreenIcon from "@mui/icons-material/Splitscreen";
@@ -14,24 +14,24 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const user = useSelector((state: RootState) => state.auth.user); 
-  const navigate = useNavigate(); 
-  const dispatch = useDispatch(); 
+  const user = useSelector((state: RootState) => state.auth.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLogout = async () => {
-    await logoutUser(dispatch); 
-    navigate('/login', { replace: true }); 
+    await logoutUser(dispatch);
+    navigate("/", { replace: true });
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-left">
         <div className="logo">
-          <Link to="/"> 
+          <Link to="/">
             <img src={logo} alt="Spotify Logo" />
           </Link>
         </div>
@@ -52,7 +52,7 @@ const Navbar = () => {
         </div>
 
         <div className="search-container">
-          <SearchIcon className="search-icon" />
+          <SearchIcon className="search-icon-N" />
           <input
             type="text"
             placeholder="What do you want to listen to?"
@@ -68,24 +68,33 @@ const Navbar = () => {
           <MenuIcon />
         </button>
 
-        <ul className={`nav-links ${isMobileMenuOpen ? "mobile-menu-open" : ""}`}>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/premium">Premium</Link></li>
-          <li><Link to="/download">Download</Link></li>
+        <ul
+          className={`nav-links ${isMobileMenuOpen ? "mobile-menu-open" : ""}`}
+        >
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/premium">Premium</Link>
+          </li>
+          <li>
+            <Link to="/download">Download</Link>
+          </li>
           <hr className="nav-divider" />
 
           {user ? (
             <li>
-              <button
-                onClick={handleLogout}
-                className="login-button"
-              >
-                Logout
-              </button>
+              <Link to="/login">
+                <button onClick={handleLogout} className="login-button">
+                  Logout
+                </button>
+              </Link>
             </li>
           ) : (
             <>
-              <li><Link to="/signup">Signup</Link></li>
+              <li>
+                <Link to="/signup">Signup</Link>
+              </li>
               <li>
                 <Link to="/login">
                   <button className="login-button">Login</button>

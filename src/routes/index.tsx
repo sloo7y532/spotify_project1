@@ -11,6 +11,7 @@ import SignupFlow from "../components/signup/SignupFlow.tsx";
 import PremiumPage from "../pages/Premium-Page.tsx";
 import DownloadPage from "../pages/Download-Page.tsx";
 import CreatePlaylistPage from "../pages/CreatePlaylist-Page.tsx";
+import BrowsePodcastsPage from "../pages/BrowsePodcasts-Page.tsx";
 import Navbar from "./Navbar.tsx";
 
 export default function AppRoutes() {
@@ -58,6 +59,7 @@ export default function AppRoutes() {
         <Route path="/premium" element={<PremiumPage />} />
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/create-playlist" element={<CreatePlaylistPage />} />
+        <Route path="/browse-podcasts" element={<BrowsePodcastsPage />} />
       </Routes>
     </>
   );
