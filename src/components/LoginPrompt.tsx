@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 
+
 const LoginPromptModal = ({
   isOpen,
   setOpen,
@@ -14,6 +15,7 @@ const LoginPromptModal = ({
 }) => {
   const navigate = useNavigate();
   const auth = getAuth();
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -43,7 +45,7 @@ const LoginPromptModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 360,
-          bgcolor: "#191414", // لون Spotify الداكن
+          bgcolor: "#191414",
           color: "#fff",
           borderRadius: 3,
           boxShadow: 24,
@@ -72,7 +74,7 @@ const LoginPromptModal = ({
         />
 
         <Typography variant="h6" fontWeight="bold">
-          Join to keep listening
+          Sign in to Spotify
         </Typography>
 
         <Typography
@@ -80,8 +82,7 @@ const LoginPromptModal = ({
           align="center"
           sx={{ color: "#ccc", mt: 1 }}
         >
-          Log in to enjoy unlimited music, playlists, and your favorite artists
-          — all in one place.
+          Sign in to access your music, playlists, and favorite artists — all in one place.
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
@@ -93,11 +94,11 @@ const LoginPromptModal = ({
               color: "#000",
               fontWeight: "bold",
               borderRadius: 20,
-              px: 4,
+              px: 3,
               "&:hover": { bgcolor: "#1ed760" },
             }}
           >
-            Log In
+            Sign In
           </Button>
           <Button
             variant="outlined"
@@ -110,7 +111,7 @@ const LoginPromptModal = ({
               "&:hover": { borderColor: "#1ed760", color: "#1ed760" },
             }}
           >
-            Not Now
+            Maybe Later
           </Button>
         </Box>
       </Box>

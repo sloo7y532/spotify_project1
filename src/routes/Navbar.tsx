@@ -1,26 +1,41 @@
+// src/components/Navbar.tsx
+
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavBar.css";
 import logo from "../assets/spotify-icon.png";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store/index.ts";
+import { logoutUser } from "../services/authService.ts";
 
-// material ui
 import SearchIcon from "@mui/icons-material/Search";
 import SplitscreenIcon from "@mui/icons-material/Splitscreen";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleLogout = async () => {
+    await logoutUser(dispatch);
+    navigate("/", { replace: true });
+  };
+
   return (
-    <div className="navbar">
+    <nav className="navbar">
       <div className="navbar-left">
         <div className="logo">
-          <img src={logo} alt="logo" />
+          <Link to="/">
+            <img src={logo} alt="Spotify Logo" />
+          </Link>
         </div>
+
         <div className="home-icon-container">
           <Link to="/">
             <svg
@@ -35,11 +50,12 @@ const Navbar = () => {
             </svg>
           </Link>
         </div>
+
         <div className="search-container">
-          <SearchIcon className="search-icon" />
+          <SearchIcon className="search-icon-N" />
           <input
             type="text"
-            placeholder="What do you want to play?"
+            placeholder="What do you want to listen to?"
             className="search-input"
           />
           <hr className="search-divider" />
@@ -51,27 +67,44 @@ const Navbar = () => {
         <button className="mobile-menu-button" onClick={toggleMobileMenu}>
           <MenuIcon />
         </button>
-        <nav
+
+        <ul
           className={`nav-links ${isMobileMenuOpen ? "mobile-menu-open" : ""}`}
         >
-          <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/premium">Premium</Link>
+          </li>
+          <li>
+            <Link to="/download">Download</Link>
+          </li>
+          <hr className="nav-divider" />
+
+          {user ? (
             <li>
-              <Link to="/premium">Premium</Link>
+              <Link to="/login">
+                <button onClick={handleLogout} className="login-button">
+                  Logout
+                </button>
+              </Link>
             </li>
-            <li>
-              <Link to="/download">Download</Link>
-            </li>
-            <hr className="nav-divider" />
-            <li>
-              <Link to="/signup">Signup</Link>
-            </li>
-            <Link to="/login">
-              <button className="login-button">Log in</button>
-            </Link>
-          </ul>
-        </nav>
+          ) : (
+            <>
+              <li>
+                <Link to="/signup">Signup</Link>
+              </li>
+              <li>
+                <Link to="/login">
+                  <button className="login-button">Login</button>
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
       </div>
-    </div>
+    </nav>
   );
 };
 

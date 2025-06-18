@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+// src/store/slices/authSlice.ts
+
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
   user: { id: string; email: string | null; token: string | null } | null;
@@ -20,46 +22,36 @@ const initialState: AuthState = {
   user: null,
   loading: false,
   error: null,
-  signupEmail: "",
-  signupPassword: "",
+  signupEmail: '',
+  signupPassword: '',
   signupProfile: {
-    name: "",
-    day: "",
-    month: "",
-    year: "",
-    gender: "",
+    name: '',
+    day: '',
+    month: '',
+    year: '',
+    gender: '',
   },
-  loginIdentifier: "",
+  loginIdentifier: '',
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
+    // ------------------------------------
+    // ----- Signup Actions -----
+    // ------------------------------------
     signupStart(state) {
       state.loading = true;
       state.error = null;
     },
-    signupSuccess(
-      state,
-      action: PayloadAction<{
-        id: string;
-        email: string | null;
-        token: string | null;
-      }>
-    ) {
+    signupSuccess(state, action: PayloadAction<{ id: string; email: string | null; token: string | null }>) {
       state.loading = false;
       state.user = action.payload;
       state.error = null;
-      state.signupEmail = "";
-      state.signupPassword = "";
-      state.signupProfile = {
-        name: "",
-        day: "",
-        month: "",
-        year: "",
-        gender: "",
-      };
+      state.signupEmail = '';
+      state.signupPassword = '';
+      state.signupProfile = { name: '', day: '', month: '', year: '', gender: '' };
     },
     signupFailure(state, action: PayloadAction<string>) {
       state.loading = false;
@@ -71,19 +63,13 @@ const authSlice = createSlice({
     setSignupPassword(state, action: PayloadAction<string>) {
       state.signupPassword = action.payload;
     },
-    setSignupProfile(state, action: PayloadAction<AuthState["signupProfile"]>) {
+    setSignupProfile(state, action: PayloadAction<AuthState['signupProfile']>) {
       state.signupProfile = action.payload;
     },
     clearSignupData(state) {
-      state.signupEmail = "";
-      state.signupPassword = "";
-      state.signupProfile = {
-        name: "",
-        day: "",
-        month: "",
-        year: "",
-        gender: "",
-      };
+      state.signupEmail = '';
+      state.signupPassword = '';
+      state.signupProfile = { name: '', day: '', month: '', year: '', gender: '' };
     },
 
     // ------------------------------------
@@ -93,38 +79,38 @@ const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    loginSuccess(
-      state,
-      action: PayloadAction<{
-        id: string;
-        email: string | null;
-        token: string | null;
-      }>
-    ) {
+    loginSuccess(state, action: PayloadAction<{ id: string; email: string | null; token: string | null }>) {
       state.loading = false;
       state.user = action.payload;
       state.error = null;
-      state.loginIdentifier = "";
+      state.loginIdentifier = ''; 
     },
     loginFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
       state.user = null;
     },
-    logout(state) {
+    logout(state) { 
       state.user = null;
       state.error = null;
       state.loading = false;
+      state.loginIdentifier = '';
+      state.signupEmail = '';
+      state.signupPassword = '';
+      state.signupProfile = { name: '', day: '', month: '', year: '', gender: '' };
     },
     clearError(state) {
       state.error = null;
     },
+    setError(state, action: PayloadAction<string | null>) {
+      state.error = action.payload;
+    },
     setLoginIdentifier(state, action: PayloadAction<string>) {
       state.loginIdentifier = action.payload;
     },
-    clearLoginData(state) {
-      state.loginIdentifier = "";
-    },
+    clearLoginData(state) { 
+      state.loginIdentifier = '';
+    }
   },
 });
 
@@ -139,8 +125,9 @@ export const {
   loginStart,
   loginSuccess,
   loginFailure,
-  logout,
+  logout, 
   clearError,
+  setError,
   setLoginIdentifier,
   clearLoginData,
 } = authSlice.actions;

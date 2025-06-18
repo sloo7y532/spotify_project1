@@ -1,7 +1,11 @@
 import React from 'react';
+<<<<<<< HEAD
 import '../styles/Download-Page.css';
 import Footer from '../components/Footer.tsx';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+=======
+  import '../styles/Download-Page.css';
+>>>>>>> ad65bf294454bc187692d4c00cdba9d94d14fbcd
 
 export default function DownloadPage() {
   return (
