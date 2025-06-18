@@ -24,17 +24,19 @@ export async function addPlaylistToFirebase(data: NewPlaylist) {
 }
 
 export async function fetchSongsFromFirebase(
-  queryText: string
+  searchText: string
 ): Promise<Song[]> {
-  const songsCol = collection(db, "songs");
-  const q = query(
-    songsCol,
-    where("keywords", "array-contains", queryText.toLowerCase())
-  );
-  const snapshot = await getDocs(q);
-  if (!queryText.trim()) return [];
+  const snapshot = await getDocs(collection(db, "songs"));
+  const allSongs = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...(doc.data() as Song),
+  }));
 
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as Song) }));
+  const filtered = allSongs.filter((song) =>
+    song.title?.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return filtered;
 }
 
 export async function uploadPlaylistImage(

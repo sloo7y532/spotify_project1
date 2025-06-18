@@ -16,8 +16,15 @@ import Navbar from "./Navbar.tsx";
 export default function AppRoutes() {
   const location = useLocation();
   const dispatch = useDispatch();
+  const hideNavbarOn = [
+    "/login",
+    "/signup",
+    "/login/password-or-code",
+    "/signup/password",
+    "/signup/profile",
+    "/signup/terms",
+  ];
 
-  const hideNavbarOn = ["/login", "/signup"];
   const shouldHideNavbar = hideNavbarOn.some(path => location.pathname.startsWith(path));
 
   useEffect(() => {

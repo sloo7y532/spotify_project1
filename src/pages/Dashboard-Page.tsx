@@ -23,8 +23,6 @@ export default function DashboardPage() {
   const handleCreatePlaylist = () => {
     if (!user) {
       setIsLoginPromptOpen(true);
-      console.log(isLoginPromptOpen);
-
       return;
     }
     navigate("/create-playlist");

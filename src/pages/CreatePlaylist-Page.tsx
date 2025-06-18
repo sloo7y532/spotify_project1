@@ -13,6 +13,7 @@ import { Song } from "../store/slices/musicSlice.ts";
 export default function CreatePlaylistPage() {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [playlistName, setPlaylistName] = useState("");
   const [playlistDesc, setPlaylistDesc] = useState("");
@@ -138,39 +139,39 @@ export default function CreatePlaylistPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search songs to add..."
+            placeholder="Search for songs..."
           />
         </div>
 
-        {searchResults.length > 0 && (
+        {isLoading && <p className="loading">Searching...</p>}
+
+        {!isLoading && searchResults.length > 0 && (
           <ul className="search-results">
-            {searchResults.map((song) => (
-              <li key={song.id}>
-                <span>
-                  {song.title} - {song.artist}
-                </span>
-                <button type="button" onClick={() => handleAddSong(song)}>
-                  Add
-                </button>
-              </li>
-            ))}
+            {searchResults.map((song) => {
+              const alreadyAdded = selectedSongs.some((s) => s.id === song.id);
+
+              return (
+                <li key={song.id} className="song-item">
+                  <img src={song.image} alt={song.title} />
+                  <div className="song-info">
+                    <p className="title">{song.title}</p>
+                    <p className="artist">{song.artist}</p>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={alreadyAdded}
+                    onClick={() => handleAddSong(song)}
+                  >
+                    {alreadyAdded ? "Added" : "Add"}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
 
-        {selectedSongs.length > 0 && (
-          <div className="selected-songs">
-            <h3>Selected Songs</h3>
-            <ul>
-              {selectedSongs.map((song) => (
-                <li key={song.id}>
-                  {song.title}
-                  <button type="button" onClick={() => handleRemoveSong(song.id)}>
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {!isLoading && searchQuery.trim() && searchResults.length === 0 && (
+          <p className="no-results">No songs found for “{searchQuery}”</p>
         )}
 
         <button type="submit" disabled={isSaving || !playlistName}>
