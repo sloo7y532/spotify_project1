@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Music, Plus, Upload } from 'lucide-react';
+import '.././styles/EditPlaylistModal.css'
 
 // Firebase types and mock functions (replace with actual Firebase imports)
 interface Playlist {

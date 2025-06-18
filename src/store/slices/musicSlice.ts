@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import {NewPlaylist} from '../../firebase/playlistService.ts'
 export interface Song {
   id?: string;
   title?: string;
@@ -10,6 +10,7 @@ export interface Song {
   userId?: string;
   createdAt?: Date;
 }
+// const filteredSongs= songs?.filter((song => song?.title?.includes(searchquery)))
 
 interface MusicState {
   currentSong: Song | null;

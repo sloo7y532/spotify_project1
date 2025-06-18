@@ -4,7 +4,6 @@
   align-items: center;
   padding: 1rem;
   color: #fff;
-  height: 60px;
   width: 100dvw;
   position: relative;
   top: 0;
@@ -19,7 +18,7 @@
 
 .navbar-right {
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: end;
   gap: 1rem;
   width: 50%;
@@ -54,6 +53,7 @@
   list-style: none;
   padding: 0;
   gap: 1rem;
+  margin: 0px;
 }
 
 .nav-links li {
@@ -68,7 +68,7 @@
   font-size: 1.2rem;
   cursor: pointer;
   font-size: 17px;
-  padding: 20px 10px;
+  padding: 10px 10px;
   
 }
 
@@ -87,6 +87,7 @@ a .login-button  {
   cursor: pointer;
 }
 .login-button:hover {
+  color:  black !important;
   background-color: #ccc !important;
 }
 
@@ -95,7 +96,7 @@ a .login-button  {
 }
 .nav-divider {
   height: 20px;
-  width: 1px;
+  width: 2px;
   background-color: #b3b3b3;
 }
 .navbar-right button {
@@ -109,6 +110,7 @@ a .login-button  {
   background-color: #212121;
   border-radius: 25px;
   padding: 5px 10px;
+  height: 50px;
   margin-left: 20px;
   width: 60%;
 }
@@ -121,7 +123,7 @@ a .login-button  {
   transition: all 0.2s ease;
 }
 
-.search-icon {
+.search-container .search-icon-N {
   color: #b3b3b3;
   font-size: 30px;
   margin-right: 5px;

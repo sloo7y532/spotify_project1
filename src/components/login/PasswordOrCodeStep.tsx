@@ -24,7 +24,7 @@ const PasswordOrCodeStep: React.FC = () => {
 
     try {
       await loginUser(loginIdentifier, password, dispatch); 
-      navigate('/dashboard', { replace: true }); 
+      navigate('/', { replace: true }); 
     } catch (err) {
       console.error("Failed to login:", err);
     }

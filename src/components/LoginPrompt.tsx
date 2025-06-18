@@ -21,7 +21,6 @@ const LoginPromptModal = ({
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setOpen(false);
-        console.log(user)
       } else {
         setOpen(true);
       }
