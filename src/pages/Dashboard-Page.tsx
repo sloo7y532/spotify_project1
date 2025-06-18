@@ -98,10 +98,10 @@ export default function DashboardPage() {
       ) : (
         <div className="dashboard-main-container">
           <div className="dashboard-main-container-header">
-            <a href="#" className="dashboard-main-container-header-title">
+            <a href="" className="dashboard-main-container-header-title">
               Trending songs
             </a>
-            <a href="#" className="dashboard-main-container-header-see-all">
+            <a href="" className="dashboard-main-container-header-see-all">
               See all
             </a>
           </div>

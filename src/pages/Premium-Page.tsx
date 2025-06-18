@@ -3,14 +3,18 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectPlan } from "../store/slices/premiumSlice.ts";
 import { RootState } from "../store";
-import "./Premium-Page.css";
+import { useState } from "react";
+import "../styles/Premium-Page.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Accordion from "react-bootstrap/Accordion";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import Footer from "../components/Footer.tsx";
+
 
 
 export default function PremiumPage() {
   const dispatch = useDispatch();
+   const [hovered, setHovered] = useState(false);
   const selectedPlan = useSelector((state: RootState) => state.premium.selectedPlan);
 
   const handleSelect = (planTitle: string) => {
@@ -18,7 +22,9 @@ export default function PremiumPage() {
   };
 
   return (
-    <>
+    <>  
+    
+  
       <div className="hero-section">
         <div className="hero-images">
           <img src="https://i.etsystatic.com/35092126/r/il/26f5d7/3863487113/il_fullxfull.3863487113_hg2v.jpg" alt="Music Covers" />
@@ -26,27 +32,27 @@ export default function PremiumPage() {
         <div className="hero-text">
           <h1>Listen without limits. Subscribe to Premium Individual for 0 SAR for one month.</h1>
           <p>Just SAR 21.99/month after. Cancel anytime.</p>
-          <div className="hero-buttons">
+          <div className="hero-buttons justify-content-center">
             <button className="start-btn">Get Started</button>
             <button className="plans-btn">See All Plans</button>
           </div>
           <p className="note">*0 SAR for one month only, then 21.99 SAR/month. Offer available for users who haven’t tried Premium. Terms apply.</p>
         </div>
       </div>
-      <section className="comparison-section text-white text-center py-5">
-  <h2 className="fw-bold mb-3">Feel the Difference</h2>
-  <p className="mb-5">
+      <section className="">
+  <h2 className="fw-bold mb-2 mt-4 text-center ">Feel the Difference</h2>
+  <p className="mb-3">
     Subscribe to <b>Spotify Premium</b> and enjoy full control over your listening. Cancel anytime.
   </p>
 
-  <div className="container">
+  <div className="comparison-section text-white text-center py-5 container">
     <div className="row justify-content-center">
       <div className="col-lg-8 col-md-10">
         <div className="table-responsive">
           <table className="table table-bordered bg-black text-white comparison-table">
             <thead>
               <tr>
-                <th className="text-start">Features You Get</th>
+                <th className="text-start">Features You Get <i className="fs-6 fab fa-spotify fa-2x me-2"></i></th>
                 <th>Spotify Free</th>
                 <th>Spotify Premium</th>
               </tr>
@@ -81,18 +87,28 @@ export default function PremiumPage() {
   </p>
 
   <div className="payment-methods d-flex justify-content-center gap-3 my-4">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg" alt="PayPal" className="payment-icon" />
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg" alt="PayPal" className="payment-icon" /> 
   <img src="https://cdn-icons-png.freepik.com/256/349/349228.png" alt="American Express" className="payment-icon" />
   <img src="https://download.logo.wine/logo/Mastercard/Mastercard-Logo.wine.png" alt="MasterCard" className="payment-icon" />
   <img src="/visa.svg.png" alt="Visa" className="payment-icon" />
 </div>
+    <div className="hover-area text-center my-5">
+      <p
+        className="hover-text"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        and more..
+      </p>
 
-  <p className="mb-5">...and more</p>
-  
-  <div className="more-payment-icons">
-    <img src="https://developer.apple.com/news/images/og/apple-pay-og.jpg" alt="Discover" />
-    <img src="https://media.licdn.com/dms/image/v2/D4D05AQGm7UL8eafowQ/videocover-high/B4DZTGR10CG8Bs-/0/1738493355273?e=2147483647&v=beta&t=gB9yBKi9Si8uDIwRFs6bSLfFpSaRZMV6BUg6K-a6xoU" alt="Mada" />
-  </div>
+      {hovered && (
+        <div className="image-box mt-3">
+          <img src="https://play-lh.googleusercontent.com/aqVjPx-JDaqoD6oyMDmqF24pVko-1p9LAnKyq6k6JycVrMMvXONfAruYfhFHeiJCfwo=w480-h960-rw" alt="StcPay" />
+          <img src="https://www.logo.wine/a/logo/Apple_Pay/Apple_Pay-White-Dark-Background-Logo.wine.svg" alt="ApplePay" />
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlJeSetovZYxcpQmPuM-fu7k2EzUcVb3qU0w&s" alt="Mada" />
+        </div>
+      )}
+    </div>
 
   <h3 className="fw-bold mb-3">All Premium Plans Include:</h3>
   <ul className="list-unstyled features-list mx-auto text-center mylist">
@@ -137,7 +153,8 @@ export default function PremiumPage() {
                 'Cancel anytime'
               ],
               btnText: 'Try 1 Month Free',
-              color: '#d1b5e0'
+              color: '#d1b5e0',
+              
             },
             {
               title: 'Premium Duo',
@@ -152,15 +169,15 @@ export default function PremiumPage() {
               color: '#facc60'
             }
           ].map((plan, index) => (
-            <div key={index} className="arabic-plan-card text-end">
+            <div key={index} className="arabic-plan-card text-start">
               <div className="plan-box p-4">
                 {/* <div className="high" style={ {backgroundColor: "#8d3f8d", color: "#facc60", marginLeft:"130px"}}><ul>
                   <li>Only for 20SAR</li>
                   </ul></div> */}
-                <h5>Premium (ᯤ)</h5> 
-                <h2 className="fw-bold text-white mb-1">{plan.title}</h2>
+                <h5 className="text-start"> <i className="fa-brands fa-spotify"></i> Premium </h5> 
+                <h2 className="fw-bold mb-1"style={{ color: plan.color }}>{plan.title}</h2>
                 <h4 className="text-white mb-0">{plan.price}</h4>
-                {plan.after && <p className="small" >{plan.after}</p>}
+                {plan.after && <p className="text-start">{plan.after}</p>}
                 <ul className="list-unstyled mt-3 mb-3 text-white small">
                   {plan.features.map((feat, i) => (
                     <li key={i}>• {feat}</li>
@@ -222,67 +239,7 @@ export default function PremiumPage() {
 </div>
 
         </section>
-        <footer className="custom-footer">
-  <div className="footer-content">
-   
-
-    <div className="footer-columns">
-      <div>
-        <h5>Spotify Plans</h5>
-        <ul>
-          <li>Premium Individual</li>
-          <li>Premium Duo</li>
-          <li>Premium Family</li>
-          <li>Premium Student</li>
-          <li>Spotify Free</li>
-        </ul>
-      </div>
-      <div>
-        <h5>Useful Links</h5>
-        <ul>
-          <li>Support</li>
-          <li>Web Player</li>
-          <li>Free Mobile App</li>
-        </ul>
-      </div>
-      <div>
-        <h5>Communities</h5>
-        <ul>
-          <li>For Artists</li>
-          <li>Developers</li>
-          <li>Advertising</li>
-          <li>Investors</li>
-          <li>Vendors</li>
-        </ul>
-      </div>
-      <div>
-        <h5>Company</h5>
-        <ul>
-          <li>About</li>
-          <li>Jobs</li>
-          <li>For the Record</li>
-        </ul>
-      </div>
-    </div>
-     <div className="footer-socials">
-      <a href="https://instagram.com/spotify"><i className="fab fa-facebook-f" aria-label="Facebook"></i></a>
-      <a href="https://twitter.com/spotify"><i className="fab fa-x-twitter" aria-label="X (Twitter)"></i></a>
-      <a href="https://www.facebook.com/Spotify"><i className="fab fa-instagram" aria-label="Instagram"></i></a>
-    </div>
-    <div className="footer-bottom">
-      <p>Saudi Arabia (English)</p>
-      <p>© Spotify AB 2025</p>
-      <div className="footer-links">
-        <span>Legal</span>
-        <span>Privacy Center</span>
-        <span>Cookies</span>
-        <span>About Ads</span>
-        <span>Accessibility</span>
-      </div>
-    </div>
-  </div>
-</footer>
-
+<Footer/>
       </div>
     </>
   );
