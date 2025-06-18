@@ -24,7 +24,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logoutUser(dispatch); 
-    navigate('/login', { replace: true }); 
+    navigate('/login', { replace: true }); // توجيه المستخدم إلى صفحة تسجيل الدخول بعد الخروج
   };
 
   return (
