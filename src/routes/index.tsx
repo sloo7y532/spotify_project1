@@ -10,9 +10,14 @@ import LoginFlow from "../components/login/LoginFlow.tsx";
 import SignupFlow from "../components/signup/SignupFlow.tsx";
 import PremiumPage from "../pages/Premium-Page.tsx";
 import DownloadPage from "../pages/Download-Page.tsx";
+import JobPage from "../pages/Job-Page.tsx";
+import AboutPage from "../pages/About-page.tsx";
+import LocationPage from "../pages/Location-Page.tsx";
+import Navbar from "./Navbar.tsx";
 import CreatePlaylistPage from "../pages/CreatePlaylist-Page.tsx";
 import BrowsePodcastsPage from "../pages/BrowsePodcasts-Page.tsx";
-import Navbar from "./Navbar.tsx";
+
+
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -50,16 +55,27 @@ export default function AppRoutes() {
   }, [dispatch]);
 
   return (
-    <>
+
+     <>
+
+   
       {!shouldHideNavbar && <Navbar />}
+
       <Routes>
         <Route path="/" element={<DashboardPage />} />
         <Route path="/login/*" element={<LoginFlow />} />
         <Route path="/signup/*" element={<SignupFlow />} />
         <Route path="/premium" element={<PremiumPage />} />
         <Route path="/download" element={<DownloadPage />} />
+
+        <Route path="/CreatePlaylist-Page" element={<CreatePlaylistPage />} />
+        <Route path="/about" element={<AboutPage />} /> 
+        <Route path="/location" element={<LocationPage />} />
+        <Route path="/job" element={<JobPage/>}/>
+
         <Route path="/create-playlist" element={<CreatePlaylistPage />} />
         <Route path="/browse-podcasts" element={<BrowsePodcastsPage />} />
+
       </Routes>
     </>
   );

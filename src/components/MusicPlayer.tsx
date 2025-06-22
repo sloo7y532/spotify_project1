@@ -14,7 +14,7 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import DevicesIcon from "@mui/icons-material/Devices";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import musicPlaceholder from "../assets/music-player.png";
+//import musicPlaceholder from "../assets/spotify-icon.png";
 
 const MusicPlayer = () => {
   const { currentSong, isPlaying } = useSelector(
@@ -97,7 +97,7 @@ const MusicPlayer = () => {
           />
         ) : (
           <img
-            src={musicPlaceholder}
+            src={""}
             alt="cover"
             className="music-player-cover"
           />
