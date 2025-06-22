@@ -39,10 +39,11 @@ div {
   color: aliceblue;
 }
 
-.hero-buttons {
+.hero-text h3 {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  background-color: #1db954;
 }
 
 .start-btn,
@@ -407,4 +408,9 @@ div {
 .custom-footer a:hover {
   color: #1db954;
   cursor: pointer;
+
+}.payment-form {
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
 }

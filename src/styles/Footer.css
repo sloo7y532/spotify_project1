@@ -22,12 +22,7 @@
   transform: scale(1.1);
   transition: transform 0.2s ease;
 }
-.location-page,
-.about-page {
-  background-color: #fff;
-  color: #000;
-  padding-top: 40px;
-}
+
 
 footer {
   margin-top: 60px;
