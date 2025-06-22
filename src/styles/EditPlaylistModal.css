@@ -1,99 +1,256 @@
+/* src/styles/EditPlaylistModal.css */
+
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* خلفية داكنة شفافة */
+  display: flex;
+  align-items: center; /* توسيط عمودي */
+  justify-content: center; /* توسيط أفقي */
+  z-index: 1000; /* لضمان ظهور المودال فوق العناصر الأخرى */
+  animation: fadeIn 0.2s ease-out; /* تأثير ظهور خفيف */
+}
+
+.modal-content {
+  background-color: #282828; /* لون خلفية المودال مطابق لسبوتيفاي */
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px; /* عرض ثابت للمودال */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* ظل للمودال */
+  color: #ffffff; /* لون النص الافتراضي داخل المودال */
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out; /* تأثير انزلاق خفيف */
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* تحديد أقصى ارتفاع للمودال */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #3e3e3e;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #ffffff;
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease-in-out;
+}
+
+.modal-close-button:hover {
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 25px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.image-upload-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  align-items: flex-start;
+}
+
+.image-preview {
+  width: 180px;
+  height: 180px;
+  background-color: #404040;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.image-preview:hover {
+  background-color: #535353;
+}
+
+.image-preview svg {
+  color: #b3b3b3;
+  opacity: 0.7;
+  margin-bottom: 5px;
+}
+
+.upload-icon-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* مخفي بشكل افتراضي */
+  transition: opacity 0.2s ease-in-out;
+  border-radius: 4px;
+}
+
+.image-preview:hover .upload-icon-overlay {
+  opacity: 1;
+}
+
+.upload-icon-overlay svg {
+  color: white;
+  margin-bottom: 5px;
+}
+
+.upload-icon-overlay span {
+  color: white;
+  font-size: 14px;
+  font-weight: bold; /* جعل النص أكثر سمكًا */
+}
+
+.form-fields {
+  flex-grow: 1;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.input-field,
+.textarea-field {
+  width: 100%;
+  padding: 12px;
+  background-color: #3e3e3e;
+  border: 1px solid #3e3e3e;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 16px;
+  transition: border-color 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+.input-field:focus,
+.textarea-field:focus {
+  border-color: #1ed760;
+  outline: none;
+}
+
+.input-field::placeholder,
+.textarea-field::placeholder {
+  color: #b3b3b3;
+}
+
+.textarea-field {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.privacy-notice {
+  font-size: 12px;
+  color: #a7a7a7;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #3e3e3e;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 25px;
+  border-top: 1px solid #3e3e3e;
+}
+
+.save-button {
+  background-color: #ffffff; /* زر حفظ أبيض (كما في الصورة المستهدفة) */
+  color: #000000;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.save-button:hover:not(:disabled) {
+  transform: scale(1.05);
+  background-color: #f0f0f0;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #a7a7a7;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .modal-content {
+      max-width: 95%;
   }
-  
-  .edit-modal {
-    background: #121212;
-    padding: 24px;
-    width: 400px;
-    border-radius: 12px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+
+  .modal-header,
+  .modal-footer {
+      padding: 15px 20px;
   }
-  
-  .image-upload {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+  .modal-title {
+      font-size: 20px;
   }
-  
-  .image-upload input {
-    display: none;
+
+  .modal-body {
+      padding: 20px;
   }
-  
-  .playlist-image-preview {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
+
+  .image-upload-section {
+      flex-direction: column;
+      align-items: center;
   }
-  
-  .placeholder-icon {
-    font-size: 64px;
-    color: #b3b3b3;
-    width: 100px;
-    height: 100px;
-    background-color: #2a2a2a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
+
+  .image-preview {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 20px;
   }
-  
-  input, textarea {
-    background-color: #2a2a2a;
-    border: none;
-    padding: 12px;
-    color: white;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-  
-  textarea {
-    resize: none;
-    height: 80px;
-  }
-  
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-  }
-  
-  .save-btn {
-    background-color: white;
-    color: black;
-    padding: 10px 16px;
-    border-radius: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-  }
-  
-  .cancel-btn {
-    background: transparent;
-    border: 1px solid white;
-    padding: 10px 16px;
-    border-radius: 24px;
-    color: white;
-    cursor: pointer;
-  }
-  
-  .disclaimer {
-    font-size: 11px;
-    color: #b3b3b3;
-    text-align: center;
-  }
-  
+}

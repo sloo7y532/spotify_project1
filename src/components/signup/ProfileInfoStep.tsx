@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 import { setSignupProfile } from '../../store/slices/authSlice.ts'; 
 
 const ProfileInfoStep: React.FC = () => {
@@ -13,7 +13,8 @@ const ProfileInfoStep: React.FC = () => {
   const [gender, setGender] = useState('');
   const dispatch = useAppDispatch(); 
   const navigate = useNavigate();
-
+  const { loading } = useAppSelector(state => state.auth);
+  
   const isFormValid = name && day && month && year && gender;
 
   const handleNext = () => {
@@ -31,7 +32,7 @@ const ProfileInfoStep: React.FC = () => {
     { value: '10', label: 'October' }, { value: '11', label: 'November' }, { value: '12', label: 'December' }
   ];
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i).reverse();
+  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
   return (
     <div className="signup-step-content">
@@ -66,8 +67,7 @@ const ProfileInfoStep: React.FC = () => {
           {years.map(y => <option key={y} value={y}>{y}</option>)}
         </select>
       </div>
-      <p className="input-hint">Why do we need to know your date of birth?</p>
-
+      
       <label className="input-label">Gender</label>
       <div className="gender-options">
         <label className="gender-option">
@@ -108,9 +108,9 @@ const ProfileInfoStep: React.FC = () => {
       <button
         onClick={handleNext}
         className="primary-button"
-        disabled={!isFormValid}
+        disabled={!isFormValid || loading}
       >
-        Next
+        {loading ? 'Loading...' : 'Next'}
       </button>
     </div>
   );

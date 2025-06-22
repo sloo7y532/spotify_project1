@@ -2,8 +2,15 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface AuthUser {
+  id: string;
+  email: string | null;
+  token: string | null;
+  // displayName?: string | null; 
+}
+
 interface AuthState {
-  user: { id: string; email: string | null; token: string | null } | null;
+  user: AuthUser | null;
   loading: boolean;
   error: string | null;
   signupEmail: string;
@@ -45,7 +52,8 @@ const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    signupSuccess(state, action: PayloadAction<{ id: string; email: string | null; token: string | null }>) {
+
+    signupSuccess(state, action: PayloadAction<AuthUser>) {
       state.loading = false;
       state.user = action.payload;
       state.error = null;
@@ -79,18 +87,19 @@ const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    loginSuccess(state, action: PayloadAction<{ id: string; email: string | null; token: string | null }>) {
+
+    loginSuccess(state, action: PayloadAction<AuthUser>) {
       state.loading = false;
       state.user = action.payload;
       state.error = null;
-      state.loginIdentifier = ''; 
+      state.loginIdentifier = '';
     },
     loginFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
       state.user = null;
     },
-    logout(state) { 
+    logout(state) {
       state.user = null;
       state.error = null;
       state.loading = false;
@@ -108,7 +117,7 @@ const authSlice = createSlice({
     setLoginIdentifier(state, action: PayloadAction<string>) {
       state.loginIdentifier = action.payload;
     },
-    clearLoginData(state) { 
+    clearLoginData(state) {
       state.loginIdentifier = '';
     }
   },
@@ -125,7 +134,7 @@ export const {
   loginStart,
   loginSuccess,
   loginFailure,
-  logout, 
+  logout,
   clearError,
   setError,
   setLoginIdentifier,

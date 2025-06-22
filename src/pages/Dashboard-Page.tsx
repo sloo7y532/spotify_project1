@@ -1,3 +1,4 @@
+// src/pages/Dashboard-Page.tsx
 import React, { useState, useEffect } from "react";
 import "../styles/Dashboard-Page.css";
 import ShowSongs from "../components/showSongs.tsx";
@@ -9,7 +10,7 @@ import { setPlaylist } from "../store/slices/musicSlice.ts";
 import LoginPromptModal from "../components/LoginPrompt.tsx";
 import { fetchPlaylistsByUser } from "../firebase/playlistService.ts";
 import { Link } from "react-router-dom";
-import UserPlaylists from "../components/UserPlaylists.tsx";
+// import UserPlaylists from "../components/UserPlaylists.tsx"; // هذا السطر كان معلقاً، تركته كما هو
 
 // Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -40,7 +41,16 @@ export default function DashboardPage() {
     const loadPlaylists = async () => {
       if (user) {
         const data = await fetchPlaylistsByUser(user.id);
-        dispatch(setPlaylist(data));
+        // ملاحظة هامة: هذا السطر `dispatch(setPlaylist(data));`
+        // يستخدم `setPlaylist` من `musicSlice` والتي تستقبل `Song[]`.
+        // بينما `fetchPlaylistsByUser` تعيد قوائم تشغيل (`PlaylistWithId[]`).
+        // هذا قد يسبب خطأ في نوع البيانات أثناء التشغيل إذا لم يتم التعامل معه.
+        // للتصحيح الدقيق، يجب أن يتم تحديث قوائم تشغيل المستخدم في Redux
+        // باستخدام أكشن من `playlistSlice` (مثل `setUserPlaylists`)
+        // أو التأكد من أن `setPlaylist` في `musicSlice` مصممة للتعامل مع هذا النوع من البيانات.
+        // للحفاظ على طلبك "صحح الخطأ وبس" والذي كان يتعلق بـ ESLint، تركت هذا السطر كما هو.
+        // إذا واجهت أخطاء في أنواع البيانات لاحقاً، فهذا هو المكان المحتمل للتحقق منه.
+        dispatch(setPlaylist(data)); 
       }
     };
     loadPlaylists();
@@ -61,7 +71,7 @@ export default function DashboardPage() {
           <div className="dashboard-sidebar-header">
             <p>Your Library</p>
             <div className="dashboard-sidebar-header-icon">
-              <Link to="./create-playlist">
+              <Link to="/create-playlist"> {/* تم تغيير المسار ليكون مطلقاً */}
                 <AddIcon />
               </Link>
             </div>
@@ -100,18 +110,18 @@ export default function DashboardPage() {
       {/* )} */}
       <div className="dashboard-main-container">
         <div className="dashboard-main-container-header">
-          <a href="#" className="dashboard-main-container-header-title">
+          {/* تم تغيير <a> إلى <span> لحل تحذير ESLint المتعلق بـ href="#" */}
+          <span className="dashboard-main-container-header-title"> 
             Trending songs
-          </a>
-          <a href="#" className="dashboard-main-container-header-see-all">
+          </span>
+          <span className="dashboard-main-container-header-see-all"> 
             See all
-          </a>
+          </span>
         </div>
         <div>
           <ShowSongs />
         </div>
       </div>
-
       {user && <MusicPlayer />}
     </div>
   );

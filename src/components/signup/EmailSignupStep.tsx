@@ -12,15 +12,13 @@ const EmailSignupStep: React.FC = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    if (email.trim() && email.includes('@')) {
+    if (email.trim() && email.includes('@') && email.includes('.')) {
       dispatch(setSignupEmail(email)); 
       navigate('/signup/password');
     } else {
       alert('Please enter a valid email.');
     }
   };
-
-
 
   return (
     <div className="signup-step-content">

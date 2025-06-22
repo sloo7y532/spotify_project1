@@ -3,12 +3,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useAppDispatch } from '../../store/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 import { setSignupPassword } from '../../store/slices/authSlice.ts'; 
 
 const PasswordStep: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { loading } = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch(); 
   const navigate = useNavigate();
 
@@ -19,7 +20,7 @@ const PasswordStep: React.FC = () => {
   const isFormValid = hasMinLength && hasChar && hasNumberOrSpecial;
 
   const handleNext = () => {
-    if (isFormValid && password.length >= 10 && hasChar && hasNumberOrSpecial) {
+    if (isFormValid) {
       dispatch(setSignupPassword(password)); 
       navigate('/signup/profile');
     }
@@ -39,6 +40,7 @@ const PasswordStep: React.FC = () => {
           id="password"
           type={showPassword ? 'text' : 'password'}
           className="input-field"
+          placeholder="Enter password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -68,9 +70,9 @@ const PasswordStep: React.FC = () => {
       <button
         onClick={handleNext}
         className="primary-button"
-        disabled={!isFormValid}
+        disabled={!isFormValid || loading}
       >
-        Next
+        {loading ? 'Loading...' : 'Next'}
       </button>
     </div>
   );
