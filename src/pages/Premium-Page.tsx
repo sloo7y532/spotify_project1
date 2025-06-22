@@ -5,8 +5,6 @@ import { selectPlan } from "../store/slices/premiumSlice.ts";
 import { RootState } from "../store";
 <<<<<<< HEAD
 import { useState } from "react";
-=======
->>>>>>> ad65bf294454bc187692d4c00cdba9d94d14fbcd
 import "../styles/Premium-Page.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Accordion from "react-bootstrap/Accordion";
