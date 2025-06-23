@@ -612,7 +612,6 @@ const CreatePlaylistPage: React.FC = () => {
   const [songs, setSongs] = useState<Song[]>([]);
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  
   useEffect(() => {
     fetch("https://spotify-project-123-default-rtdb.firebaseio.com/songs.json")
       .then((response) => response.json())
