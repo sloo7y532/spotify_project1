@@ -1,0 +1,29 @@
+.footer-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #1db954;
+  text-decoration: underline;
+}
+
+.custom-footer ul li {
+  margin-bottom: 8px;
+}
+
+.custom-footer h6 {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.custom-footer i:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+
+footer {
+  margin-top: 60px;
+}

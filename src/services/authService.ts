@@ -19,9 +19,12 @@ export const loginUser = async (email: string, password: string, dispatch: AppDi
     const user = userCredential.user;
     const token = await user.getIdToken();
     const userPayload = { id: user.uid, email: user.email, token };
+
+
     dispatch(loginSuccess(userPayload));
     localStorage.setItem('user', JSON.stringify(userPayload));
     return user;
+    
   } catch (error: any) {
     let errorMessage = "An error occurred while logging in. Please try again.";
     if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {

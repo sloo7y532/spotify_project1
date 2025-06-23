@@ -65,6 +65,19 @@ body {
     color: #fff;
     font-size: 16px;
     box-sizing: border-box;
+    text-align: left;
+}
+
+.input-field-date {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    box-sizing: border-box;
     text-align: right;
 }
 
@@ -78,6 +91,7 @@ body {
     color: #a7a7a7;
     margin-top: -15px; /* Bring it closer to input field */
     margin-bottom: 20px;
+    text-align: left;
 }
 
 .primary-button {
@@ -496,3 +510,4 @@ body {
         font-size: 28px;
     }
 }
+

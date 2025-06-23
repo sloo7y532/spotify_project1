@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import "./styles/signup.css"; 
 import "bootstrap/dist/css/bootstrap.min.css"; 
-
+import "./i18n.ts";
 import App from "./App.tsx";
 import { store } from "./store/index.ts";
 
