@@ -1,6 +1,10 @@
-import React from 'react';
+// src/components/auth/SignupFlow.tsx
+
+import React, { useEffect } from 'react'; // تم إضافة useEffect
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks.ts'; 
+import { useAppSelector, useAppDispatch } from '../../store/hooks.ts'; // تم إضافة useAppDispatch
+import { clearError } from '../../store/slices/authSlice.ts'; // تم إضافة clearError
+import { useTranslation } from 'react-i18next'; // تم إضافة هذا الاستيراد
 
 import EmailSignupStep from './EmailSignupStep.tsx';
 import PasswordStep from './PasswordStep.tsx';
@@ -11,13 +15,25 @@ import spotifyLogo from '../../assets/spotify-icon-green.png';
 const SignupFlow: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { loading, error, user } = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch(); // تم إضافة dispatch
+  const { loading, user } = useAppSelector(state => state.auth);
+  const { t } = useTranslation(); // تم تعريف دالة الترجمة هنا
 
   React.useEffect(() => {
     if (user) {
       navigate('/dashboard', { replace: true });
     }
   }, [user, navigate]);
+
+  // إضافة useEffect لمسح الأخطاء عند تحميل المكون
+  useEffect(() => {
+    dispatch(clearError());
+    // يمكنك إضافة تنظيف إضافي هنا إذا لزم الأمر
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch, location.pathname]); // مسح الأخطاء عند تغيير المسار أيضًا
+
 
   let currentStepIndex = 0;
   if (location.pathname.includes('/signup/password')) {
@@ -30,7 +46,7 @@ const SignupFlow: React.FC = () => {
 
   return (
     <div className="signup-flow-container">
-      <img src={spotifyLogo} alt="Spotify Logo" className="spotify-logo" />
+      <img src={spotifyLogo} alt={t('Spotify Logo')} className="spotify-logo" /> {/* تم تعريب alt text */}
 
       {currentStepIndex > 0 && currentStepIndex <= 3 && (
         <div className="progress-bar">
@@ -38,9 +54,8 @@ const SignupFlow: React.FC = () => {
         </div>
       )}
 
-      {loading && <p className="loading-message">...Loading</p>}
-      {error && <p className="error-message">{error}</p>}
-
+      {loading && <p className="loading-message">{t('...Loading')}</p>} {/* تم تعريب نص التحميل */}
+      
       <Routes>
         <Route index element={<EmailSignupStep />} />
         <Route path="password" element={<PasswordStep />} />
