@@ -121,8 +121,7 @@ const CreatePlaylistPage: React.FC = () => {
       ownerEmail: email || "",
       songs: selectedSongs,
     };
-    console.log("Setting currentEditingPlaylist:", playlistData);
-    console.log("Current playlist ID:", currentPlaylistId);
+
     setCurrentEditingPlaylist(playlistData);
   }, [
     playlistName,
