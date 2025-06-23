@@ -1,513 +1,316 @@
-import React, { useState, useEffect } from 'react';
-import { X, Music, Plus, Upload } from 'lucide-react';
-import '.././styles/EditPlaylistModal.css'
+import React, { useState, useEffect } from "react";
+import { X, Music, Upload } from "lucide-react";
+import { useAppDispatch } from "../store/hooks.ts";
+import {
+  updatePlaylistInFirebase,
+  fetchPlaylistById,
+  addPlaylistToFirebase,
+} from "../firebase/playlistService.ts";
+import {
+  setCurrentPlaylist,
+  updatePlaylist as updatePlaylistInStore,
+  Playlist,
+} from "../store/slices/playlistSlice.ts";
+import { Song } from "../store/slices/musicSlice.ts";
+import "../styles/EditPlaylistModal.css";
+import { useToast } from "../context/ToastContext.tsx";
 
-// Firebase types and mock functions (replace with actual Firebase imports)
-interface Playlist {
-  id: string;
+export interface PlaylistToEdit {
+  id?: string;
   name: string;
-  description: string;
-  imageUrl?: string;
-  isPublic: boolean;
-  createdAt: Date;
+  description?: string;
+  coverUrl?: string;
+  userId: string;
+  ownerEmail: string;
+  songs?: Song[];
+  createdAt?: string;
 }
 
-// Mock Firebase functions - replace with actual Firebase implementation
-const mockFirebaseOperations = {
-  savePlaylist: async (playlist: Omit<Playlist, 'id' | 'createdAt'>): Promise<string> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return Math.random().toString(36).substr(2, 9);
-  },
-  
-  updatePlaylist: async (id: string, playlist: Partial<Playlist>): Promise<void> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  },
-  
-  uploadImage: async (file: File): Promise<string> => {
-    // Simulate image upload
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    return URL.createObjectURL(file);
-  }
-};
+interface EditPlaylistModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  currentPlaylist: PlaylistToEdit | null;
+  onSaveSuccess: (updatedPlaylist: PlaylistToEdit) => void;
+}
 
-const PlaylistEditor: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
+const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({
+  isOpen,
+  onClose,
+  currentPlaylist,
+  onSaveSuccess,
+}) => {
+  const dispatch = useAppDispatch();
+  const { showToast } = useToast(); // <-- نستخدم الـ toast هنا
   const [isLoading, setIsLoading] = useState(false);
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  
-  // Form state
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    imageUrl: '',
-    isPublic: true
+    name: "",
+    description: "",
+    coverUrl: "",
   });
-  
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [currentPlaylistId, setCurrentPlaylistId] = useState<string | null>(null);
 
-  // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    if (currentPlaylist) {
+      setFormData({
+        name: currentPlaylist.name,
+        description: currentPlaylist.description || "",
+        coverUrl: currentPlaylist.coverUrl || "",
+      });
+    } else {
+      setFormData({ name: "", description: "", coverUrl: "" });
+    }
+  }, [currentPlaylist]);
+
+  if (!isOpen) {
+    return null;
+  }
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  // Handle image selection
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      // Create preview URL
-      const previewUrl = URL.createObjectURL(file);
-      setFormData(prev => ({
-        ...prev,
-        imageUrl: previewUrl
-      }));
-    }
-  };
-
-  // Open modal for creating new playlist
-  const openCreateModal = () => {
-    setFormData({
-      name: '',
-      description: '',
-      imageUrl: '',
-      isPublic: true
-    });
-    setSelectedImage(null);
-    setIsEditMode(false);
-    setCurrentPlaylistId(null);
-    setIsModalOpen(true);
-  };
-
-  // Open modal for editing existing playlist
-  const openEditModal = (playlist: Playlist) => {
-    setFormData({
-      name: playlist.name,
-      description: playlist.description,
-      imageUrl: playlist.imageUrl || '',
-      isPublic: playlist.isPublic
-    });
-    setSelectedImage(null);
-    setIsEditMode(true);
-    setCurrentPlaylistId(playlist.id);
-    setIsModalOpen(true);
-  };
-
-  // Close modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setFormData({
-      name: '',
-      description: '',
-      imageUrl: '',
-      isPublic: true
-    });
-    setSelectedImage(null);
-    setCurrentPlaylistId(null);
-  };
-
-  // Save playlist
   const handleSave = async () => {
+    if (!currentPlaylist || !currentPlaylist.userId) {
+      showToast("Error: User ID is missing or no playlist to edit.", "error");
+      return;
+    }
     if (!formData.name.trim()) {
-      alert('Please enter a playlist name');
+      showToast("Please enter a playlist name.", "error");
       return;
     }
 
     setIsLoading(true);
-    
-    try {
-      let imageUrl = formData.imageUrl;
-      
-      // Upload image if selected
-      if (selectedImage) {
-        imageUrl = await mockFirebaseOperations.uploadImage(selectedImage);
-      }
 
-      const playlistData = {
+    try {
+      let finalCoverUrl =
+        formData.coverUrl || "https://example.com/default-playlist-cover.png";
+
+      const updatedData: Partial<Playlist> = {
         name: formData.name,
         description: formData.description,
-        imageUrl,
-        isPublic: formData.isPublic
+        coverUrl: finalCoverUrl,
       };
 
-      if (isEditMode && currentPlaylistId) {
-        // Update existing playlist
-        await mockFirebaseOperations.updatePlaylist(currentPlaylistId, playlistData);
-        setPlaylists(prev => prev.map(p => 
-          p.id === currentPlaylistId 
-            ? { ...p, ...playlistData }
-            : p
-        ));
+      // Save playlist details to Firestore
+      if (currentPlaylist.id && currentPlaylist.id !== "new") {
+        try {
+          // First check if the playlist exists in Firestore
+          const existingPlaylist = await fetchPlaylistById(currentPlaylist.id);
+
+          if (existingPlaylist) {
+            // Update existing playlist in Firestore
+            await updatePlaylistInFirebase(currentPlaylist.id, updatedData);
+          } else {
+            // Playlist doesn't exist in Firestore, create it
+            const newPlaylistData = {
+              name: formData.name,
+              description: formData.description,
+              coverUrl: finalCoverUrl,
+              userId: currentPlaylist.userId,
+              ownerEmail: currentPlaylist.ownerEmail,
+              songs: currentPlaylist.songs || [],
+            };
+
+            const createdPlaylist = await addPlaylistToFirebase(
+              newPlaylistData
+            );
+
+            // Update the currentPlaylist ID
+            currentPlaylist.id = createdPlaylist.id;
+          }
+
+          const updatedPlaylist: PlaylistToEdit = {
+            ...currentPlaylist,
+            name: formData.name,
+            description: formData.description,
+            coverUrl: finalCoverUrl,
+          };
+
+          // Update Redux store
+          const playlistForRedux: Playlist = {
+            id: currentPlaylist.id,
+            name: formData.name,
+            description: formData.description || undefined,
+            coverUrl: finalCoverUrl,
+            userId: currentPlaylist.userId,
+            ownerEmail: currentPlaylist.ownerEmail,
+            songs: currentPlaylist.songs || [],
+            createdAt: currentPlaylist.createdAt || new Date().toISOString(),
+          };
+
+          dispatch(setCurrentPlaylist(playlistForRedux));
+          dispatch(updatePlaylistInStore(playlistForRedux));
+
+          // Notify parent component
+          onSaveSuccess(updatedPlaylist);
+          showToast("Playlist saved to Firestore successfully!", "success");
+        } catch (updateError) {
+          console.error("❌ Error during Firestore operation:", updateError);
+          showToast(
+            "Failed to save playlist to Firestore. Please try again.",
+            "error"
+          );
+        }
       } else {
-        // Create new playlist
-        const newId = await mockFirebaseOperations.savePlaylist(playlistData);
-        const newPlaylist: Playlist = {
-          id: newId,
-          ...playlistData,
-          createdAt: new Date()
-        };
-        setPlaylists(prev => [...prev, newPlaylist]);
+        try {
+          // Create a new playlist
+          const newPlaylistData = {
+            name: formData.name,
+            description: formData.description,
+            coverUrl: finalCoverUrl,
+            userId: currentPlaylist.userId,
+            ownerEmail: currentPlaylist.ownerEmail,
+            songs: currentPlaylist.songs || [],
+          };
+
+          const createdPlaylist = await addPlaylistToFirebase(newPlaylistData);
+
+          const updatedPlaylist: PlaylistToEdit = {
+            ...currentPlaylist,
+            id: createdPlaylist.id,
+            name: formData.name,
+            description: formData.description,
+            coverUrl: finalCoverUrl,
+          };
+
+          // Update Redux store
+          const playlistForRedux: Playlist = {
+            id: createdPlaylist.id,
+            name: formData.name,
+            description: formData.description || undefined,
+            coverUrl: finalCoverUrl,
+            userId: currentPlaylist.userId,
+            ownerEmail: currentPlaylist.ownerEmail,
+            songs: currentPlaylist.songs || [],
+            createdAt: createdPlaylist.createdAt || new Date().toISOString(),
+          };
+
+          dispatch(setCurrentPlaylist(playlistForRedux));
+
+          // Notify parent component with the new playlist
+          onSaveSuccess(updatedPlaylist);
+          showToast(
+            `Playlist "${formData.name}" created successfully!`,
+            "success"
+          );
+        } catch (createError) {
+          console.error("❌ Error creating new playlist:", createError);
+          showToast("Failed to create playlist. Please try again.", "error");
+        }
       }
 
-      closeModal();
+      onClose();
     } catch (error) {
-      console.error('Error saving playlist:', error);
-      alert('Failed to save playlist. Please try again.');
+      console.error("❌ Error saving playlist:", error);
+      showToast("Failed to save playlist. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#121212',
-      color: '#ffffff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-    }}>
-      {/* Header */}
-      <div style={{
-        padding: '20px',
-        borderBottom: '1px solid #282828'
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          <h1 style={{
-            fontSize: '32px',
-            fontWeight: 'bold',
-            margin: 0
-          }}>Your Library</h1>
-          
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2 className="modal-title">Edit details</h2>
+          <button onClick={onClose} className="modal-close-button">
+            <X size={24} />
+          </button>
+        </div>
+
+        <div className="modal-body">
+          <div className="image-upload-section">
+            <div
+              className="image-preview"
+              onClick={() => {
+                console.log(
+                  "Image selection is disabled as Firebase Storage is not used."
+                );
+                showToast(
+                  "Image selection functionality is disabled. You can manually enter the URL if provided.",
+                  "info"
+                );
+              }}
+              style={{
+                backgroundImage: formData.coverUrl
+                  ? `url(${formData.coverUrl})`
+                  : "none",
+              }}
+            >
+              {!formData.coverUrl && <Music size={48} color="#b3b3b3" />}
+              <div className="upload-icon-overlay">
+                <Upload size={16} />
+                <span>Choose photo</span>
+              </div>
+            </div>
+
+            <div className="form-fields">
+              <div className="form-group">
+                <label htmlFor="playlist-name-modal">Name</label>
+                <input
+                  type="text"
+                  id="playlist-name-modal"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="My Playlist #1"
+                  className="input-field"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="playlist-description-modal">Description</label>
+                <textarea
+                  id="playlist-description-modal"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Add an optional description"
+                  rows={4}
+                  className="textarea-field"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="playlist-cover-url-modal">
+                  Cover Image URL
+                </label>
+                <input
+                  type="text"
+                  id="playlist-cover-url-modal"
+                  name="coverUrl"
+                  value={formData.coverUrl}
+                  onChange={handleInputChange}
+                  placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                  className="input-field"
+                />
+              </div>
+            </div>
+          </div>
+
+          <p className="privacy-notice">
+            By proceeding, you agree to give Spotify access to the image you
+            choose to upload. Please make sure you have the right to upload the
+            image.
+          </p>
+        </div>
+
+        <div className="modal-footer">
           <button
-            onClick={openCreateModal}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: '#1db954',
-              color: 'white',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '8px 16px',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#1ed760';
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#1db954';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
+            onClick={handleSave}
+            disabled={isLoading}
+            className={`save-button ${isLoading ? "disabled" : ""}`}
           >
-            <Plus size={16} />
-            Create Playlist
+            {isLoading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
-
-      {/* Playlists Grid */}
-      <div style={{
-        padding: '20px',
-        maxWidth: '1200px',
-        margin: '0 auto'
-      }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-          gap: '20px'
-        }}>
-          {playlists.map((playlist) => (
-            <div
-              key={playlist.id}
-              onClick={() => openEditModal(playlist)}
-              style={{
-                backgroundColor: '#181818',
-                borderRadius: '8px',
-                padding: '16px',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = '#282828';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = '#181818';
-              }}
-            >
-              <div style={{
-                width: '100%',
-                aspectRatio: '1',
-                backgroundColor: '#333',
-                borderRadius: '4px',
-                marginBottom: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundImage: playlist.imageUrl ? `url(${playlist.imageUrl})` : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}>
-                {!playlist.imageUrl && <Music size={48} color="#b3b3b3" />}
-              </div>
-              <h3 style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                margin: '0 0 4px 0',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}>
-                {playlist.name}
-              </h3>
-              <p style={{
-                fontSize: '14px',
-                color: '#b3b3b3',
-                margin: 0,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}>
-                {playlist.isPublic ? 'Public Playlist' : 'Private Playlist'}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: '#282828',
-            borderRadius: '8px',
-            padding: '24px',
-            width: '90%',
-            maxWidth: '500px',
-            position: 'relative'
-          }}>
-            {/* Modal Header */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '24px'
-            }}>
-              <h2 style={{
-                fontSize: '24px',
-                fontWeight: 'bold',
-                margin: 0,
-                color: '#ffffff'
-              }}>
-                {isEditMode ? 'Edit details' : 'Create playlist'}
-              </h2>
-              <button
-                onClick={closeModal}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#b3b3b3',
-                  cursor: 'pointer',
-                  padding: '4px'
-                }}
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Image Upload Section */}
-            <div style={{
-              display: 'flex',
-              gap: '16px',
-              marginBottom: '24px'
-            }}>
-              <div style={{
-                width: '180px',
-                height: '180px',
-                backgroundColor: '#333',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundImage: formData.imageUrl ? `url(${formData.imageUrl})` : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                position: 'relative',
-                cursor: 'pointer'
-              }}>
-                {!formData.imageUrl && <Music size={48} color="#b3b3b3" />}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageSelect}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    opacity: 0,
-                    cursor: 'pointer'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  bottom: '8px',
-                  right: '8px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                  borderRadius: '50%',
-                  padding: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Upload size={16} />
-                </div>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                {/* Name Input */}
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{
-                    display: 'block',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    marginBottom: '8px',
-                    color: '#ffffff'
-                  }}>
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="My Playlist #1"
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      backgroundColor: '#3e3e3e',
-                      border: 'none',
-                      borderRadius: '4px',
-                      color: '#ffffff',
-                      fontSize: '14px',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-
-                {/* Description Input */}
-                <div>
-                  <label style={{
-                    display: 'block',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    marginBottom: '8px',
-                    color: '#ffffff'
-                  }}>
-                    Description
-                  </label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder="Add an optional description"
-                    rows={4}
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      backgroundColor: '#3e3e3e',
-                      border: 'none',
-                      borderRadius: '4px',
-                      color: '#ffffff',
-                      fontSize: '14px',
-                      resize: 'vertical',
-                      minHeight: '80px',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Privacy Notice */}
-            <p style={{
-              fontSize: '11px',
-              color: '#b3b3b3',
-              marginBottom: '24px',
-              lineHeight: '1.4'
-            }}>
-              By proceeding, you agree to give Spotify access to the image you choose to upload. 
-              Please make sure you have the right to upload the image.
-            </p>
-
-            {/* Save Button */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'flex-end'
-            }}>
-              <button
-                onClick={handleSave}
-                disabled={isLoading}
-                style={{
-                  backgroundColor: '#1db954',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '50px',
-                  padding: '12px 32px',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: isLoading ? 'not-allowed' : 'pointer',
-                  opacity: isLoading ? 0.7 : 1,
-                  transition: 'all 0.2s'
-                }}
-                onMouseOver={(e) => {
-                  if (!isLoading) {
-                    e.currentTarget.style.backgroundColor = '#1ed760';
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (!isLoading) {
-                    e.currentTarget.style.backgroundColor = '#1db954';
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }
-                }}
-              >
-                {isLoading ? 'Saving...' : 'Save'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default PlaylistEditor;
+export default EditPlaylistModal;

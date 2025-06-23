@@ -1,18 +1,21 @@
 // src/components/login/PasswordOrCodeStep.tsx
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-import { clearError } from '../../store/slices/authSlice.ts';
-import { loginUser } from '../../services/authService.ts'; 
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../store/hooks.ts";
+import { clearError } from "../../store/slices/authSlice.ts";
+import { loginUser } from "../../services/authService.ts";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Spinner from "../Spinner.tsx";
 
 const PasswordOrCodeStep: React.FC = () => {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { loading, error, loginIdentifier } = useAppSelector(state => state.auth);
+  const { loading, error, loginIdentifier } = useAppSelector(
+    (state) => state.auth
+  );
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +26,8 @@ const PasswordOrCodeStep: React.FC = () => {
     }
 
     try {
-      await loginUser(loginIdentifier, password, dispatch); 
-      navigate('/', { replace: true }); 
+      await loginUser(loginIdentifier, password, dispatch);
+      navigate("/", { replace: true });
     } catch (err) {
       console.error("Failed to login:", err);
     }
@@ -33,16 +36,20 @@ const PasswordOrCodeStep: React.FC = () => {
   return (
     <div className="login-step-content">
       <div className="signup-step-header">
-        <span onClick={() => navigate('/login')} className="back-arrow">&#8249;</span>
+        <span onClick={() => navigate("/login")} className="back-arrow">
+          &#8249;
+        </span>
         <h2 className="step-title">
-          <span>Enter your password for</span><br />{loginIdentifier}
+          <span>Enter your password for</span>
+          <br />
+          {loginIdentifier}
         </h2>
       </div>
 
       <form onSubmit={handleLogin}>
         <div className="password-input-wrapper">
           <input
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             className="input-field"
             value={password}
@@ -58,7 +65,7 @@ const PasswordOrCodeStep: React.FC = () => {
         </div>
 
         {error && <p className="error-message">{error}</p>}
-        {loading && <p className="loading-message">...Loading</p>}
+        {loading && <Spinner />}
 
         <button
           type="submit"

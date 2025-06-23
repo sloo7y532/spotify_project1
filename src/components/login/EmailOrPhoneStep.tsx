@@ -1,36 +1,40 @@
-// src/components/login/EmailOrPhoneStep.tsx
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-import { setLoginIdentifier, clearError, setError } from '../../store/slices/authSlice.ts';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../store/hooks.ts";
+import {
+  setLoginIdentifier,
+  clearError,
+  setError,
+} from "../../store/slices/authSlice.ts";
+import Spinner from "../Spinner.tsx";
 
 const EmailOrPhoneStep: React.FC = () => {
-  const [identifier, setIdentifier] = useState(''); 
+  const [identifier, setIdentifier] = useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector(state => state.auth);
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   const handleContinue = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(clearError()); 
+    dispatch(clearError());
 
     if (identifier.trim()) {
-      dispatch(setLoginIdentifier(identifier.trim())); 
-      navigate('password-or-code');
+      dispatch(setLoginIdentifier(identifier.trim()));
+      navigate("password-or-code");
     } else {
       dispatch(setError("Please enter your email or username."));
     }
   };
 
-
   return (
     <div className="login-step-content">
-      <h1 className="login-title">Log in to Spotify
-      </h1>
+      <h1 className="login-title">Log in to Spotify</h1>
 
-        <form onSubmit={handleContinue}>
-          <label htmlFor="identifier" className="input-label">Email or Username</label>
+      <form onSubmit={handleContinue}>
+        <label htmlFor="identifier" className="input-label">
+          Email or Username
+        </label>
         <input
           id="identifier"
           type="text"
@@ -42,7 +46,7 @@ const EmailOrPhoneStep: React.FC = () => {
         />
 
         {error && <p className="error-message">{error}</p>}
-        {loading && <p className="loading-message">...Loading</p>}
+        {loading && <Spinner />}
 
         <button
           type="submit"
@@ -54,7 +58,7 @@ const EmailOrPhoneStep: React.FC = () => {
       </form>
 
       <p className="signup-prompt">
-      Don't have an account ? <a href="/signup">Sign up for Spotify</a>
+        Don't have an account ? <a href="/signup">Sign up for Spotify</a>
       </p>
     </div>
   );

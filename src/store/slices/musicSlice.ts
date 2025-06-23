@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {NewPlaylist} from '../../firebase/playlistService.ts'
+import { NewPlaylist } from "../../firebase/playlistService.ts";
 export interface Song {
   id?: string;
   title?: string;
@@ -9,6 +9,8 @@ export interface Song {
   playlistName?: string;
   userId?: string;
   createdAt?: Date;
+  duration?: number; // duration in seconds
+  dateAdded?: string; // ISO string or formatted date
 }
 // const filteredSongs= songs?.filter((song => song?.title?.includes(searchquery)))
 
@@ -28,7 +30,7 @@ const musicSlice = createSlice({
   name: "music",
   initialState,
   reducers: {
-    setCurrentSong: (state, action: PayloadAction<Song>) => {
+    setCurrentSong: (state, action: PayloadAction<Song | null>) => {
       state.currentSong = action.payload;
     },
     setIsPlaying: (state, action: PayloadAction<boolean>) => {

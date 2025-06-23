@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchPlaylistsByUser } from "../firebase/playlistService.ts";
-import "../styles/UserPlaylist.css"
+import "../styles/UserPlaylist.css";
 
 interface Playlist {
   id: string;
@@ -21,7 +21,14 @@ const UserPlaylists: React.FC<Props> = ({ userId }) => {
     const loadPlaylists = async () => {
       try {
         const data = await fetchPlaylistsByUser(userId);
-        setPlaylists(data as Playlist[]);
+        setPlaylists(
+          data.map((playlist: any) => ({
+            id: playlist.id,
+            name: playlist.name || "",
+            description: playlist.description || "",
+            coverUrl: playlist.coverUrl || "",
+          }))
+        );
       } catch (err) {
         console.error("Failed to load playlists:", err);
       } finally {

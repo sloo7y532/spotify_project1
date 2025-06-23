@@ -38,9 +38,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // ------------------------------------
-    // ----- Signup Actions -----
-    // ------------------------------------
     signupStart(state) {
       state.loading = true;
       state.error = null;
@@ -72,9 +69,6 @@ const authSlice = createSlice({
       state.signupProfile = { name: '', day: '', month: '', year: '', gender: '' };
     },
 
-    // ------------------------------------
-    // ----- Login Actions (Updated for Flow) -----
-    // ------------------------------------
     loginStart(state) {
       state.loading = true;
       state.error = null;

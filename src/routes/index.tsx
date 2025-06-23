@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
@@ -17,6 +17,7 @@ import Navbar from "./Navbar.tsx";
 export default function AppRoutes() {
   const location = useLocation();
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
   const hideNavbarOn = [
     "/login",
     "/signup",
@@ -26,10 +27,12 @@ export default function AppRoutes() {
     "/signup/terms",
   ];
 
-  const shouldHideNavbar = hideNavbarOn.some(path => location.pathname.startsWith(path));
+  const shouldHideNavbar = hideNavbarOn.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       dispatch(loginSuccess(JSON.parse(storedUser)));
     }
@@ -39,10 +42,10 @@ export default function AppRoutes() {
         const token = await user.getIdToken();
         const userPayload = { id: user.uid, email: user.email, token };
         dispatch(loginSuccess(userPayload));
-        localStorage.setItem('user', JSON.stringify(userPayload));
+        localStorage.setItem("user", JSON.stringify(userPayload));
       } else {
         dispatch(logout());
-        localStorage.removeItem('user');
+        localStorage.removeItem("user");
       }
     });
 
@@ -51,14 +54,20 @@ export default function AppRoutes() {
 
   return (
     <>
-      {!shouldHideNavbar && <Navbar />}
+      {!shouldHideNavbar && (
+        <Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      )}
       <Routes>
-        <Route path="/" element={<DashboardPage />} />
+        <Route path="/" element={<DashboardPage searchTerm={searchTerm} />} />
         <Route path="/login/*" element={<LoginFlow />} />
         <Route path="/signup/*" element={<SignupFlow />} />
         <Route path="/premium" element={<PremiumPage />} />
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/create-playlist" element={<CreatePlaylistPage />} />
+        <Route
+          path="/create-playlist/:playlistId"
+          element={<CreatePlaylistPage />}
+        />
         <Route path="/browse-podcasts" element={<BrowsePodcastsPage />} />
       </Routes>
     </>

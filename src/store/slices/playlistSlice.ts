@@ -1,3 +1,5 @@
+// src/store/slices/playlistSlice.ts
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Song } from "./musicSlice";
 
@@ -8,8 +10,8 @@ export interface Playlist {
   coverUrl?: string;
   songs: Song[];
   userId: string;
-  ownerName: string;
-  createdAt?: any;
+  ownerEmail: string;
+  createdAt?: string;
 }
 
 interface PlaylistState {
@@ -30,8 +32,17 @@ const playlistSlice = createSlice({
     clearCurrentPlaylist: (state) => {
       state.currentPlaylist = null;
     },
+    updatePlaylist: (state, action: PayloadAction<Playlist>) => {
+      if (
+        state.currentPlaylist &&
+        state.currentPlaylist.id === action.payload.id
+      ) {
+        state.currentPlaylist = action.payload;
+      }
+    },
   },
 });
 
-export const { setCurrentPlaylist, clearCurrentPlaylist } = playlistSlice.actions;
+export const { setCurrentPlaylist, clearCurrentPlaylist, updatePlaylist } =
+  playlistSlice.actions;
 export default playlistSlice.reducer;
