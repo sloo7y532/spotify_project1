@@ -9,6 +9,9 @@ import {
   getDocs,
   updateDoc, // *** NEW: Import updateDoc for updating documents
   doc,       // *** NEW: Import doc for referencing specific documents
+  getDoc,    // *** NEW: Import getDoc for fetching single document
+  arrayUnion, // *** NEW: Import arrayUnion for adding to arrays
+  arrayRemove, // *** NEW: Import arrayRemove for removing from arrays
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -29,6 +32,8 @@ export interface PlaylistWithId extends NewPlaylist {
     id: string; // لأن Firebase Firestore يضيف ID بعد الإنشاء
 }
 
+// Export PlaylistWithId as Playlist for backward compatibility
+export type Playlist = PlaylistWithId;
 
 export async function addPlaylistToFirebase(data: NewPlaylist): Promise<PlaylistWithId> {
   const docRef = await addDoc(collection(db, "playlists"), {
@@ -87,4 +92,49 @@ export async function fetchPlaylistsByUser(userId: string): Promise<PlaylistWith
     id: doc.id,
     ...(doc.data() as NewPlaylist), // Cast to NewPlaylist, then add ID
   })) as PlaylistWithId[]; // Cast the entire array to PlaylistWithId[]
+}
+
+// *** NEW FUNCTION: Fetch playlist by ID
+export async function fetchPlaylistById(playlistId: string): Promise<PlaylistWithId | null> {
+  try {
+    const playlistRef = doc(db, "playlists", playlistId);
+    const playlistDoc = await getDoc(playlistRef);
+    
+    if (playlistDoc.exists()) {
+      return {
+        id: playlistDoc.id,
+        ...(playlistDoc.data() as NewPlaylist),
+      } as PlaylistWithId;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching playlist by ID:", error);
+    return null;
+  }
+}
+
+// *** NEW FUNCTION: Add song to playlist
+export async function addSongToPlaylist(playlistId: string, song: Song): Promise<void> {
+  try {
+    const playlistRef = doc(db, "playlists", playlistId);
+    await updateDoc(playlistRef, {
+      songs: arrayUnion(song)
+    });
+  } catch (error) {
+    console.error("Error adding song to playlist:", error);
+    throw error;
+  }
+}
+
+// *** NEW FUNCTION: Remove song from playlist
+export async function removeSongFromPlaylist(playlistId: string, song: Song): Promise<void> {
+  try {
+    const playlistRef = doc(db, "playlists", playlistId);
+    await updateDoc(playlistRef, {
+      songs: arrayRemove(song)
+    });
+  } catch (error) {
+    console.error("Error removing song from playlist:", error);
+    throw error;
+  }
 }
