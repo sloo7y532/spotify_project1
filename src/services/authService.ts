@@ -20,33 +20,38 @@ export const loginUser = async (email: string, password: string, dispatch: AppDi
     const token = await user.getIdToken();
     const userPayload = { id: user.uid, email: user.email, token };
 
-
     dispatch(loginSuccess(userPayload));
     localStorage.setItem('user', JSON.stringify(userPayload));
     return user;
-    
+
   } catch (error: any) {
-    let errorMessage = "An error occurred while logging in. Please try again.";
+    let errorKey: string = "An unknown error occurred."; // مفتاح افتراضي للخطأ غير المعروف
     if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-      errorMessage = "The email or password is incorrect.";
+      errorKey = "auth/invalid-credential"; // استخدام مفتاح مخصص لهذه الأخطاء
     } else if (error.code === 'auth/invalid-email') {
-      errorMessage = "The email format is invalid.";
+      errorKey = "auth/invalid-email-format"; // مفتاح للبريد الإلكتروني غير الصالح
     } else if (error.code === 'auth/too-many-requests') {
-      errorMessage = "You have tried to login multiple times. Please wait a moment or reset your password.";
+      errorKey = "auth/too-many-requests"; // مفتاح للطلبات الكثيرة
+    } else {
+        // إذا كان هناك أي رسالة خطأ أخرى مباشرة من Firebase يمكن استخدامها كمفتاح
+        // يفضل توحيد المفاتيح قدر الإمكان
+        errorKey = error.code || "An unknown error occurred.";
     }
-    dispatch(loginFailure(errorMessage));
+    dispatch(loginFailure(errorKey)); // إرسال مفتاح الترجمة بدلاً من النص
     throw error;
   }
 };
 
 export const logoutUser = async (dispatch: AppDispatch) => {
   try {
-    await signOut(auth); 
-    dispatch(logout()); 
+    await signOut(auth);
+    dispatch(logout());
     localStorage.removeItem('user');
     console.log("Logged out successfully!");
   } catch (error: any) {
     console.error("Error logging out:", error.message);
+    // يمكنك هنا إرسال خطأ إلى الـ slice إذا أردت التعامل مع أخطاء تسجيل الخروج
+    // dispatch(setError(t('logout_error_message_key')));
   }
 };
 
@@ -75,13 +80,17 @@ export const registerUser = async (email: string, password: string, dispatch: Ap
 
     return user;
   } catch (error: any) {
-    let errorMessage = "An error occurred while signing up. Please try again.";
+    let errorKey: string = "An unknown error occurred."; // مفتاح افتراضي للخطأ غير المعروف
     if (error.code === 'auth/email-already-in-use') {
-      errorMessage = "The email is already in use.";
+      errorKey = "auth/email-already-in-use"; // مفتاح للبريد المستخدم بالفعل
     } else if (error.code === 'auth/invalid-email') {
-      errorMessage = "The email format is invalid.";
+      errorKey = "auth/invalid-email-format"; // مفتاح للبريد الإلكتروني غير الصالح
+    } else if (error.code === 'auth/weak-password') {
+        errorKey = "auth/weak-password"; // مفتاح لكلمة المرور الضعيفة
+    } else {
+        errorKey = error.code || "An unknown error occurred.";
     }
-    dispatch(signupFailure(errorMessage));
+    dispatch(signupFailure(errorKey)); // إرسال مفتاح الترجمة بدلاً من النص
     throw error;
   }
 };

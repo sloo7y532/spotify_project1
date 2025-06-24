@@ -12,7 +12,7 @@ html, body, #root {
     padding: 0;
     height: 100%;
     width: 100%;
-    text-align: left; /* Default text alignment to left */
+    /* text-align: left; */ /* هذا سيتم التحكم فيه بواسطة 'dir' attribute و 'text-align: start' */
 }
 
 body, #root {
@@ -33,15 +33,16 @@ body {
     min-height: 100vh;
     padding: 20px; /* Inner spacing for mobile */
     overflow-y: auto; /* Allow scrolling if content is long */
+    /* text-align: left; */ /* هذا سيتم التحكم فيه بواسطة 'dir' attribute و 'text-align: start' */
 }
 
 .spotify-logo {
     width: 70px;
     height: auto;
-    margin-bottom: 40px;
+    margin-block-end: 40px; /* كان margin-bottom */
     display: block; /* Ensure it takes full line */
-    margin-left: auto; /* Center the logo */
-    margin-right: auto; /* Center the logo */
+    margin-inline-start: auto; /* كان margin-left: auto; */
+    margin-inline-end: auto;   /* كان margin-right: auto; */
 }
 
 /* ================================ */
@@ -51,34 +52,35 @@ body {
     display: block; /* Ensure it takes full line */
     font-size: 14px;
     color: #a7a7a7;
-    margin-bottom: 8px;
-    text-align: left;
+    margin-block-end: 8px; /* كان margin-bottom */
+    text-align: start; /* كان text-align: left; */
 }
 
 .input-field {
     width: 100%;
     padding: 12px;
-    margin-bottom: 20px;
+    margin-block-end: 20px; /* كان margin-bottom */
     background-color: #333;
     border: 1px solid #555;
     border-radius: 4px;
     color: #fff;
     font-size: 16px;
     box-sizing: border-box;
-    text-align: left;
+    text-align: start; /* كان text-align: left; */
+    /* direction: rtl; */ /* إزالة هذا، سيتم التحكم به من الـ body dir */
 }
 
 .input-field-date {
     width: 100%;
     padding: 12px;
-    margin-bottom: 20px;
+    margin-block-end: 20px; /* كان margin-bottom */
     background-color: #333;
     border: 1px solid #555;
     border-radius: 4px;
     color: #fff;
     font-size: 16px;
     box-sizing: border-box;
-    text-align: right;
+    text-align: end; /* كان text-align: right; */
 }
 
 .input-field:focus {
@@ -89,9 +91,9 @@ body {
 .input-hint {
     font-size: 12px;
     color: #a7a7a7;
-    margin-top: -15px; /* Bring it closer to input field */
-    margin-bottom: 20px;
-    text-align: left;
+    margin-block-start: -15px; /* كان margin-top */
+    margin-block-end: 20px;   /* كان margin-bottom */
+    text-align: start; /* كان text-align: left; */
 }
 
 .primary-button {
@@ -105,7 +107,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 20px; /* Space from previous elements */
+    margin-block-start: 20px; /* كان margin-top */
 }
 
 .primary-button:hover {
@@ -122,7 +124,7 @@ body {
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 30px 0;
+    margin: 30px 0; /* هذا لا يحتاج لتغيير لأنه symmetrical */
     color: #a7a7a7;
     font-size: 14px;
 }
@@ -135,17 +137,17 @@ body {
 }
 
 .separator:not(:empty)::before {
-    margin-right: .25em; /* Space before text */
+    margin-inline-end: .25em; /* كان margin-right */
 }
 
 .separator:not(:empty)::after {
-    margin-left: .25em; /* Space after text */
+    margin-inline-start: .25em; /* كان margin-left */
 }
 
 .login-link {
     color: #a7a7a7;
     font-size: 14px;
-    margin-top: 30px;
+    margin-block-start: 30px; /* كان margin-top */
     text-align: center; /* Center the link at bottom */
 }
 
@@ -157,16 +159,16 @@ body {
 .error-message {
     color: #ff4d4f; /* Red color for error */
     font-size: 14px;
-    margin-top: -10px;
-    margin-bottom: 10px;
-    text-align: left;
+    margin-block-start: -10px; /* كان margin-top */
+    margin-block-end: 10px;   /* كان margin-bottom */
+    text-align: start; /* كان text-align: left; */
 }
 
 .loading-message {
     color: #1DB954;
     font-size: 16px;
     text-align: center;
-    margin-top: 10px;
+    margin-block-start: 10px; /* كان margin-top */
 }
 
 /* ================================ */
@@ -174,9 +176,9 @@ body {
 /* ================================ */
 .signup-flow-container {
     background-color: #121212;
-    padding: 40px;
+    padding: 40px; /* Padding remains symmetrical unless specified */
     border-radius: 8px;
-    text-align: left;
+    text-align: start; /* كان text-align: left; */
     max-width: 450px;
     width: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -186,8 +188,8 @@ body {
 .signup-title {
     font-size: 32px;
     font-weight: bold;
-    margin-bottom: 30px;
-    text-align: center; 
+    margin-block-end: 30px; /* كان margin-bottom */
+    text-align: center;
 }
 
 .progress-bar {
@@ -195,7 +197,7 @@ body {
     height: 4px;
     background-color: #555;
     border-radius: 2px;
-    margin-bottom: 20px;
+    margin-block-end: 20px; /* كان margin-bottom */
 }
 
 .progress-bar-fill {
@@ -208,15 +210,21 @@ body {
 .signup-step-header {
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    margin-block-end: 30px; /* كان margin-bottom */
 }
 
 .back-arrow {
     font-size: 30px;
     color: #a7a7a7;
     cursor: pointer;
-    margin-right: 15px; /* Space for arrow in LTR */
+    margin-inline-end: 15px; /* كان margin-right */
     font-weight: bold;
+    /* لإدارة اتجاه السهم نفسه، قد تحتاج لـ flipX في RTL إذا كان السهم ثابت */
+    /* مثال:
+    [dir="rtl"] .back-arrow {
+        transform: scaleX(-1);
+    }
+    */
 }
 
 .step-title {
@@ -233,32 +241,42 @@ body {
 }
 
 .password-input-wrapper .input-field {
-    padding-right: 40px; /* Space for icon on right in LTR */
-    padding-left: 12px;
+    padding-inline-end: 40px; /* كان padding-right */
+    padding-inline-start: 12px; /* كان padding-left */
 }
 
 .password-toggle-icon {
     position: absolute;
-    right: 15px; /* Position on right in LTR */
-    top: 25px;
+    inset-inline-end: 15px; /* كان right: 15px; يتكيف مع الاتجاه */
+    top: 35%; /* كان top: 25px; - تغييرته لـ 50% ليكون في المنتصف ثم translateY */
     transform: translateY(-50%);
     cursor: pointer;
     color: #a7a7a7;
 }
 
+/* مثال على قلب الأيقونات */
+[dir="rtl"] .back-arrow,
+[dir="rtl"] .password-toggle-icon {
+    transform: scaleX(-1); /* تقلب الأيقونة أفقياً */
+}
+
+[dir="rtl"] .password-toggle-icon {
+    transform: translateY(-50%) scaleX(-1);
+}
+
 .password-requirements {
     list-style: none;
     padding: 0;
-    margin-top: 10px;
+    margin-block-start: 10px; /* كان margin-top */
 }
 
 .password-requirements li {
     font-size: 14px;
     color: #a7a7a7;
-    margin-bottom: 8px;
+    margin-block-end: 8px; /* كان margin-bottom */
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Align items to left in LTR */
+    justify-content: flex-start; /* هذه الخاصية لا تتغير، لكنها تتبع الاتجاه العام للعنصر */
 }
 
 .password-requirements li.valid {
@@ -266,7 +284,7 @@ body {
 }
 
 .password-requirements li .check-icon {
-    margin-left: 8px; /* Space between text and icon in LTR */
+    margin-inline-start: 8px; /* كان margin-left */
     font-weight: bold;
 }
 
@@ -275,8 +293,8 @@ body {
 /* ================================ */
 .date-pickers {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 10px; /* Gap property is direction-agnostic */
+    margin-block-end: 20px; /* كان margin-bottom */
 }
 
 .date-pickers select {
@@ -292,15 +310,27 @@ body {
     appearance: none;
     background-image: url('data:image/svg+xml;utf8,<svg fill="%23fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
     background-repeat: no-repeat;
-    background-position: left 10px top 50%; /* Custom arrow on left in LTR */
+    /* ضبط background-position ليتكيف مع الاتجاه */
+    background-position: var(--select-arrow-position, left 10px) top 50%;
     background-size: 20px auto;
 }
+
+/* إضافة متغير CSS لضبط موقع السهم في Select بناءً على الاتجاه */
+[dir="rtl"] .date-pickers select {
+  --select-arrow-position: right 10px;
+  text-align-last: center; /* لجعل النص يبدأ من اليمين في RTL */
+}
+[dir="ltr"] .date-pickers select {
+  --select-arrow-position: left 10px;
+  text-align-last: center; /* لجعل النص يبدأ من اليسار في LTR */
+}
+
 
 .gender-options {
     display: flex;
     justify-content: space-around; /* Even distribution */
     gap: 20px; /* Ensure space even if sizes vary */
-    margin-bottom: 20px;
+    margin-block-end: 20px; /* كان margin-bottom */
     flex-wrap: wrap; /* Allow wrapping elements on small screens */
 }
 
@@ -320,7 +350,7 @@ body {
     height: 20px;
     border: 2px solid #555;
     border-radius: 50%;
-    margin-right: 8px; /* Space between text and circle in LTR */
+    margin-inline-end: 8px; /* كان margin-right */
     position: relative;
     flex-shrink: 0; /* Ensure circle doesn't shrink */
 }
@@ -338,7 +368,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); /* هذا يعمل بشكل جيد في كلا الاتجاهين */
 }
 
 /* ================================ */
@@ -347,7 +377,7 @@ body {
 .checkbox-option {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-block-end: 20px; /* كان margin-bottom */
 }
 
 .checkbox-option input[type="checkbox"] {
@@ -360,13 +390,29 @@ body {
     border-radius: 4px;
     cursor: pointer;
     flex-shrink: 0;
-    margin-left: 10px; /* Space on left for checkbox in LTR */
-    margin-right: 0;
-    margin-top: 2px;
+    /* استخدام الخصائص المنطقية للمساحة حول الـ checkbox */
+    margin-inline-start: 10px; /* كان margin-left: 10px; هذا يجعل المساحة على اليمين في RTL */
+    margin-inline-end: 0; /* كان margin-right: 0; هذا يجعل المساحة على اليسار في RTL */
+    margin-block-start: 2px; /* كان margin-top */
     background-color: transparent;
     position: relative;
     top: 2px;
 }
+/* لتصحيح الترتيب البصري في RTL، تحتاج لضبط ترتيب العناصر داخل الـ flex container */
+[dir="rtl"] .checkbox-option {
+    flex-direction: row; /* لعكس ترتيب الـ checkbox والـ label */
+}
+/* إذا لم يتمكن input[type="checkbox"] من تغيير marging-left إلى right تلقائيا باستخدام margin-inline-start/end
+   نحتاج لتعديل هذا ليعمل بشكل صحيح مع flex-direction: row-reverse */
+[dir="rtl"] .checkbox-option input[type="checkbox"] {
+    margin-inline-start: 0; /* إزالة الهامش السابق */
+    margin-inline-end: 10px; /* إضافة الهامش على الجهة اليمنى (اليسار في الوضع البصري LTR) */
+}
+[dir="ltr"] .checkbox-option input[type="checkbox"] {
+    margin-inline-start: 0; /* إزالة الهامش السابق */
+    margin-inline-end: 10px; /* إضافة الهامش على الجهة اليمنى (اليسار في الوضع البصري LTR) */
+}
+
 
 .checkbox-option input[type="checkbox"]:checked {
     background-color: #1DB954;
@@ -380,21 +426,22 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); /* هذا يعمل بشكل جيد في كلا الاتجاهين */
 }
 
 .checkbox-option label {
     font-size: 14px;
     color: #a7a7a7;
     cursor: pointer;
-    margin-left: 10px;
+    /* margin-left: 10px; */ /* هذا تم التعامل معه بواسطة flex-direction: row-reverse على الأب */
 }
 
 .terms-text {
     font-size: 12px;
     color: #a7a7a7;
-    margin-top: 20px;
+    margin-block-start: 20px; /* كان margin-top */
     line-height: 1.5;
+    text-align: start; /* تأكد من أن النص يبدأ من الاتجاه الصحيح */
 }
 
 .terms-text a {
@@ -405,7 +452,7 @@ body {
 .recapcha-text {
     font-size: 12px;
     color: #a7a7a7;
-    margin-top: 50px;
+    margin-block-start: 50px; /* كان margin-top */
     text-align: center;
 }
 
@@ -430,10 +477,6 @@ body {
     }
 }
 
-/* src/styles/main.css */
-
-/* ... (All previous formatting for signup flow and general components) ... */
-
 /* ================================ */
 /* ===== Login Flow & Steps Layout ===== */
 /* ================================ */
@@ -441,18 +484,17 @@ body {
     background-color: #121212;
     padding: 40px;
     border-radius: 8px;
-    text-align: right;
+    text-align: start; /* كان text-align: right; - يجب أن يتكيف تلقائياً */
     max-width: 450px;
     width: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    /* Adjustments here to center it */
     margin: 50px auto; /* 50px for top and bottom margin, auto for left and right centering */
 }
 
 .login-title {
     font-size: 32px;
     font-weight: bold;
-    margin-bottom: 30px;
+    margin-block-end: 30px; /* كان margin-bottom */
     text-align: center; /* Title in center */
     color: #fff;
 }
@@ -467,9 +509,9 @@ body {
     text-decoration: underline;
     width: 100%;
     text-align: center; /* Center the button */
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding: 5px 0;
+    margin-block-start: 10px; /* كان margin-top */
+    margin-block-end: 20px;   /* كان margin-bottom */
+    padding: 5px 0; /* Padding remains symmetrical */
 }
 
 .forgot-password-button:hover {
@@ -481,7 +523,7 @@ body {
     color: #a7a7a7;
     font-size: 14px;
     text-align: center;
-    margin-top: 20px;
+    margin-block-start: 20px; /* كان margin-top */
 }
 
 .signup-prompt a {
@@ -490,24 +532,16 @@ body {
     font-weight: bold;
 }
 
-
 /* ================================ */
 /* ===== Responsive Adjustments for Login Flow ===== */
 /* ================================ */
 @media (max-width: 600px) {
     .login-flow-container {
-        background-color: #121212;
-        padding: 40px;
-        border-radius: 8px;
-        text-align: right;
-        max-width: 450px;
-        width: 100%;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        /* Adjustments here to center it */
-        margin: 50px auto; /* 50px for top and bottom margin, auto for left and right centering */
+        /* هذه التعديلات كانت مكررة من .login-flow-container الأساسي، أعدت تعديلها هنا للتناسق */
+        padding: 20px; /* تم تعديلها لتكون 20px في الشاشات الصغيرة */
+        margin: 10px; /* Space on sides on small screens */
     }
     .login-title {
         font-size: 28px;
     }
 }
-
