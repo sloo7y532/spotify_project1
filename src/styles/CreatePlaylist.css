@@ -1,31 +1,55 @@
-/* src/styles/CreatePlaylist.css */
+.create-playlist-container {
+  display: flex;
+  height: 100vh;
+  background-color: #000000;
+  color: #fff;
+  position: relative;
+  width: 100dvw;
+}
 
-.create-playlist-page {
-  background-color: #121212; /* خلفية داكنة جداً (مثل سبوتيفاي) */
-  color: #ffffff; /* نص أبيض */
-  min-height: 100vh; /* ارتفاع كامل الشاشة */
-  padding: 20px;
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; /* خطوط قريبة من سبوتيفاي */
+/* Sidebar */
+.create-playlist-sidebar {
+  width: 25%;
+  background-color: #121212;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* محاذاة المحتوى لليسار */
+  text-align: left;
+  gap: 16px;
+  margin-right: 10px;
+  border-radius: 10px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
-.create-playlist-header {
-  background: linear-gradient(to bottom, #333333, #1a1a1a); /* تدرج لوني خفيف للرأس */
-  padding: 60px 30px 30px; /* حشوة علوية أكبر */
-  border-radius: 8px;
-  margin-bottom: 30px;
+.sidebar-header {
   display: flex;
-  align-items: flex-end;
-  gap: 30px;
-  width: 100%; /* عرض كامل للمنطقة */
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 
-.playlist-info-section {
+.sidebar-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.playlists-section-title {
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+.current-playlist-item {
   display: flex;
-  align-items: flex-end; /* محاذاة العناصر إلى الأسفل */
-  gap: 25px;
+  align-items: center;
+  background-color: #292929;
+  padding: 8px;
+  border-radius: 4px;
+  gap: 12px;
   cursor: pointer;
   padding: 10px;
   border-radius: 8px;
@@ -36,202 +60,361 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.playlist-cover-placeholder {
-  width: 232px; /* حجم صورة الغلاف (مطابق لسبوتيفاي) */
-  height: 232px;
-  background-color: #282828;
+.playlist-cover-thumb {
+  width: 48px;
+  height: 48px;
+  background-color: #333;
+  background-size: cover;
+  background-position: center;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+}
+
+.playlist-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.playlist-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-meta {
+  font-size: 12px;
+  color: #b3b3b3;
+}
+
+.recents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+/* Main Content */
+.main {
+  width: 75%;
+}
+
+.create-playlist-main {
+  border-radius: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.playlist-header {
+  background: linear-gradient(
+    0deg,
+    rgba(41, 41, 41, 1) 29%,
+    rgba(80, 80, 80, 1) 71%
+  );
+  display: flex;
+  padding: 32px;
+  gap: 32px;
+  align-items: end;
+}
+
+.cover-upload-container {
+  width: 232px !important;
+  height: 232px;
+  background-color: #282828;
+  border-radius: 8px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* ظل للصورة */
 }
 
-.playlist-cover-image {
+.img-cover {
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
-
-.playlist-cover-placeholder svg {
-  opacity: 0.7;
-}
-
-.upload-icon-overlay-circle {
-  position: absolute;
-  top: 0; /* لتغطية الصورة بالكامل عند التحويم */
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* خلفية شفافة داكنة عند التحويم */
-  border-radius: 4px; /* نفس حواف الصورة */
-  display: flex;
-  flex-direction: column; /* لترتيب الأيقونة والنص عمودياً */
-  align-items: center;
-  justify-content: center;
-  opacity: 0; /* مخفي بشكل افتراضي */
-  transition: opacity 0.2s ease-in-out;
-}
-
-.playlist-info-section:hover .upload-icon-overlay-circle {
-  opacity: 1; /* يظهر عند التحويم على المنطقة بأكملها */
-}
-
-.upload-icon-overlay-circle svg {
-  color: white;
-  opacity: 1;
-  margin-bottom: 5px; /* تباعد عن النص */
-}
-
-.upload-icon-overlay-circle span {
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-}
-
 
 .playlist-text-info {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  height: 80%;
+  width: 50%;
 }
 
 .playlist-type {
   font-size: 14px;
+  color: white;
+}
+
+.playlist-name-input {
+  font-size: 55px;
+  font-weight: 800;
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+}
+
+.playlist-description-input {
+  font-size: 14px;
+  background: transparent;
+  border: none;
   color: #b3b3b3;
-  text-transform: uppercase;
-  margin-bottom: 10px; /* تباعد أكبر */
-  font-weight: bold;
+  outline: none;
 }
 
-.playlist-title {
-  font-size: 70px; /* حجم أكبر قليلاً للعنوان */
-  font-weight: 900;
-  margin: 0 0 15px 0;
-  color: #ffffff;
-  word-break: break-word;
-  line-height: 1; /* لتقليل المسافة بين الأسطر */
-}
-
-.playlist-description {
-  font-size: 16px;
-  color: #b3b3b3;
-  margin-bottom: 15px;
-  max-width: 600px;
-  line-height: 1.4;
-}
-
-.playlist-owner {
+.playlist-owner-info {
   font-size: 14px;
   color: #b3b3b3;
-  margin: 0;
-  font-weight: bold;
 }
 
-.playlist-actions {
-  margin-bottom: 30px;
+/* Controls */
+.playlist-controls {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding-left: 30px; /* حشوة لليسار لتتوافق مع Header */
-  width: 100%;
+  padding: 16px 32px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.save-button {
-  background-color: #1db954; /* أخضر Spotify */
-  color: white;
+.play-button {
+  background-color: #1db954;
   border: none;
-  border-radius: 50px;
-  padding: 12px 32px;
+  color: #000000;
   font-size: 16px;
+  height: 55px;
+  width: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.play-button.disabled {
+  display: none;
+  cursor: not-allowed;
+}
+
+.songs-count-indicator {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-left: 16px;
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
+.playlist-main-content {
+  background: linear-gradient(
+    180deg,
+    rgba(33, 33, 33, 1) 0%,
+    rgba(26, 26, 26, 1) 15%,
+    rgba(18, 18, 18, 1) 20%
+  );
+}
+
+/* Search */
+.search-section {
+  padding: 0 32px;
+  margin-bottom: 16px;
+}
+
+.search-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.search-input-container {
+  display: flex;
+  align-items: center;
+  background-color: #242424;
+  border-radius: 7px;
+  padding: 3px 7px;
+  width: 40%;
+}
+
+.search-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px;
+}
+
+/* Song List Styles */
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 20px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
+}
+
+.song-list-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #232323;
+  padding: 12px 24px;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  gap: 20px;
+  position: relative;
+  height: 70px;
+  width: 97%;
+  margin: 0 auto;
+}
+
+.song-list-item:last-child {
+  border-bottom: none;
+}
+
+.song-list-item:hover {
+  background-color: #232323;
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.18);
+}
+
+.song-list-item:hover .play-icon {
+  opacity: 1;
+}
+
+.song-index {
+  width: 32px;
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.song-cover-container {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+  border-radius: 8px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.song-cover-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1;
+  border-radius: 8px;
+}
+
+.song-cover-container:hover::after {
+  opacity: 1;
+}
+
+.song-cover-container .play-icon {
+  z-index: 2;
+}
+
+.song-cover {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 16px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.song-cover-container:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.song-cover-container:hover .play-icon {
+  opacity: 1;
+}
+
+.song-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.song-title {
+  font-size: 17px;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-artist {
+  font-size: 15px;
+  color: #b3b3b3;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.add-button {
+  background-color: transparent;
+  color: #fff;
+  border: 1.5px solid #fff;
+  border-radius: 999px;
+  padding: 6px 22px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 1px; /* تباعد الأحرف */
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  margin-left: 16px;
 }
 
-.save-button:hover:not(:disabled) {
-  background-color: #1ed760;
-  transform: scale(1.05);
+.add-button:hover:not(.added) {
+  background-color: #fff;
+  color: #232323;
+  border: 1.5px solid #fff;
 }
 
-.save-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
+.add-button.added {
+  background-color: #232323;
+  color: #b3b3b3;
+  border: 1.5px solid #535353;
+  cursor: default;
 }
 
-.playlist-songs-section {
-  padding: 0 30px; /* حشوة لليسار واليمين */
-  width: 100%;
-}
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-  .create-playlist-header {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding-top: 40px;
-  }
-
-  .playlist-info-section {
-      flex-direction: column;
-      align-items: center;
-  }
-
-  .playlist-title {
-      font-size: 50px;
-  }
-
-  .playlist-actions {
-      padding-left: 20px;
-      justify-content: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .create-playlist-page {
-      padding: 15px;
-  }
-
-  .playlist-cover-placeholder {
-      width: 180px;
-      height: 180px;
-  }
-
-  .playlist-title {
-      font-size: 40px;
-      margin-bottom: 10px;
-  }
-
-  .playlist-description {
-      font-size: 14px;
-  }
-
-  .save-button {
-      padding: 10px 25px;
-      font-size: 14px;
-  }
-
-  .playlist-actions {
-      padding-left: 15px;
-  }
-
-  .playlist-songs-section {
-      padding: 0 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .playlist-cover-placeholder {
-      width: 130px;
-      height: 130px;
-  }
-
-  .playlist-title {
-      font-size: 30px;
-  }
+.play-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: #fff;
+  font-size: 22px;
+  pointer-events: none;
 }

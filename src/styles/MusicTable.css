@@ -1,0 +1,114 @@
+.music-table-container {
+  font-family: Arial, sans-serif;
+  color: #c7c7c7;
+  background-color: #121212;
+  padding: 20px;
+  border-radius: 8px;
+  width: 93%;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.music-table-header {
+  display: flex;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #333;
+  font-size: 14px;
+  font-weight: bold;
+  color: #7a7a7a;
+}
+
+.header-item {
+  flex: 1;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+}
+
+.header-hash {
+  flex: 0 0 40px;
+  justify-content: flex-start;
+}
+
+.header-title {
+  flex: 3;
+}
+
+.header-date-added {
+  flex: 1;
+}
+
+.header-duration {
+  flex: 0 0 60px;
+  justify-content: flex-end;
+  margin-right: 15px;
+}
+
+.clock-icon {
+  width: 16px;
+  height: 16px;
+  fill: #7a7a7a;
+}
+
+.music-table-row {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.music-table-row:hover {
+  background-color: #282828;
+}
+
+.row-item {
+  flex: 1;
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+.row-hash {
+  flex: 0 0 40px;
+  color: #7a7a7a;
+}
+
+.row-title {
+  flex: 3;
+  display: flex;
+  align-items: center;
+}
+
+.song-thumbnail {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.song-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-title {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.song-artist {
+  color: #a7a7a7;
+  font-size: 12px;
+}
+
+.row-date-added {
+  flex: 2;
+  color: #7a7a7a;
+}
+
+.row-duration {
+  flex: 0 0 60px;
+  text-align: right;
+  color: #7a7a7a;
+}

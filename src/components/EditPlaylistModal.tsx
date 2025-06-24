@@ -1,21 +1,29 @@
-// src/components/EditPlaylistModal.tsx
-import React, { useState, useEffect, ChangeEvent, useRef } from 'react'; // إضافة useRef
-import { X, Music, Upload } from 'lucide-react';
-import { useAppDispatch } from '../store/hooks.ts';
-import { uploadPlaylistImage, updatePlaylistInFirebase } from '../firebase/playlistService.ts';
-import { setCurrentPlaylist, updatePlaylist as updatePlaylistInStore, Playlist } from '../store/slices/playlistSlice.ts';
-import { Song } from '../store/slices/musicSlice.ts';
-import '../styles/EditPlaylistModal.css';
+import React, { useState, useEffect } from "react";
+import { X, Music, Upload } from "lucide-react";
+import { useAppDispatch } from "../store/hooks.ts";
+import {
+  updatePlaylistInFirebase,
+  fetchPlaylistById,
+  addPlaylistToFirebase,
+} from "../firebase/playlistService.ts";
+import {
+  setCurrentPlaylist,
+  updatePlaylist as updatePlaylistInStore,
+  Playlist,
+} from "../store/slices/playlistSlice.ts";
+import { Song } from "../store/slices/musicSlice.ts";
+import "../styles/EditPlaylistModal.css";
+import { useToast } from "../context/ToastContext.tsx";
 
 export interface PlaylistToEdit {
-  id: string;
+  id?: string;
   name: string;
   description?: string;
   coverUrl?: string;
   userId: string;
   ownerEmail: string;
   songs?: Song[];
-  createdAt?: Date;
+  createdAt?: string;
 }
 
 interface EditPlaylistModalProps {
@@ -25,28 +33,30 @@ interface EditPlaylistModalProps {
   onSaveSuccess: (updatedPlaylist: PlaylistToEdit) => void;
 }
 
-const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({ isOpen, onClose, currentPlaylist, onSaveSuccess }) => {
+const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({
+  isOpen,
+  onClose,
+  currentPlaylist,
+  onSaveSuccess,
+}) => {
   const dispatch = useAppDispatch();
+  const { showToast } = useToast(); // <-- نستخدم الـ toast هنا
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    coverUrl: '',
+    name: "",
+    description: "",
+    coverUrl: "",
   });
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null); 
 
   useEffect(() => {
     if (currentPlaylist) {
       setFormData({
         name: currentPlaylist.name,
-        description: currentPlaylist.description || '',
-        coverUrl: currentPlaylist.coverUrl || '',
+        description: currentPlaylist.description || "",
+        coverUrl: currentPlaylist.coverUrl || "",
       });
-      setSelectedImage(null);
     } else {
-      setFormData({ name: '', description: '', coverUrl: '' });
-      setSelectedImage(null);
+      setFormData({ name: "", description: "", coverUrl: "" });
     }
   }, [currentPlaylist]);
 
@@ -54,82 +64,150 @@ const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({ isOpen, onClose, 
     return null;
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const previewUrl = URL.createObjectURL(file);
-      setFormData(prev => ({
-        ...prev,
-        coverUrl: previewUrl
-      }));
-    }
-  };
-
   const handleSave = async () => {
-    if (!currentPlaylist) {
-      alert('لا توجد قائمة تشغيل لتعديلها.');
+    if (!currentPlaylist || !currentPlaylist.userId) {
+      showToast("Error: User ID is missing or no playlist to edit.", "error");
       return;
     }
     if (!formData.name.trim()) {
-      alert('الرجاء إدخال اسم لقائمة التشغيل.');
+      showToast("Please enter a playlist name.", "error");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      let finalCoverUrl = formData.coverUrl;
+      let finalCoverUrl =
+        formData.coverUrl || "https://example.com/default-playlist-cover.png";
 
-      if (selectedImage) {
-        if (!currentPlaylist.userId) {
-            console.error("User ID is missing for image upload.");
-            alert("خطأ: معرف المستخدم مفقود لرفع الصورة.");
-            setIsLoading(false);
-            return;
-        }
-        finalCoverUrl = await uploadPlaylistImage(selectedImage, currentPlaylist.userId);
-      }
-
-      const updatedData: Partial<PlaylistToEdit> = {
+      const updatedData: Partial<Playlist> = {
         name: formData.name,
         description: formData.description,
         coverUrl: finalCoverUrl,
       };
 
-      await updatePlaylistInFirebase(currentPlaylist.id, updatedData);
+      // Save playlist details to Firestore
+      if (currentPlaylist.id && currentPlaylist.id !== "new") {
+        try {
+          // First check if the playlist exists in Firestore
+          const existingPlaylist = await fetchPlaylistById(currentPlaylist.id);
 
-      const playlistForRedux: Playlist = {
-        id: currentPlaylist.id,
-        name: formData.name,
-        description: formData.description || undefined,
-        coverUrl: finalCoverUrl,
-        userId: currentPlaylist.userId,
-        ownerEmail: currentPlaylist.ownerEmail,
-        songs: currentPlaylist.songs || [],
-        createdAt: currentPlaylist.createdAt || new Date(),
-      };
+          if (existingPlaylist) {
+            // Update existing playlist in Firestore
+            await updatePlaylistInFirebase(currentPlaylist.id, updatedData);
+          } else {
+            // Playlist doesn't exist in Firestore, create it
+            const newPlaylistData = {
+              name: formData.name,
+              description: formData.description,
+              coverUrl: finalCoverUrl,
+              userId: currentPlaylist.userId,
+              ownerEmail: currentPlaylist.ownerEmail,
+              songs: currentPlaylist.songs || [],
+            };
 
-      dispatch(setCurrentPlaylist(playlistForRedux));
-      dispatch(updatePlaylistInStore(playlistForRedux));
+            const createdPlaylist = await addPlaylistToFirebase(
+              newPlaylistData
+            );
 
-      const updatedPlaylistForCallback: PlaylistToEdit = {
-          ...playlistForRedux,
-      };
+            // Update the currentPlaylist ID
+            currentPlaylist.id = createdPlaylist.id;
+          }
 
-      onSaveSuccess(updatedPlaylistForCallback);
+          const updatedPlaylist: PlaylistToEdit = {
+            ...currentPlaylist,
+            name: formData.name,
+            description: formData.description,
+            coverUrl: finalCoverUrl,
+          };
+
+          // Update Redux store
+          const playlistForRedux: Playlist = {
+            id: currentPlaylist.id,
+            name: formData.name,
+            description: formData.description || undefined,
+            coverUrl: finalCoverUrl,
+            userId: currentPlaylist.userId,
+            ownerEmail: currentPlaylist.ownerEmail,
+            songs: currentPlaylist.songs || [],
+            createdAt: currentPlaylist.createdAt || new Date().toISOString(),
+          };
+
+          dispatch(setCurrentPlaylist(playlistForRedux));
+          dispatch(updatePlaylistInStore(playlistForRedux));
+
+          // Notify parent component
+          onSaveSuccess(updatedPlaylist);
+          showToast("Playlist saved to Firestore successfully!", "success");
+        } catch (updateError) {
+          console.error("❌ Error during Firestore operation:", updateError);
+          showToast(
+            "Failed to save playlist to Firestore. Please try again.",
+            "error"
+          );
+        }
+      } else {
+        try {
+          // Create a new playlist
+          const newPlaylistData = {
+            name: formData.name,
+            description: formData.description,
+            coverUrl: finalCoverUrl,
+            userId: currentPlaylist.userId,
+            ownerEmail: currentPlaylist.ownerEmail,
+            songs: currentPlaylist.songs || [],
+          };
+
+          const createdPlaylist = await addPlaylistToFirebase(newPlaylistData);
+
+          const updatedPlaylist: PlaylistToEdit = {
+            ...currentPlaylist,
+            id: createdPlaylist.id,
+            name: formData.name,
+            description: formData.description,
+            coverUrl: finalCoverUrl,
+          };
+
+          // Update Redux store
+          const playlistForRedux: Playlist = {
+            id: createdPlaylist.id,
+            name: formData.name,
+            description: formData.description || undefined,
+            coverUrl: finalCoverUrl,
+            userId: currentPlaylist.userId,
+            ownerEmail: currentPlaylist.ownerEmail,
+            songs: currentPlaylist.songs || [],
+            createdAt: createdPlaylist.createdAt || new Date().toISOString(),
+          };
+
+          dispatch(setCurrentPlaylist(playlistForRedux));
+
+          // Notify parent component with the new playlist
+          onSaveSuccess(updatedPlaylist);
+          showToast(
+            `Playlist "${formData.name}" created successfully!`,
+            "success"
+          );
+        } catch (createError) {
+          console.error("❌ Error creating new playlist:", createError);
+          showToast("Failed to create playlist. Please try again.", "error");
+        }
+      }
+
       onClose();
     } catch (error) {
-      console.error('خطأ في حفظ قائمة التشغيل:', error);
-      alert('فشل حفظ قائمة التشغيل. يرجى المحاولة مرة أخرى.');
+      console.error("❌ Error saving playlist:", error);
+      showToast("Failed to save playlist. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -147,36 +225,36 @@ const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({ isOpen, onClose, 
 
         <div className="modal-body">
           <div className="image-upload-section">
-            {/* منطقة معاينة الصورة وتحميلها */}
             <div
               className="image-preview"
-              onClick={() => fileInputRef.current?.click()} 
+              onClick={() => {
+                console.log(
+                  "Image selection is disabled as Firebase Storage is not used."
+                );
+                showToast(
+                  "Image selection functionality is disabled. You can manually enter the URL if provided.",
+                  "info"
+                );
+              }}
               style={{
-                backgroundImage: formData.coverUrl ? `url(${formData.coverUrl})` : 'none',
+                backgroundImage: formData.coverUrl
+                  ? `url(${formData.coverUrl})`
+                  : "none",
               }}
             >
               {!formData.coverUrl && <Music size={48} color="#b3b3b3" />}
-              <input
-                type="file"
-                ref={fileInputRef} 
-                accept="image/*"
-                onChange={handleImageSelect}
-                className="image-file-input"
-                style={{ display: 'none' }} 
-              />
               <div className="upload-icon-overlay">
                 <Upload size={16} />
-                <span>Choose photo</span> {/* إضافة نص لأيقونة الرفع */}
+                <span>Choose photo</span>
               </div>
             </div>
 
-            {/* حقول النموذج */}
             <div className="form-fields">
               <div className="form-group">
-                <label htmlFor="playlist-name-modal">Name</label> {/* معرف فريد */}
+                <label htmlFor="playlist-name-modal">Name</label>
                 <input
                   type="text"
-                  id="playlist-name-modal" 
+                  id="playlist-name-modal"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
@@ -186,9 +264,9 @@ const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({ isOpen, onClose, 
               </div>
 
               <div className="form-group">
-                <label htmlFor="playlist-description-modal">Description</label> {/* معرف فريد */}
+                <label htmlFor="playlist-description-modal">Description</label>
                 <textarea
-                  id="playlist-description-modal" // معرف فريد
+                  id="playlist-description-modal"
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
@@ -197,12 +275,27 @@ const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({ isOpen, onClose, 
                   className="textarea-field"
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="playlist-cover-url-modal">
+                  Cover Image URL
+                </label>
+                <input
+                  type="text"
+                  id="playlist-cover-url-modal"
+                  name="coverUrl"
+                  value={formData.coverUrl}
+                  onChange={handleInputChange}
+                  placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                  className="input-field"
+                />
+              </div>
             </div>
           </div>
 
           <p className="privacy-notice">
-            By proceeding, you agree to give Spotify access to the image you choose to upload.
-            Please make sure you have the right to upload the image.
+            By proceeding, you agree to give Spotify access to the image you
+            choose to upload. Please make sure you have the right to upload the
+            image.
           </p>
         </div>
 
@@ -210,9 +303,9 @@ const EditPlaylistModal: React.FC<EditPlaylistModalProps> = ({ isOpen, onClose, 
           <button
             onClick={handleSave}
             disabled={isLoading}
-            className={`save-button ${isLoading ? 'disabled' : ''}`}
+            className={`save-button ${isLoading ? "disabled" : ""}`}
           >
-            {isLoading ? 'Saving...' : 'Save'}
+            {isLoading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>

@@ -6,26 +6,27 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* خلفية داكنة شفافة */
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: center; /* توسيط عمودي */
-  justify-content: center; /* توسيط أفقي */
-  z-index: 1000; /* لضمان ظهور المودال فوق العناصر الأخرى */
-  animation: fadeIn 0.2s ease-out; /* تأثير ظهور خفيف */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+  text-align: left;
 }
 
 .modal-content {
-  background-color: #282828; /* لون خلفية المودال مطابق لسبوتيفاي */
+  background-color: #282828;
   border-radius: 8px;
   width: 100%;
-  max-width: 500px; /* عرض ثابت للمودال */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* ظل للمودال */
-  color: #ffffff; /* لون النص الافتراضي داخل المودال */
+  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
   overflow: hidden;
-  animation: slideIn 0.3s ease-out; /* تأثير انزلاق خفيف */
+  animation: slideIn 0.3s ease-out;
   display: flex;
   flex-direction: column;
-  max-height: 90vh; /* تحديد أقصى ارتفاع للمودال */
+  max-height: 90vh;
 }
 
 .modal-header {
@@ -111,7 +112,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  opacity: 0; /* مخفي بشكل افتراضي */
+  opacity: 0;
   transition: opacity 0.2s ease-in-out;
   border-radius: 4px;
 }
@@ -128,7 +129,7 @@
 .upload-icon-overlay span {
   color: white;
   font-size: 14px;
-  font-weight: bold; /* جعل النص أكثر سمكًا */
+  font-weight: bold;
 }
 
 .form-fields {
@@ -148,6 +149,7 @@
 
 .input-field,
 .textarea-field {
+  text-align: left;
   width: 100%;
   padding: 12px;
   background-color: #3e3e3e;
@@ -191,7 +193,7 @@
 }
 
 .save-button {
-  background-color: #ffffff; /* زر حفظ أبيض (كما في الصورة المستهدفة) */
+  background-color: #ffffff;
   color: #000000;
   border: none;
   border-radius: 50px;
@@ -215,42 +217,52 @@
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
-  from { transform: translateY(-20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .modal-content {
-      max-width: 95%;
+    max-width: 95%;
   }
 
   .modal-header,
   .modal-footer {
-      padding: 15px 20px;
+    padding: 15px 20px;
   }
 
   .modal-title {
-      font-size: 20px;
+    font-size: 20px;
   }
 
   .modal-body {
-      padding: 20px;
+    padding: 20px;
   }
 
   .image-upload-section {
-      flex-direction: column;
-      align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   .image-preview {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 20px;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
   }
 }

@@ -1,5 +1,4 @@
-// src/firebase/playlistService.ts
-import { db, storage } from "./firebase.js"; // تأكد من أن المسار صحيح و ".js" صحيح إذا كان ملفك "firebase.js"
+import { db } from "./firebase.js";
 import { Song } from "../store/slices/musicSlice.ts";
 import {
   collection,
@@ -7,61 +6,222 @@ import {
   query,
   where,
   getDocs,
-  updateDoc, // *** NEW: Import updateDoc for updating documents
-  doc,       // *** NEW: Import doc for referencing specific documents
-  getDoc,    // *** NEW: Import getDoc for fetching single document
-  arrayUnion, // *** NEW: Import arrayUnion for adding to arrays
-  arrayRemove, // *** NEW: Import arrayRemove for removing from arrays
+  Timestamp,
+  doc,
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-// **تحديث NewPlaylist لتشمل كل الحقول الضرورية وتغيير ownerName إلى ownerEmail**
 export interface NewPlaylist {
   name: string;
   description?: string;
   userId: string;
   songs: Song[];
   coverUrl?: string;
-  ownerEmail: string; // *** CHANGED: from ownerName to ownerEmail for consistency
-  createdAt?: Date; // لضمان وجودها عند إنشاء بلاي ليست جديدة
+  ownerEmail: string;
 }
 
-// **إضافة واجهة لـ PlaylistWithId - مهم جداً للمودال الجديد**
-// هذه الواجهة تمثل قائمة تشغيل تم جلبها من Firebase (تحتوي على ID)
-export interface PlaylistWithId extends NewPlaylist {
-    id: string; // لأن Firebase Firestore يضيف ID بعد الإنشاء
+export interface Playlist {
+  id: string;
+  name: string;
+  description?: string;
+  coverUrl?: string;
+  userId: string;
+  ownerEmail: string;
+  songs: Song[];
+  createdAt?: string;
 }
 
-// Export PlaylistWithId as Playlist for backward compatibility
-export type Playlist = PlaylistWithId;
+export async function addPlaylistToFirebase(data: NewPlaylist) {
+  try {
+    console.log("🆕 Creating new playlist with data:", data);
 
-export async function addPlaylistToFirebase(data: NewPlaylist): Promise<PlaylistWithId> {
-  const docRef = await addDoc(collection(db, "playlists"), {
-    name: data.name,
-    description: data.description || "",
-    userId: data.userId,
-    songs: data.songs,
-    ownerEmail: data.ownerEmail, // *** CHANGED: using ownerEmail
-    coverUrl: data.coverUrl || "",
-    createdAt: new Date(), // تعيين تاريخ الإنشاء هنا
-  });
+    // Validate required fields
+    if (!data.name || data.name.trim() === "") {
+      throw new Error("Playlist name is required");
+    }
+    if (!data.userId || data.userId.trim() === "") {
+      throw new Error("User ID is required");
+    }
+    if (!data.ownerEmail || data.ownerEmail.trim() === "") {
+      throw new Error("Owner email is required");
+    }
 
-  return {
-    id: docRef.id,
-    ...data,
-    createdAt: new Date(), // إعادة createdAt ليكون كاملاً
-  };
+    // Clean the data
+    const cleanPlaylistData = {
+      name: String(data.name).trim(),
+      description: String(data.description || ""),
+      userId: String(data.userId).trim(),
+      songs: Array.isArray(data.songs) ? data.songs : [],
+      ownerEmail: String(data.ownerEmail).trim(),
+      coverUrl: String(data.coverUrl || ""),
+      createdAt: Timestamp.fromDate(new Date()),
+    };
+
+    console.log("🧹 Cleaned playlist data for Firestore:", cleanPlaylistData);
+
+    const docRef = await addDoc(collection(db, "playlists"), cleanPlaylistData);
+
+    const result = {
+      id: docRef.id,
+      name: cleanPlaylistData.name,
+      description: cleanPlaylistData.description,
+      userId: cleanPlaylistData.userId,
+      songs: cleanPlaylistData.songs,
+      ownerEmail: cleanPlaylistData.ownerEmail,
+      coverUrl: cleanPlaylistData.coverUrl,
+      createdAt: new Date().toISOString(),
+    };
+
+    console.log("✅ Playlist created successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("❌ Error creating playlist in Firestore:", error);
+    throw error;
+  }
 }
 
-// **NEW FUNCTION: دالة جديدة لتحديث قائمة تشغيل موجودة في Firebase**
 export async function updatePlaylistInFirebase(
   playlistId: string,
-  updatedData: Partial<NewPlaylist> // نستخدم Partial للسماح بتحديث جزء من البيانات
-): Promise<void> {
-  const playlistRef = doc(db, "playlists", playlistId); // الحصول على مرجع المستند
-  await updateDoc(playlistRef, updatedData); // تحديث المستند
+  data: Partial<Playlist>
+) {
+  try {
+    console.log("🔄 Updating playlist:", playlistId);
+    console.log("📝 Data to update:", data);
+
+    // Validate the playlistId
+    if (!playlistId || playlistId === "new" || playlistId.trim() === "") {
+      throw new Error("Invalid playlist ID provided");
+    }
+
+    // Clean and validate the data
+    const cleanData: any = {};
+
+    if (data.name !== undefined) {
+      cleanData.name = String(data.name).trim();
+      if (cleanData.name === "") {
+        throw new Error("Playlist name cannot be empty");
+      }
+    }
+
+    if (data.description !== undefined) {
+      cleanData.description = String(data.description || "");
+    }
+
+    if (data.coverUrl !== undefined) {
+      cleanData.coverUrl = String(data.coverUrl || "");
+    }
+
+    if (data.songs !== undefined) {
+      cleanData.songs = Array.isArray(data.songs) ? data.songs : [];
+    }
+
+    // Remove undefined values and non-updatable fields
+    Object.keys(cleanData).forEach((key) => {
+      if (cleanData[key] === undefined || key === "id" || key === "createdAt") {
+        delete cleanData[key];
+      }
+    });
+
+    console.log("🧹 Cleaned data for Firestore:", cleanData);
+
+    const playlistRef = doc(db, "playlists", playlistId);
+    await updateDoc(playlistRef, cleanData);
+
+    console.log("✅ Playlist updated successfully in Firestore");
+  } catch (error) {
+    console.error("❌ Error updating playlist in Firestore:", error);
+    throw error;
+  }
 }
 
+export async function addSongToPlaylist(playlistId: string, song: Song) {
+  const playlistRef = doc(db, "playlists", playlistId);
+  const docSnap = await getDoc(playlistRef);
+
+  if (!docSnap.exists()) {
+    throw new Error("Playlist not found");
+  }
+
+  const data = docSnap.data();
+  const originalSongs = data.songs as Song[];
+
+  const songExists = originalSongs.some((s) => s.id === song.id);
+
+  if (!songExists) {
+    const songToAdd = {
+      ...song,
+      dateAdded: song.dateAdded || new Date().toISOString(),
+    };
+
+    const updatedSongs = [...originalSongs, songToAdd];
+
+    await updateDoc(playlistRef, { songs: updatedSongs });
+  } else {
+    console.log("Song already exists in playlist");
+  }
+}
+
+export async function removeSongFromPlaylist(playlistId: string, song: Song) {
+  const playlistRef = doc(db, "playlists", playlistId);
+  const docSnap = await getDoc(playlistRef);
+
+  if (!docSnap.exists()) {
+    throw new Error("Playlist not found");
+  }
+
+  const data = docSnap.data();
+  const originalSongs = data.songs as Song[];
+  const updatedSongs = originalSongs.filter((s) => s.id !== song.id);
+
+  await updateDoc(playlistRef, { songs: updatedSongs });
+}
+
+export async function updatePlaylistSongs(playlistId: string, songs: Song[]) {
+  const playlistRef = doc(db, "playlists", playlistId);
+
+  const songsWithDate = songs.map((song) => ({
+    ...song,
+    dateAdded: song.dateAdded || new Date().toISOString(),
+  }));
+
+  await updateDoc(playlistRef, {
+    songs: songsWithDate,
+  });
+}
+
+export async function addMultipleSongsToPlaylist(
+  playlistId: string,
+  songs: Song[]
+) {
+  const playlistRef = doc(db, "playlists", playlistId);
+
+  const currentPlaylist = await fetchPlaylistById(playlistId);
+  if (!currentPlaylist) {
+    throw new Error("Playlist not found");
+  }
+
+  const newSongs = songs.filter(
+    (song) =>
+      !currentPlaylist.songs.some((existingSong) => existingSong.id === song.id)
+  );
+
+  if (newSongs.length > 0) {
+    const songsWithDate = newSongs.map((song) => ({
+      ...song,
+      dateAdded: song.dateAdded || new Date().toISOString(),
+    }));
+
+    await updateDoc(playlistRef, {
+      songs: [...currentPlaylist.songs, ...songsWithDate],
+    });
+  }
+
+  return newSongs.length;
+}
 
 export async function fetchSongsFromFirebase(): Promise<Song[]> {
   const snapshot = await getDocs(collection(db, "songs"));
@@ -69,72 +229,53 @@ export async function fetchSongsFromFirebase(): Promise<Song[]> {
     id: doc.id,
     ...(doc.data() as Song),
   }));
-  console.log("from fire",allSongs)
+  console.log("from fire", allSongs);
   return allSongs;
 }
 
-export async function uploadPlaylistImage(
-  file: File,
-  userId: string // نحتاج userId لتحديد مسار التخزين
-): Promise<string> {
-  const uniqueName = `${Date.now()}_${file.name}`;
-  const storageRef = ref(storage, `playlist_covers/${userId}/${uniqueName}`);
-  await uploadBytes(storageRef, file);
-  const url = await getDownloadURL(storageRef);
-  return url;
-}
-
-export async function fetchPlaylistsByUser(userId: string): Promise<PlaylistWithId[]> {
+export async function fetchPlaylistsByUser(
+  userId: string
+): Promise<Playlist[]> {
   const q = query(collection(db, "playlists"), where("userId", "==", userId));
   const snapshot = await getDocs(q);
 
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...(doc.data() as NewPlaylist), // Cast to NewPlaylist, then add ID
-  })) as PlaylistWithId[]; // Cast the entire array to PlaylistWithId[]
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      name: data.name || "",
+      description: data.description || "",
+      coverUrl: data.coverUrl || "",
+      userId: data.userId || "",
+      ownerEmail: data.ownerEmail || "",
+      songs: data.songs || [],
+      createdAt: (data.createdAt as Timestamp)?.toDate().toISOString() || "",
+    };
+  });
 }
 
-// *** NEW FUNCTION: Fetch playlist by ID
-export async function fetchPlaylistById(playlistId: string): Promise<PlaylistWithId | null> {
-  try {
-    const playlistRef = doc(db, "playlists", playlistId);
-    const playlistDoc = await getDoc(playlistRef);
-    
-    if (playlistDoc.exists()) {
-      return {
-        id: playlistDoc.id,
-        ...(playlistDoc.data() as NewPlaylist),
-      } as PlaylistWithId;
-    }
-    return null;
-  } catch (error) {
-    console.error("Error fetching playlist by ID:", error);
-    return null;
-  }
+export async function deletePlaylistFromFirebase(playlistId: string) {
+  const playlistRef = doc(db, "playlists", playlistId);
+  await deleteDoc(playlistRef);
 }
 
-// *** NEW FUNCTION: Add song to playlist
-export async function addSongToPlaylist(playlistId: string, song: Song): Promise<void> {
-  try {
-    const playlistRef = doc(db, "playlists", playlistId);
-    await updateDoc(playlistRef, {
-      songs: arrayUnion(song)
-    });
-  } catch (error) {
-    console.error("Error adding song to playlist:", error);
-    throw error;
+export async function fetchPlaylistById(
+  playlistId: string
+): Promise<Playlist | null> {
+  const playlistRef = doc(db, "playlists", playlistId);
+  const docSnap = await getDoc(playlistRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    return {
+      id: docSnap.id,
+      name: data.name || "",
+      description: data.description || "",
+      coverUrl: data.coverUrl || "",
+      userId: data.userId || "",
+      ownerEmail: data.ownerEmail || "",
+      songs: data.songs || [],
+      createdAt: (data.createdAt as Timestamp)?.toDate().toISOString() || "",
+    };
   }
-}
-
-// *** NEW FUNCTION: Remove song from playlist
-export async function removeSongFromPlaylist(playlistId: string, song: Song): Promise<void> {
-  try {
-    const playlistRef = doc(db, "playlists", playlistId);
-    await updateDoc(playlistRef, {
-      songs: arrayRemove(song)
-    });
-  } catch (error) {
-    console.error("Error removing song from playlist:", error);
-    throw error;
-  }
+  return null;
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "../styles/MusicPlayer.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/index.ts";
-import { setIsPlaying } from "../store/slices/musicSlice.ts";
+import { setIsPlaying, setCurrentSong } from "../store/slices/musicSlice.ts";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -27,13 +27,33 @@ const MusicPlayer = () => {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
+  // عند تغيير الأغنية أو التشغيل/الإيقاف
   useEffect(() => {
-    if (audioRef.current && currentSong?.audioUrl) {
-      audioRef.current.load();
-      audioRef.current.play();
-      dispatch(setIsPlaying(true));
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (currentSong?.audioUrl) {
+      // فقط حدث src لو اختلفت الأغنية
+      if (audio.src !== currentSong.audioUrl) {
+        audio.src = currentSong.audioUrl;
+        audio.load();
+      }
+
+      if (isPlaying) {
+        audio.play().catch((err) => {
+          if (err.name !== "AbortError") {
+            console.warn("Audio play interrupted:", err);
+          }
+        });
+      } else {
+        audio.pause();
+      }
+    } else {
+      // لو ما فيه أغنية شغالة، أوقف الصوت ومسح المصدر
+      audio.pause();
+      audio.src = "";
     }
-  }, [currentSong, dispatch]);
+  }, [currentSong, isPlaying]);
 
   const togglePlayPause = () => {
     if (!audioRef.current) return;
@@ -41,8 +61,14 @@ const MusicPlayer = () => {
       audioRef.current.pause();
       dispatch(setIsPlaying(false));
     } else {
-      audioRef.current.play();
-      dispatch(setIsPlaying(true));
+      audioRef.current
+        .play()
+        .then(() => dispatch(setIsPlaying(true)))
+        .catch((err) => {
+          if (err.name !== "AbortError") {
+            console.warn("Play interrupted:", err);
+          }
+        });
     }
   };
 
@@ -59,11 +85,11 @@ const MusicPlayer = () => {
       audioRef.current.volume = value;
     }
   };
+
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
+    if (!audioRef.current) return;
+    audioRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,8 +98,11 @@ const MusicPlayer = () => {
   };
 
   const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60) || "0";
-    const seconds = Math.floor(time % 60) || "00";
+    if (!time || isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60)
+      .toString()
+      .padStart(2, "0");
     return `${minutes}:${seconds}`;
   };
 
@@ -82,16 +111,17 @@ const MusicPlayer = () => {
       <audio
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
-        onEnded={() => dispatch(setIsPlaying(false))}
-      >
-        <source src={currentSong?.audioUrl} type="audio/mpeg" />
-      </audio>
+        onEnded={() => {
+          dispatch(setIsPlaying(false));
+          dispatch(setCurrentSong(null));
+        }}
+      />
 
       {/* Left: Song info */}
       <div className="music-player-left">
         {currentSong?.image ? (
           <img
-            src={currentSong?.image}
+            src={currentSong.image}
             alt="cover"
             className="music-player-cover"
           />

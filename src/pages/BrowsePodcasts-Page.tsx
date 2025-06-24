@@ -6,6 +6,8 @@ import "../styles/Dashboard-Page.css";
 
 
 export default function BrowsePodcastsPage() {
+
+
   return (
     <div><div className="dashboard-sidebar">
     <div className="dashboard-sidebar-header">

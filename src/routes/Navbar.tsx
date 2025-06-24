@@ -12,7 +12,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import SplitscreenIcon from "@mui/icons-material/Splitscreen";
 import MenuIcon from "@mui/icons-material/Menu";
 
-const Navbar = () => {
+interface NavbarProps {
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+}
+
+const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const user = useSelector((state: RootState) => state.auth.user);
   const navigate = useNavigate();
@@ -57,6 +62,8 @@ const Navbar = () => {
             type="text"
             placeholder="What do you want to listen to?"
             className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <hr className="search-divider" />
           <SplitscreenIcon className="splitscreen-icon" />
