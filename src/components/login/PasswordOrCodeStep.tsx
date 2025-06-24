@@ -9,7 +9,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next'; // تم إضافة هذا الاستيراد
 
 const PasswordOrCodeStep: React.FC = () => {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -41,7 +41,9 @@ const PasswordOrCodeStep: React.FC = () => {
   return (
     <div className="login-step-content">
       <div className="signup-step-header">
-        <span onClick={() => navigate('/login')} className="back-arrow">&#8249;</span>
+        <span onClick={() => navigate("/login")} className="back-arrow">
+          &#8249;
+        </span>
         <h2 className="step-title">
           <span>{t('Enter your password for')}</span><br />{loginIdentifier} {/* تم تعريب جزء العنوان */}
         </h2>

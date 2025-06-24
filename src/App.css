@@ -8,11 +8,233 @@
   height: 100vh;
   width: 100vw;
   overflow-x: hidden;
-  overflow-y: auto;
-  box-sizing: border-box;
+  overflow-y: unset;
+  box-sizing: border-box !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* RTL Support */
+/* Default LTR styles remain as they are */
+
+/* RTL-specific styles */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* Navbar RTL adjustments */
+[dir="rtl"] .navbar {
+  direction: rtl;
+}
+
+[dir="rtl"] .navbar-left {
+  order: 2;
+}
+
+[dir="rtl"] .navbar-right {
+  order: 1;
+}
+
+[dir="rtl"] .search-container {
+  direction: ltr; /* Keep search input LTR for better UX */
+}
+
+[dir="rtl"] .nav-links {
+  text-align: right;
+}
+
+/* Dashboard RTL adjustments */
+[dir="rtl"] .dashboard-container {
+  direction: rtl;
+}
+
+[dir="rtl"] .dashboard-sidebar {
+  order: 2;
+}
+
+[dir="rtl"] .dashboard-main-container {
+  order: 1;
+}
+
+/* Create Playlist RTL adjustments */
+[dir="rtl"] .create-playlist-container {
+  direction: rtl;
+}
+
+[dir="rtl"] .create-playlist-sidebar {
+  order: 2;
+}
+
+[dir="rtl"] .main {
+  order: 1;
+}
+
+[dir="rtl"] .playlist-header {
+  text-align: right;
+}
+
+/* Music Player RTL adjustments */
+[dir="rtl"] .music-player {
+  direction: rtl;
+}
+
+[dir="rtl"] .music-player-left {
+  order: 3;
+}
+
+[dir="rtl"] .music-player-center {
+  order: 2;
+}
+
+[dir="rtl"] .music-player-right {
+  order: 1;
+}
+
+/* Music Table RTL adjustments */
+[dir="rtl"] .music-table-container {
+  direction: rtl;
+}
+
+[dir="rtl"] .music-table-header,
+[dir="rtl"] .music-table-row {
+  flex-direction: row-reverse;
+}
+
+/* Modal RTL adjustments */
+[dir="rtl"] .modal-content {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .modal-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .form-fields {
+  text-align: right;
+}
+
+/* Button adjustments for RTL */
+[dir="rtl"] .playlist-controls {
+  flex-direction: row-reverse;
+}
+
+/* Song list RTL adjustments */
+[dir="rtl"] .song-list-item {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .song-info {
+  text-align: right;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+/* Language switcher styles */
+.language-switcher-container {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+[dir="rtl"] .language-switcher-container {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.language-switcher {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+}
+
+.language-switcher:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Responsive adjustments for RTL */
+@media (max-width: 768px) {
+  [dir="rtl"] .navbar-left,
+  [dir="rtl"] .navbar-right {
+    order: unset;
+  }
+
+  [dir="rtl"] .dashboard-sidebar,
+  [dir="rtl"] .dashboard-main-container {
+    order: unset;
+  }
+
+  [dir="rtl"] .create-playlist-sidebar,
+  [dir="rtl"] .main {
+    order: unset;
+  }
+}
+
+/* Flexbox adjustments for RTL */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Margin and padding adjustments for RTL */
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .pl-4 {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+[dir="rtl"] .pr-4 {
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+/* Input field adjustments for RTL */
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="password"],
+[dir="rtl"] textarea {
+  text-align: right;
+}
+
+[dir="rtl"] input::placeholder,
+[dir="rtl"] textarea::placeholder {
+  text-align: right;
+}
+
+/* Icon adjustments for RTL */
+[dir="rtl"] .icon-left {
+  order: 2;
+}
+
+[dir="rtl"] .icon-right {
+  order: 1;
+}
+
+/* Smooth transitions for direction changes */
+* {
+  transition:
+    margin 0.3s ease,
+    padding 0.3s ease;
 }

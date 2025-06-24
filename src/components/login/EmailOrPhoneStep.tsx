@@ -1,4 +1,3 @@
-// src/components/login/EmailOrPhoneStep.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +14,7 @@ const EmailOrPhoneStep: React.FC = () => {
 
   const handleContinue = (e: React.FormEvent) => {
     e.preventDefault();
+    dispatch(clearError());
     dispatch(clearError());
 
     if (identifier.trim()) {

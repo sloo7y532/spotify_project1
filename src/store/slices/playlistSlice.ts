@@ -1,10 +1,7 @@
 // src/store/slices/playlistSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Song } from './musicSlice.ts';
-// تم إزالة استيراد PlaylistWithId من هنا، لأنه لا يتم استخدامه مباشرة داخل هذا الملف
-// بل يتم استخدامه في ملفات أخرى مثل EditPlaylistModal و playlistService.
-// لذلك لا داعي لاستيراده هنا إذا لم يتم استخدامه بشكل مباشر.
-// import { PlaylistWithId } from '../../firebase/playlistService.ts'; // تم تعطيل هذا السطر
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Song } from "./musicSlice";
 
 export interface Playlist {
   id: string;
@@ -14,7 +11,7 @@ export interface Playlist {
   songs: Song[];
   userId: string;
   ownerEmail: string;
-  createdAt?: Date;
+  createdAt?: string;
 }
 
 interface PlaylistState {
@@ -73,18 +70,17 @@ const playlistSlice = createSlice({
     clearCurrentPlaylist: (state) => {
       state.currentPlaylist = null;
     },
+    // updatePlaylist: (state, action: PayloadAction<Playlist>) => {
+    //   if (
+    //     state.currentPlaylist &&
+    //     state.currentPlaylist.id === action.payload.id
+    //   ) {
+    //     state.currentPlaylist = action.payload;
+    //   }
+    // },
   },
 });
 
-export const {
-  setCurrentPlaylist,
-  clearCurrentPlaylist,
-  setUserPlaylists,
-  addPlaylist,
-  updatePlaylist,
-  deletePlaylist,
-  playlistLoading,
-  playlistError,
-} = playlistSlice.actions;
-
+export const { setCurrentPlaylist, clearCurrentPlaylist, updatePlaylist } =
+  playlistSlice.actions;
 export default playlistSlice.reducer;

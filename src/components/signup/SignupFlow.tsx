@@ -4,11 +4,11 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks.ts';
 import { clearError } from '../../store/slices/authSlice.ts';
 import { useTranslation } from 'react-i18next';
 
-import EmailSignupStep from './EmailSignupStep.tsx';
-import PasswordStep from './PasswordStep.tsx';
-import ProfileInfoStep from './ProfileInfoStep.tsx';
-import TermsAndConditionsStep from './TermsAndConditionsStep.tsx';
-import spotifyLogo from '../../assets/spotify-icon-green.png';
+import EmailSignupStep from "./EmailSignupStep.tsx";
+import PasswordStep from "./PasswordStep.tsx";
+import ProfileInfoStep from "./ProfileInfoStep.tsx";
+import TermsAndConditionsStep from "./TermsAndConditionsStep.tsx";
+import spotifyLogo from "../../assets/spotify-icon-green.png";
 
 const SignupFlow: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const SignupFlow: React.FC = () => {
 
   React.useEffect(() => {
     if (user) {
-      navigate('/dashboard', { replace: true });
+      navigate("/", { replace: true });
     }
   }, [user, navigate]);
 
@@ -44,11 +44,11 @@ const SignupFlow: React.FC = () => {
   }, [i18n.language]); // إعادة تشغيل هذا التأثير عند تغيير اللغة
 
   let currentStepIndex = 0;
-  if (location.pathname.includes('/signup/password')) {
+  if (location.pathname.includes("/signup/password")) {
     currentStepIndex = 1;
-  } else if (location.pathname.includes('/signup/profile')) {
+  } else if (location.pathname.includes("/signup/profile")) {
     currentStepIndex = 2;
-  } else if (location.pathname.includes('/signup/terms')) {
+  } else if (location.pathname.includes("/signup/terms")) {
     currentStepIndex = 3;
   }
 
@@ -58,7 +58,10 @@ const SignupFlow: React.FC = () => {
 
       {currentStepIndex > 0 && currentStepIndex <= 3 && (
         <div className="progress-bar">
-          <div className="progress-bar-fill" style={{ width: `${(currentStepIndex / 3) * 100}%` }}></div>
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${(currentStepIndex / 3) * 100}%` }}
+          ></div>
         </div>
       )}
 
