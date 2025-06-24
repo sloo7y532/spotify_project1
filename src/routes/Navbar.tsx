@@ -7,40 +7,84 @@ import logo from "../assets/spotify-icon.png";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/index.ts";
 import { logoutUser } from "../services/authService.ts";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher.tsx";
 
 import SearchIcon from "@mui/icons-material/Search";
 import SplitscreenIcon from "@mui/icons-material/Splitscreen";
 import MenuIcon from "@mui/icons-material/Menu";
 
+/**
+ * Props interface for the Navbar component
+ */
 interface NavbarProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }
 
+/**
+ * Navbar Component
+ *
+ * Main navigation component that provides:
+ * - Brand logo and home navigation
+ * - Global search functionality
+ * - User authentication controls (login/logout)
+ * - Language switching capabilities
+ * - Responsive mobile menu
+ *
+ * Features:
+ * - Dynamic authentication state handling
+ * - Real-time search with parent state updates
+ * - Mobile-responsive design with hamburger menu
+ * - Internationalization support
+ * - Clean logout functionality with navigation
+ */
 const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
+  const { t } = useTranslation();
+
+  // =============== STATE MANAGEMENT ===============
+  // Mobile menu toggle state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Redux state for user authentication
   const user = useSelector((state: RootState) => state.auth.user);
+
+  // Navigation and Redux dispatch
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // =============== EVENT HANDLERS ===============
+
+  /**
+   * Toggles mobile menu visibility
+   * Used for responsive navigation on smaller screens
+   */
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  /**
+   * Handles user logout process
+   * Clears authentication state and redirects to home page
+   */
   const handleLogout = async () => {
     await logoutUser(dispatch);
     navigate("/", { replace: true });
   };
 
+  // =============== RENDER ===============
   return (
     <nav className="navbar">
+      {/* Left section: Logo, home, and search */}
       <div className="navbar-left">
+        {/* Brand logo with home link */}
         <div className="logo">
           <Link to="/">
-            <img src={logo} alt="Spotify Logo" />
+            <img src={logo} alt={t("Spotify Logo")} />
           </Link>
         </div>
 
+        {/* Home icon button */}
         <div className="home-icon-container">
           <Link to="/">
             <svg
@@ -56,11 +100,12 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
           </Link>
         </div>
 
+        {/* Global search container */}
         <div className="search-container">
           <SearchIcon className="search-icon-N" />
           <input
             type="text"
-            placeholder="What do you want to listen to?"
+            placeholder={t("What do you want to listen to?")}
             className="search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -70,41 +115,55 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
         </div>
       </div>
 
+      {/* Right section: Language switcher, menu, and authentication */}
       <div className="navbar-right">
+        {/* Language switcher component */}
+        <div className="language-switcher-container">
+          <LanguageSwitcher />
+        </div>
+
+        {/* Mobile menu toggle button */}
         <button className="mobile-menu-button" onClick={toggleMobileMenu}>
           <MenuIcon />
         </button>
 
+        {/* Navigation links with responsive mobile menu */}
         <ul
           className={`nav-links ${isMobileMenuOpen ? "mobile-menu-open" : ""}`}
         >
+          {/* Main navigation links */}
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">{t("Home")}</Link>
           </li>
           <li>
-            <Link to="/premium">Premium</Link>
+            <Link to="/premium">{t("Premium")}</Link>
           </li>
           <li>
-            <Link to="/download">Download</Link>
+            <Link to="/download">{t("Download")}</Link>
           </li>
+
+          {/* Visual divider */}
           <hr className="nav-divider" />
 
+          {/* Authentication-based conditional rendering */}
           {user ? (
+            // Logout button for authenticated users
             <li>
               <Link to="/login">
                 <button onClick={handleLogout} className="login-button">
-                  Logout
+                  {t("Logout")}
                 </button>
               </Link>
             </li>
           ) : (
+            // Signup and login links for unauthenticated users
             <>
               <li>
-                <Link to="/signup">Signup</Link>
+                <Link to="/signup">{t("Signup")}</Link>
               </li>
               <li>
                 <Link to="/login">
-                  <button className="login-button">Login</button>
+                  <button className="login-button">{t("Login")}</button>
                 </Link>
               </li>
             </>

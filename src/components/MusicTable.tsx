@@ -1,12 +1,15 @@
 import React from "react";
 import "../styles/MusicTable.css";
 import { Song } from "../store/slices/musicSlice";
+import { useTranslation } from "react-i18next";
 
 interface MusicTableProps {
   songsData: Song[];
 }
 
 const MusicTable: React.FC<MusicTableProps> = ({ songsData }) => {
+  const { t } = useTranslation();
+
   const formatDuration = (duration?: number) => {
     if (!duration && duration !== 0) return "--:--";
     const minutes = Math.floor(duration / 60);
@@ -27,8 +30,8 @@ const MusicTable: React.FC<MusicTableProps> = ({ songsData }) => {
     <div className="music-table-container">
       <div className="music-table-header">
         <div className="header-item header-hash">#</div>
-        <div className="header-item header-title">Title</div>
-        <div className="header-item header-date-added">Date added</div>
+        <div className="header-item header-title">{t("Title")}</div>
+        <div className="header-item header-date-added">{t("Date added")}</div>
         <div className="header-item header-duration">
           <svg className="clock-icon" viewBox="0 0 24 24">
             <path
@@ -67,7 +70,7 @@ const MusicTable: React.FC<MusicTableProps> = ({ songsData }) => {
           ))
         ) : (
           <div className="no-songs-message">
-            No songs added to the playlist yet.
+            {t("No songs added to the playlist yet.")}
           </div>
         )}
       </div>

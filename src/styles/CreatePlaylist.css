@@ -1,3 +1,5 @@
+/* =============== MAIN CONTAINER =============== */
+/* Main container using flexbox for sidebar + main content layout */
 .create-playlist-container {
   display: flex;
   height: 100vh;
@@ -7,7 +9,8 @@
   width: 100dvw;
 }
 
-/* Sidebar */
+/* =============== SIDEBAR STYLING =============== */
+/* Left sidebar for playlist library and navigation */
 .create-playlist-sidebar {
   width: 25%;
   background-color: #121212;
@@ -18,13 +21,14 @@
   gap: 16px;
   margin-right: 10px;
   border-radius: 10px;
-  position: sticky;
+  position: sticky; /* Keeps sidebar fixed during scroll */
   top: 0;
   left: 0;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: auto; /* Scrollable if content overflows */
 }
 
+/* Sidebar header with library title */
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -38,11 +42,13 @@
   color: #fff;
 }
 
+/* Section titles within sidebar */
 .playlists-section-title {
   color: #b3b3b3;
   font-size: 14px;
 }
 
+/* Current playlist preview item in sidebar */
 .current-playlist-item {
   display: flex;
   align-items: center;
@@ -56,10 +62,12 @@
   transition: background-color 0.2s ease-in-out;
 }
 
+/* Hover effect for playlist info sections */
 .playlist-info-section:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Playlist cover thumbnail styling */
 .playlist-cover-thumb {
   width: 48px;
   height: 48px;
@@ -72,12 +80,14 @@
   justify-content: center;
 }
 
+/* Playlist metadata container */
 .playlist-info {
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
+/* Playlist name styling with ellipsis for overflow */
 .playlist-name {
   font-size: 14px;
   font-weight: 600;
@@ -87,11 +97,13 @@
   text-overflow: ellipsis;
 }
 
+/* Playlist metadata (owner, type) styling */
 .playlist-meta {
   font-size: 12px;
   color: #b3b3b3;
 }
 
+/* Recents section header */
 .recents-header {
   display: flex;
   justify-content: space-between;
@@ -100,11 +112,12 @@
   font-size: 14px;
 }
 
-/* Main Content */
+/* =============== MAIN CONTENT AREA =============== */
 .main {
   width: 75%;
 }
 
+/* Main playlist creation form container */
 .create-playlist-main {
   border-radius: 10px;
   flex: 1;
@@ -113,6 +126,8 @@
   overflow: hidden;
 }
 
+/* =============== PLAYLIST HEADER =============== */
+/* Header section with cover image and playlist details */
 .playlist-header {
   background: linear-gradient(
     0deg,
@@ -125,6 +140,7 @@
   align-items: end;
 }
 
+/* Cover image upload/display container */
 .cover-upload-container {
   width: 232px !important;
   height: 232px;
@@ -132,14 +148,16 @@
   border-radius: 8px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* ظل للصورة */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Shadow for depth */
 }
 
+/* Default cover image styling */
 .img-cover {
   width: 100%;
   height: 100%;
 }
 
+/* Playlist metadata input section */
 .playlist-text-info {
   display: flex;
   flex-direction: column;
@@ -150,11 +168,13 @@
   width: 50%;
 }
 
+/* Playlist type indicator */
 .playlist-type {
   font-size: 14px;
   color: white;
 }
 
+/* Large playlist name input */
 .playlist-name-input {
   font-size: 55px;
   font-weight: 800;
@@ -164,6 +184,7 @@
   outline: none;
 }
 
+/* Playlist description input */
 .playlist-description-input {
   font-size: 14px;
   background: transparent;
@@ -172,12 +193,14 @@
   outline: none;
 }
 
+/* Owner information display */
 .playlist-owner-info {
   font-size: 14px;
   color: #b3b3b3;
 }
 
-/* Controls */
+/* =============== CONTROL BUTTONS =============== */
+/* Play button and song count container */
 .playlist-controls {
   display: flex;
   align-items: center;
@@ -186,8 +209,9 @@
   margin-bottom: 24px;
 }
 
+/* Large green play button */
 .play-button {
-  background-color: #1db954;
+  background-color: #1db954; /* Spotify green */
   border: none;
   color: #000000;
   font-size: 16px;
@@ -196,17 +220,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
+  border-radius: 999px; /* Perfect circle */
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
+/* Disabled state for play button */
 .play-button.disabled {
   display: none;
   cursor: not-allowed;
 }
 
+/* Song count indicator badge */
 .songs-count-indicator {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
@@ -216,6 +242,7 @@
   color: #b3b3b3;
 }
 
+/* Main content background gradient */
 .playlist-main-content {
   background: linear-gradient(
     180deg,
@@ -225,12 +252,14 @@
   );
 }
 
-/* Search */
+/* =============== SEARCH SECTION =============== */
+/* Search functionality container */
 .search-section {
   padding: 0 32px;
   margin-bottom: 16px;
 }
 
+/* Search section title */
 .search-title {
   font-size: 20px;
   font-weight: bold;
@@ -238,6 +267,7 @@
   text-align: left;
 }
 
+/* Search input container with icon */
 .search-input-container {
   display: flex;
   align-items: center;
@@ -247,6 +277,7 @@
   width: 40%;
 }
 
+/* Search header layout */
 .search-header {
   width: 100%;
   display: flex;
@@ -254,6 +285,7 @@
   justify-content: space-between;
 }
 
+/* Search input field */
 .search-input {
   flex: 1;
   background: transparent;
@@ -261,7 +293,8 @@
   padding: 8px;
 }
 
-/* Song List Styles */
+/* =============== SONG LIST STYLING =============== */
+/* Container for song list items */
 .song-list {
   display: flex;
   flex-direction: column;
@@ -272,12 +305,15 @@
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
 }
 
+/* Individual song list item */
 .song-list-item {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #232323;
   padding: 12px 24px;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
   cursor: pointer;
   gap: 20px;
   position: relative;
@@ -286,27 +322,32 @@
   margin: 0 auto;
 }
 
+/* Remove border from last item */
 .song-list-item:last-child {
   border-bottom: none;
 }
 
+/* Hover effects for song items */
 .song-list-item:hover {
   background-color: #232323;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.18);
 }
 
+/* Show play icon on hover */
 .song-list-item:hover .play-icon {
   opacity: 1;
 }
 
+/* Song index number */
 .song-index {
   width: 32px;
   text-align: center;
   color: #b3b3b3;
   font-size: 16px;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums; /* Consistent number width */
 }
 
+/* Song cover image container with hover effects */
 .song-cover-container {
   position: relative;
   display: inline-block;
@@ -316,6 +357,7 @@
   overflow: hidden;
 }
 
+/* Dark overlay on cover hover */
 .song-cover-container::after {
   content: "";
   position: absolute;
@@ -335,6 +377,7 @@
   z-index: 2;
 }
 
+/* Song cover image styling */
 .song-cover {
   width: 56px;
   height: 56px;
@@ -345,6 +388,7 @@
   position: relative;
 }
 
+/* Hover scale effect for cover container */
 .song-cover-container:hover {
   transform: scale(1.05);
   transition: transform 0.2s ease-in-out;
@@ -355,14 +399,16 @@
   opacity: 1;
 }
 
+/* Song information container */
 .song-info {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 0;
+  min-width: 0; /* Allows text truncation */
 }
 
+/* Song title styling with ellipsis */
 .song-title {
   font-size: 17px;
   color: #fff;
@@ -372,6 +418,7 @@
   text-overflow: ellipsis;
 }
 
+/* Song artist styling with ellipsis */
 .song-artist {
   font-size: 15px;
   color: #b3b3b3;
@@ -381,6 +428,8 @@
   text-overflow: ellipsis;
 }
 
+/* =============== ADD BUTTON STYLING =============== */
+/* Add/Remove song button */
 .add-button {
   background-color: transparent;
   color: #fff;
@@ -390,16 +439,21 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border 0.2s;
   margin-left: 16px;
 }
 
+/* Hover effect for add button */
 .add-button:hover:not(.added) {
   background-color: #fff;
   color: #232323;
   border: 1.5px solid #fff;
 }
 
+/* Added state styling */
 .add-button.added {
   background-color: #232323;
   color: #b3b3b3;
@@ -407,6 +461,7 @@
   cursor: default;
 }
 
+/* Play icon overlay for song covers */
 .play-icon {
   position: absolute;
   left: 50%;
@@ -417,4 +472,195 @@
   color: #fff;
   font-size: 22px;
   pointer-events: none;
+}
+
+/* =============== SAVE BUTTON =============== */
+/* Primary action button styling */
+.save-button {
+  background-color: #1db954; /* Spotify green */
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Hover effects for save button */
+.save-button:hover:not(:disabled) {
+  background-color: #1ed760;
+  transform: scale(1.05);
+}
+
+/* Disabled state for save button */
+.save-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Playlist songs section container */
+.playlist-songs-section {
+  padding: 0 30px;
+  width: 100%;
+}
+
+/* =============== RESPONSIVE DESIGN =============== */
+/* Tablet and small desktop adjustments */
+@media (max-width: 992px) {
+  .create-playlist-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 40px;
+  }
+
+  .playlist-info-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .playlist-title {
+    font-size: 50px;
+  }
+
+  .playlist-actions {
+    padding-left: 20px;
+    justify-content: center;
+  }
+}
+
+/* Mobile device adjustments */
+@media (max-width: 768px) {
+  .create-playlist-page {
+    padding: 15px;
+  }
+
+  .playlist-cover-placeholder {
+    width: 180px;
+    height: 180px;
+  }
+
+  .playlist-title {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+
+  .playlist-description {
+    font-size: 14px;
+  }
+
+  .save-button {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+
+  .playlist-actions {
+    padding-left: 15px;
+  }
+
+  .playlist-songs-section {
+    padding: 0 15px;
+  }
+}
+
+/* Small mobile device adjustments */
+@media (max-width: 480px) {
+  .playlist-cover-placeholder {
+    width: 130px;
+    height: 130px;
+  }
+
+  .playlist-title {
+    font-size: 30px;
+  }
+}
+
+/* =============== RTL (RIGHT-TO-LEFT) SUPPORT =============== */
+/* RTL layout adjustments for Arabic language support */
+[dir="rtl"] .create-playlist-container {
+  direction: rtl;
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .create-playlist-sidebar {
+  text-align: right;
+}
+
+[dir="rtl"] .sidebar-title {
+  text-align: right;
+}
+
+[dir="rtl"] .playlist-info {
+  text-align: right;
+}
+
+[dir="rtl"] .playlist-header {
+  text-align: right;
+}
+
+[dir="rtl"] .playlist-details {
+  text-align: right;
+}
+
+[dir="rtl"] .playlist-controls {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .search-input-container {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .search-title {
+  text-align: right;
+}
+
+[dir="rtl"] .search-input {
+  text-align: right;
+}
+
+[dir="rtl"] .song-list-item {
+  flex-direction: row;
+}
+
+[dir="rtl"] .song-cover {
+  margin-right: 0;
+  margin-left: 16px;
+}
+
+[dir="rtl"] .song-info {
+  text-align: right;
+}
+
+[dir="rtl"] .add-button {
+  margin-left: 0;
+  margin-right: 16px;
+}
+
+[dir="rtl"] .play-icon {
+  left: auto;
+  right: 50%;
+  transform: translate(50%, -50%);
+}
+
+/* RTL responsive adjustments */
+@media (max-width: 992px) {
+  [dir="rtl"] .create-playlist-header {
+    text-align: center;
+  }
+
+  [dir="rtl"] .playlist-actions {
+    padding-left: 0;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  [dir="rtl"] .playlist-actions {
+    padding-left: 0;
+    padding-right: 15px;
+  }
 }

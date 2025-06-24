@@ -15,6 +15,10 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 
+/**
+ * Interface for creating a new playlist
+ * Contains all required fields for playlist creation
+ */
 export interface NewPlaylist {
   name: string;
   description?: string;
@@ -24,6 +28,10 @@ export interface NewPlaylist {
   ownerEmail: string;
 }
 
+/**
+ * Interface for existing playlist data
+ * Includes the Firestore document ID along with playlist data
+ */
 export interface Playlist {
   id: string;
   name: string;
@@ -35,6 +43,19 @@ export interface Playlist {
   createdAt?: string;
 }
 
+/**
+ * Creates a new playlist in Firestore
+ *
+ * @param data - NewPlaylist object containing playlist information
+ * @returns Promise<Playlist> - The created playlist with Firestore ID
+ * @throws Error if validation fails or Firestore operation fails
+ *
+ * Features:
+ * - Input validation for required fields
+ * - Data sanitization for Firestore compatibility
+ * - Automatic timestamp generation
+ * - Comprehensive error logging
+ */
 export async function addPlaylistToFirebase(data: NewPlaylist) {
   try {
     console.log("🆕 Creating new playlist with data:", data);
@@ -50,7 +71,7 @@ export async function addPlaylistToFirebase(data: NewPlaylist) {
       throw new Error("Owner email is required");
     }
 
-    // Clean the data
+    // Clean and prepare data for Firestore
     const cleanPlaylistData = {
       name: String(data.name).trim(),
       description: String(data.description || ""),
@@ -63,8 +84,10 @@ export async function addPlaylistToFirebase(data: NewPlaylist) {
 
     console.log("🧹 Cleaned playlist data for Firestore:", cleanPlaylistData);
 
+    // Add document to Firestore
     const docRef = await addDoc(collection(db, "playlists"), cleanPlaylistData);
 
+    // Format response for application use
     const result = {
       id: docRef.id,
       name: cleanPlaylistData.name,
@@ -84,6 +107,19 @@ export async function addPlaylistToFirebase(data: NewPlaylist) {
   }
 }
 
+/**
+ * Updates an existing playlist in Firestore
+ *
+ * @param playlistId - The Firestore document ID of the playlist to update
+ * @param data - Partial playlist data to update
+ * @throws Error if playlistId is invalid or update fails
+ *
+ * Features:
+ * - Validates playlist ID format
+ * - Sanitizes update data
+ * - Prevents updating immutable fields (id, createdAt)
+ * - Comprehensive error handling
+ */
 export async function updatePlaylistInFirebase(
   playlistId: string,
   data: Partial<Playlist>
@@ -97,7 +133,7 @@ export async function updatePlaylistInFirebase(
       throw new Error("Invalid playlist ID provided");
     }
 
-    // Clean and validate the data
+    // Clean and validate the update data
     const cleanData: any = {};
 
     if (data.name !== undefined) {
@@ -128,6 +164,7 @@ export async function updatePlaylistInFirebase(
 
     console.log("🧹 Cleaned data for Firestore:", cleanData);
 
+    // Update the document in Firestore
     const playlistRef = doc(db, "playlists", playlistId);
     await updateDoc(playlistRef, cleanData);
 
@@ -138,6 +175,18 @@ export async function updatePlaylistInFirebase(
   }
 }
 
+/**
+ * Adds a single song to an existing playlist
+ *
+ * @param playlistId - The Firestore document ID of the playlist
+ * @param song - The song object to add to the playlist
+ * @throws Error if playlist not found or song addition fails
+ *
+ * Features:
+ * - Prevents duplicate songs in playlist
+ * - Adds timestamp when song was added
+ * - Maintains existing playlist structure
+ */
 export async function addSongToPlaylist(playlistId: string, song: Song) {
   const playlistRef = doc(db, "playlists", playlistId);
   const docSnap = await getDoc(playlistRef);
@@ -149,6 +198,7 @@ export async function addSongToPlaylist(playlistId: string, song: Song) {
   const data = docSnap.data();
   const originalSongs = data.songs as Song[];
 
+  // Check if song already exists in playlist
   const songExists = originalSongs.some((s) => s.id === song.id);
 
   if (!songExists) {
@@ -158,13 +208,24 @@ export async function addSongToPlaylist(playlistId: string, song: Song) {
     };
 
     const updatedSongs = [...originalSongs, songToAdd];
-
     await updateDoc(playlistRef, { songs: updatedSongs });
   } else {
     console.log("Song already exists in playlist");
   }
 }
 
+/**
+ * Removes a song from an existing playlist
+ *
+ * @param playlistId - The Firestore document ID of the playlist
+ * @param song - The song object to remove from the playlist
+ * @throws Error if playlist not found
+ *
+ * Features:
+ * - Filters out song by ID match
+ * - Maintains order of remaining songs
+ * - Safe operation if song doesn't exist
+ */
 export async function removeSongFromPlaylist(playlistId: string, song: Song) {
   const playlistRef = doc(db, "playlists", playlistId);
   const docSnap = await getDoc(playlistRef);
@@ -180,6 +241,17 @@ export async function removeSongFromPlaylist(playlistId: string, song: Song) {
   await updateDoc(playlistRef, { songs: updatedSongs });
 }
 
+/**
+ * Replaces all songs in a playlist with a new song array
+ *
+ * @param playlistId - The Firestore document ID of the playlist
+ * @param songs - Array of songs to replace existing songs
+ *
+ * Features:
+ * - Adds dateAdded timestamp to songs without one
+ * - Completely replaces existing song list
+ * - Useful for reordering or bulk updates
+ */
 export async function updatePlaylistSongs(playlistId: string, songs: Song[]) {
   const playlistRef = doc(db, "playlists", playlistId);
 
@@ -193,22 +265,39 @@ export async function updatePlaylistSongs(playlistId: string, songs: Song[]) {
   });
 }
 
+/**
+ * Adds multiple songs to a playlist in a single operation
+ *
+ * @param playlistId - The Firestore document ID of the playlist
+ * @param songs - Array of songs to add to the playlist
+ * @returns Promise<number> - Number of songs actually added (excludes duplicates)
+ * @throws Error if playlist not found
+ *
+ * Features:
+ * - Efficient bulk song addition
+ * - Automatic duplicate detection
+ * - Returns count of newly added songs
+ * - Preserves existing songs in playlist
+ */
 export async function addMultipleSongsToPlaylist(
   playlistId: string,
   songs: Song[]
 ) {
   const playlistRef = doc(db, "playlists", playlistId);
 
+  // Get current playlist to check for duplicates
   const currentPlaylist = await fetchPlaylistById(playlistId);
   if (!currentPlaylist) {
     throw new Error("Playlist not found");
   }
 
+  // Filter out songs that already exist in the playlist
   const newSongs = songs.filter(
     (song) =>
       !currentPlaylist.songs.some((existingSong) => existingSong.id === song.id)
   );
 
+  // Add only new songs
   if (newSongs.length > 0) {
     const songsWithDate = newSongs.map((song) => ({
       ...song,
@@ -223,6 +312,14 @@ export async function addMultipleSongsToPlaylist(
   return newSongs.length;
 }
 
+/**
+ * Fetches all songs from the Firebase Realtime Database
+ *
+ * @returns Promise<Song[]> - Array of all available songs
+ *
+ * Note: This function uses Firebase Realtime Database instead of Firestore
+ * for the songs collection, which is why it has a different implementation
+ */
 export async function fetchSongsFromFirebase(): Promise<Song[]> {
   const snapshot = await getDocs(collection(db, "songs"));
   const allSongs = snapshot.docs.map((doc) => ({
@@ -233,6 +330,18 @@ export async function fetchSongsFromFirebase(): Promise<Song[]> {
   return allSongs;
 }
 
+/**
+ * Fetches all playlists belonging to a specific user
+ *
+ * @param userId - The user ID to fetch playlists for
+ * @returns Promise<Playlist[]> - Array of user's playlists
+ *
+ * Features:
+ * - Queries by userId for efficient filtering
+ * - Converts Firestore timestamps to ISO strings
+ * - Handles missing fields gracefully
+ * - Returns empty array if no playlists found
+ */
 export async function fetchPlaylistsByUser(
   userId: string
 ): Promise<Playlist[]> {
@@ -254,16 +363,39 @@ export async function fetchPlaylistsByUser(
   });
 }
 
+/**
+ * Deletes a playlist from Firestore
+ *
+ * @param playlistId - The Firestore document ID of the playlist to delete
+ *
+ * Features:
+ * - Permanent deletion operation
+ * - No recovery possible after deletion
+ * - Should be used with user confirmation
+ */
 export async function deletePlaylistFromFirebase(playlistId: string) {
   const playlistRef = doc(db, "playlists", playlistId);
   await deleteDoc(playlistRef);
 }
 
+/**
+ * Fetches a single playlist by its ID
+ *
+ * @param playlistId - The Firestore document ID of the playlist
+ * @returns Promise<Playlist | null> - The playlist data or null if not found
+ *
+ * Features:
+ * - Safe handling of non-existent playlists
+ * - Converts Firestore timestamps to ISO strings
+ * - Returns null instead of throwing error for missing playlist
+ * - Comprehensive data transformation
+ */
 export async function fetchPlaylistById(
   playlistId: string
 ): Promise<Playlist | null> {
   const playlistRef = doc(db, "playlists", playlistId);
   const docSnap = await getDoc(playlistRef);
+
   if (docSnap.exists()) {
     const data = docSnap.data();
     return {

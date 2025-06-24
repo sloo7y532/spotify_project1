@@ -146,7 +146,16 @@
   cursor: pointer;
   z-index: 2;
 }
-
+/* RTL Support for Music Player */
+[dir="rtl"] .music-player {
+  direction: rtl;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+[dir="rtl"] .music-player-right {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
 /* Media Queries */
 @media screen and (max-width: 1140px) {
   .music-player-center {

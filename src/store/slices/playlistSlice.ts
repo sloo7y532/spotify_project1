@@ -70,14 +70,14 @@ const playlistSlice = createSlice({
     clearCurrentPlaylist: (state) => {
       state.currentPlaylist = null;
     },
-    updatePlaylist: (state, action: PayloadAction<Playlist>) => {
-      if (
-        state.currentPlaylist &&
-        state.currentPlaylist.id === action.payload.id
-      ) {
-        state.currentPlaylist = action.payload;
-      }
-    },
+    // updatePlaylist: (state, action: PayloadAction<Playlist>) => {
+    //   if (
+    //     state.currentPlaylist &&
+    //     state.currentPlaylist.id === action.payload.id
+    //   ) {
+    //     state.currentPlaylist = action.payload;
+    //   }
+    // },
   },
 });
 

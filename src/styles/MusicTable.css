@@ -112,3 +112,22 @@
   text-align: right;
   color: #7a7a7a;
 }
+[dir="rtl"] .music-table-header {
+  flex-direction: row;
+}
+[dir="rtl"] .header-title {
+  flex: 1.5;
+  padding-right: 50px;
+}
+[dir="rtl"] .header-date-added {
+  padding-right: 40px;
+}
+[dir="rtl"] .header-duration {
+  flex-direction: row-reverse;
+}
+[dir="rtl"] .music-table-row {
+  flex-direction: row;
+}
+[dir="rtl"] .row-item {
+  text-align: right;
+}
