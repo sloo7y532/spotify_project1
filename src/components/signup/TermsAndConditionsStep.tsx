@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'; // تم إضافة هذا الا
 const TermsAndConditionsStep: React.FC = () => {
   const [receiveMarketing, setReceiveMarketing] = useState(false);
   const [shareData, setShareData] = useState(false);
-  const { loading, signupEmail, signupPassword, error, signupProfile } = useAppSelector(state => state.auth); // <--- جلب البيانات من Redux
+  const { loading, signupEmail, signupPassword, error } = useAppSelector(state => state.auth); // <--- جلب البيانات من Redux
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation(); // تم تعريف دالة الترجمة هنا

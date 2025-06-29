@@ -1,10 +1,8 @@
-// src/components/auth/SignupFlow.tsx
-
-import React, { useEffect } from 'react'; // تم إضافة useEffect
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store/hooks.ts'; // تم إضافة useAppDispatch
-import { clearError } from '../../store/slices/authSlice.ts'; // تم إضافة clearError
-import { useTranslation } from 'react-i18next'; // تم إضافة هذا الاستيراد
+import React, { useEffect } from "react"; // تأكد من استيراد useEffect
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from '../../store/hooks.ts';
+import { clearError } from '../../store/slices/authSlice.ts';
+import { useTranslation } from 'react-i18next';
 
 import EmailSignupStep from "./EmailSignupStep.tsx";
 import PasswordStep from "./PasswordStep.tsx";
@@ -15,9 +13,9 @@ import spotifyLogo from "../../assets/spotify-icon-green.png";
 const SignupFlow: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useAppDispatch(); // تم إضافة dispatch
+  const dispatch = useAppDispatch();
   const { loading, user } = useAppSelector(state => state.auth);
-  const { t } = useTranslation(); // تم تعريف دالة الترجمة هنا
+  const { t, i18n } = useTranslation(); // استيراد i18n هنا
 
   React.useEffect(() => {
     if (user) {
@@ -25,15 +23,25 @@ const SignupFlow: React.FC = () => {
     }
   }, [user, navigate]);
 
-  // إضافة useEffect لمسح الأخطاء عند تحميل المكون
   useEffect(() => {
     dispatch(clearError());
-    // يمكنك إضافة تنظيف إضافي هنا إذا لزم الأمر
     return () => {
       dispatch(clearError());
     };
-  }, [dispatch, location.pathname]); // مسح الأخطاء عند تغيير المسار أيضًا
+  }, [dispatch, location.pathname]);
 
+  // **هنا إضافة الـ RTL/LTR:**
+  useEffect(() => {
+    // ضبط اتجاه الـ body بناءً على اللغة الحالية
+    document.body.setAttribute('dir', i18n.language === 'ar' ? 'rtl' : 'ltr');
+    // تنظيف عند إزالة المكون (العودة للوضع الافتراضي إذا لزم الأمر، لكن عادةً ما يكون هذا كافياً)
+    return () => {
+      // إذا كنت تريد إزالة الـ 'dir' attribute عند الخروج من مسارات التسجيل
+      // يمكنك إما تعيينه إلى 'ltr' افتراضيًا أو إزالته تمامًا
+      // document.body.removeAttribute('dir'); // أو
+      // document.body.setAttribute('dir', 'ltr');
+    };
+  }, [i18n.language]); // إعادة تشغيل هذا التأثير عند تغيير اللغة
 
   let currentStepIndex = 0;
   if (location.pathname.includes("/signup/password")) {
@@ -46,7 +54,7 @@ const SignupFlow: React.FC = () => {
 
   return (
     <div className="signup-flow-container">
-      <img src={spotifyLogo} alt={t('Spotify Logo')} className="spotify-logo" /> {/* تم تعريب alt text */}
+      <img src={spotifyLogo} alt={t('Spotify Logo')} className="spotify-logo" />
 
       {currentStepIndex > 0 && currentStepIndex <= 3 && (
         <div className="progress-bar">
@@ -57,8 +65,8 @@ const SignupFlow: React.FC = () => {
         </div>
       )}
 
-      {loading && <p className="loading-message">{t('...Loading')}</p>} {/* تم تعريب نص التحميل */}
-      
+      {loading && <p className="loading-message">{t('...Loading')}</p>}
+
       <Routes>
         <Route index element={<EmailSignupStep />} />
         <Route path="password" element={<PasswordStep />} />
