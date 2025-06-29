@@ -645,6 +645,14 @@
   right: 50%;
   transform: translate(50%, -50%);
 }
+[dir="rtl"] .user-playlist-item {
+  flex-direction: row;
+}
+
+[dir="rtl"] .user-playlist-item .playlist-cover-thumb {
+  margin-right: 0;
+  margin-left: 16px;
+}
 
 /* RTL responsive adjustments */
 @media (max-width: 992px) {

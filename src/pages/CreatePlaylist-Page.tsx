@@ -95,12 +95,12 @@ const CreatePlaylistPage: React.FC = () => {
             dispatch(setPlaylist(playlist.songs || []));
           }
         } catch (error) {
-          console.error("Error loading playlist:", error);
+          showToast(t("Failed to load playlist. Please try again."), "error");
         }
       }
     };
     loadPlaylistFromBackend();
-  }, [playlistId, dispatch]);
+  }, [playlistId, dispatch, showToast, t]);
 
   /**
    * Effect: Fetch all available songs from Firebase
@@ -112,6 +112,7 @@ const CreatePlaylistPage: React.FC = () => {
       .then((response) => {
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
+        showToast(t("Songs loaded successfully."), "success");
         return response.json();
       })
       .then((data) => {
@@ -143,7 +144,10 @@ const CreatePlaylistPage: React.FC = () => {
           setSongs(songsWithDurations);
         });
       })
-      .catch((error) => console.error("Error fetching songs:", error));
+      .catch((error) => {
+        console.error("Error fetching songs:", error);
+        showToast(t("Failed to load songs. Please try again."), "error");
+      });
   }, []);
 
   /**

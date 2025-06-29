@@ -11,8 +11,6 @@ import {
   updateDoc,
   deleteDoc,
   getDoc,
-  arrayUnion,
-  arrayRemove,
 } from "firebase/firestore";
 
 /**
@@ -239,95 +237,6 @@ export async function removeSongFromPlaylist(playlistId: string, song: Song) {
   const updatedSongs = originalSongs.filter((s) => s.id !== song.id);
 
   await updateDoc(playlistRef, { songs: updatedSongs });
-}
-
-/**
- * Replaces all songs in a playlist with a new song array
- *
- * @param playlistId - The Firestore document ID of the playlist
- * @param songs - Array of songs to replace existing songs
- *
- * Features:
- * - Adds dateAdded timestamp to songs without one
- * - Completely replaces existing song list
- * - Useful for reordering or bulk updates
- */
-export async function updatePlaylistSongs(playlistId: string, songs: Song[]) {
-  const playlistRef = doc(db, "playlists", playlistId);
-
-  const songsWithDate = songs.map((song) => ({
-    ...song,
-    dateAdded: song.dateAdded || new Date().toISOString(),
-  }));
-
-  await updateDoc(playlistRef, {
-    songs: songsWithDate,
-  });
-}
-
-/**
- * Adds multiple songs to a playlist in a single operation
- *
- * @param playlistId - The Firestore document ID of the playlist
- * @param songs - Array of songs to add to the playlist
- * @returns Promise<number> - Number of songs actually added (excludes duplicates)
- * @throws Error if playlist not found
- *
- * Features:
- * - Efficient bulk song addition
- * - Automatic duplicate detection
- * - Returns count of newly added songs
- * - Preserves existing songs in playlist
- */
-export async function addMultipleSongsToPlaylist(
-  playlistId: string,
-  songs: Song[]
-) {
-  const playlistRef = doc(db, "playlists", playlistId);
-
-  // Get current playlist to check for duplicates
-  const currentPlaylist = await fetchPlaylistById(playlistId);
-  if (!currentPlaylist) {
-    throw new Error("Playlist not found");
-  }
-
-  // Filter out songs that already exist in the playlist
-  const newSongs = songs.filter(
-    (song) =>
-      !currentPlaylist.songs.some((existingSong) => existingSong.id === song.id)
-  );
-
-  // Add only new songs
-  if (newSongs.length > 0) {
-    const songsWithDate = newSongs.map((song) => ({
-      ...song,
-      dateAdded: song.dateAdded || new Date().toISOString(),
-    }));
-
-    await updateDoc(playlistRef, {
-      songs: [...currentPlaylist.songs, ...songsWithDate],
-    });
-  }
-
-  return newSongs.length;
-}
-
-/**
- * Fetches all songs from the Firebase Realtime Database
- *
- * @returns Promise<Song[]> - Array of all available songs
- *
- * Note: This function uses Firebase Realtime Database instead of Firestore
- * for the songs collection, which is why it has a different implementation
- */
-export async function fetchSongsFromFirebase(): Promise<Song[]> {
-  const snapshot = await getDocs(collection(db, "songs"));
-  const allSongs = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...(doc.data() as Song),
-  }));
-  console.log("from fire", allSongs);
-  return allSongs;
 }
 
 /**

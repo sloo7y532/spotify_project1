@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { NewPlaylist } from "../../firebase/playlistService.ts";
 
 /**
  * Song Interface
@@ -13,9 +12,6 @@ export interface Song {
   artist?: string; // Artist name
   image?: string; // Album/song cover image URL
   audioUrl?: string; // Audio file URL for playback
-  playlistName?: string; // Associated playlist name (legacy field)
-  userId?: string; // User who added the song (legacy field)
-  createdAt?: Date; // Creation timestamp (legacy field)
   duration?: number; // Song duration in seconds
   dateAdded?: string; // ISO string of when song was added to playlist
 }
