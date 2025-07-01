@@ -234,7 +234,7 @@ const MusicPlayer = () => {
         {/* Control buttons row */}
         <div className="music-player-controls">
           <ShuffleIcon />
-          <SkipPreviousIcon />
+          <SkipPreviousIcon  className="skipPreviousIcon"/>
           <button onClick={togglePlayPause} className="music-player-play-btn">
             {isPlaying ? (
               <PauseIcon fontSize="large" />
@@ -242,7 +242,7 @@ const MusicPlayer = () => {
               <PlayArrowIcon fontSize="large" />
             )}
           </button>
-          <SkipNextIcon />
+          <SkipNextIcon className="skipNextIcon" />
           <RepeatIcon />
         </div>
 
