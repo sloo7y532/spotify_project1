@@ -241,7 +241,7 @@
     text-align: right;
   }
 }
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 900px) {
   .dashboard-content {
     flex-direction: column !important;
     width: 100%;

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useRef,
+} from "react";
 import "../styles/Toast.css";
 
 type ToastType = "success" | "error" | "info";
@@ -26,10 +32,21 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [toast, setToast] = useState<Toast | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const showToast = (message: string, type: ToastType = "info") => {
+    // Clear existing timeout if any
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
     setToast({ message, type });
-    setTimeout(() => setToast(null), 3000); // hide after 3 sec
+
+    // Set new timeout
+    timeoutRef.current = setTimeout(() => {
+      setToast(null);
+      timeoutRef.current = null;
+    }, 3000); // hide after 3 sec
   };
 
   return (

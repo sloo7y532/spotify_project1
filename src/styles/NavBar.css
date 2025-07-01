@@ -349,7 +349,7 @@ input .search-input {
   transform: scale(1.05);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .search-container {
     width: 40%;
   }
@@ -357,9 +357,59 @@ input .search-input {
   [dir="rtl"] .search-container {
     width: 40%;
   }
-}
+  .navbar-left {
+    width: 65%;
+  }
 
-@media (max-width: 962px) {
+  .navbar-right {
+    width: 35%;
+  }
+
+  .nav-links a {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  .login-button {
+    width: 90px;
+    height: 42px;
+    font-size: 16px;
+  }
+  .search-input {
+    width: 100%;
+  }
+}
+@media (max-width: 980px) {
+  .search-container {
+    width: 30%;
+  }
+
+  [dir="rtl"] .search-container {
+    width: 30%;
+  }
+  .navbar-left {
+    width: 70%;
+  }
+
+  .navbar-right {
+    width: 30%;
+  }
+
+    .nav-links a {
+      font-size: 16px;
+      padding: 8px;
+    }
+
+  .login-button {
+    width: 80px;
+    height: 40px;
+    font-size: 15px;
+  }
+  .search-input {
+    width: 100%;
+  }
+}
+@media (max-width: 900px) {
   .navbar {
     padding: 0.5rem;
     position: relative;
@@ -529,31 +579,5 @@ input .search-input {
   .login-button {
     height: 40px;
     font-size: 15px;
-  }
-}
-
-/* tablet-specific styles */
-@media (min-width: 769px) and (max-width: 1023px) {
-  .navbar-left {
-    width: 65%;
-  }
-
-  .navbar-right {
-    width: 35%;
-  }
-
-  .search-container {
-    width: 50%;
-  }
-
-  .nav-links a {
-    font-size: 16px;
-    padding: 8px;
-  }
-
-  .login-button {
-    width: 90px;
-    height: 42px;
-    font-size: 16px;
   }
 }
