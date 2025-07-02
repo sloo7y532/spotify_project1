@@ -1,48 +1,45 @@
-import React, { useEffect } from "react"; // تأكد من استيراد useEffect
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from '../../store/hooks.ts';
-import { clearError } from '../../store/slices/authSlice.ts';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect } from "react"; // Imports React and the useEffect hook.
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom"; // Imports routing hooks and components from react-router-dom.
+import { useAppSelector, useAppDispatch } from '../../store/hooks.ts'; // Imports custom Redux hooks.
+import { clearError } from '../../store/slices/authSlice.ts'; // Imports an action to clear auth errors.
+import { useTranslation } from 'react-i18next'; // Imports translation hook for i18n.
 
+// Imports individual signup step components.
 import EmailSignupStep from "./EmailSignupStep.tsx";
 import PasswordStep from "./PasswordStep.tsx";
 import ProfileInfoStep from "./ProfileInfoStep.tsx";
 import TermsAndConditionsStep from "./TermsAndConditionsStep.tsx";
-import spotifyLogo from "../../assets/spotify-icon-green.png";
+import spotifyLogo from "../../assets/spotify-icon-green.png"; // Imports the Spotify logo image.
 
+// SignupFlow component manages the multi-step signup process.
 const SignupFlow: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useAppDispatch();
-  const { loading, user } = useAppSelector(state => state.auth);
-  const { t, i18n } = useTranslation(); // استيراد i18n هنا
+  const navigate = useNavigate(); // Hook to programmatically navigate.
+  const location = useLocation(); // Hook to get current URL location.
+  const dispatch = useAppDispatch(); // Hook to dispatch Redux actions.
+  const { loading, user } = useAppSelector(state => state.auth); // Selects loading state and user info from Redux auth slice.
+  const { t, i18n } = useTranslation(); // Translation function and i18n instance for language detection.
 
+  // Effect hook to redirect logged-in users to the home page.
   React.useEffect(() => {
     if (user) {
-      navigate("/", { replace: true });
+      navigate("/", { replace: true }); // Redirects and replaces history entry.
     }
-  }, [user, navigate]);
+  }, [user, navigate]); // Re-runs when 'user' or 'navigate' changes.
 
+  // Effect hook to clear Redux errors on route changes and component unmount.
   useEffect(() => {
-    dispatch(clearError());
+    dispatch(clearError()); // Clears errors when component mounts or path changes.
     return () => {
-      dispatch(clearError());
+      dispatch(clearError()); // Clears errors when component unmounts.
     };
-  }, [dispatch, location.pathname]);
+  }, [dispatch, location.pathname]); // Re-runs when 'dispatch' or 'location.pathname' changes.
 
-  // **هنا إضافة الـ RTL/LTR:**
+  // Effect hook to set the document's text direction (RTL/LTR) based on the current language.
   useEffect(() => {
-    // ضبط اتجاه الـ body بناءً على اللغة الحالية
-    document.body.setAttribute('dir', i18n.language === 'ar' ? 'rtl' : 'ltr');
-    // تنظيف عند إزالة المكون (العودة للوضع الافتراضي إذا لزم الأمر، لكن عادةً ما يكون هذا كافياً)
-    return () => {
-      // إذا كنت تريد إزالة الـ 'dir' attribute عند الخروج من مسارات التسجيل
-      // يمكنك إما تعيينه إلى 'ltr' افتراضيًا أو إزالته تمامًا
-      // document.body.removeAttribute('dir'); // أو
-      // document.body.setAttribute('dir', 'ltr');
-    };
-  }, [i18n.language]); // إعادة تشغيل هذا التأثير عند تغيير اللغة
+    document.body.setAttribute('dir', i18n.language === 'ar' ? 'rtl' : 'ltr'); // Sets 'dir' attribute of the <body> tag.
+  }, [i18n.language]); // Re-runs when the i18n language changes.
 
+  // Determines the current step index based on the URL path for the progress bar.
   let currentStepIndex = 0;
   if (location.pathname.includes("/signup/password")) {
     currentStepIndex = 1;
@@ -52,30 +49,34 @@ const SignupFlow: React.FC = () => {
     currentStepIndex = 3;
   }
 
+  // Renders the signup flow container, logo, progress bar, loading message, and nested routes.
   return (
     <div className="signup-flow-container">
-      <img src={spotifyLogo} alt={t('Spotify Logo')} className="spotify-logo" />
+      <img src={spotifyLogo} alt={t('Spotify Logo')} className="spotify-logo" /> {/* Spotify logo with translation. */}
 
+      {/* Renders the progress bar only if it's not the initial step (index > 0). */}
       {currentStepIndex > 0 && currentStepIndex <= 3 && (
         <div className="progress-bar">
           <div
             className="progress-bar-fill"
-            style={{ width: `${(currentStepIndex / 3) * 100}%` }}
+            style={{ width: `${(currentStepIndex / 3) * 100}%` }} // Dynamically sets progress bar width.
           ></div>
         </div>
       )}
 
+      {/* Displays a loading message if the auth state is loading. */}
       {loading && <p className="loading-message">{t('...Loading')}</p>}
 
+      {/* Defines the routes for each step of the signup process. */}
       <Routes>
-        <Route index element={<EmailSignupStep />} />
-        <Route path="password" element={<PasswordStep />} />
-        <Route path="profile" element={<ProfileInfoStep />} />
-        <Route path="terms" element={<TermsAndConditionsStep />} />
-        <Route path="*" element={<EmailSignupStep />} />
+        <Route index element={<EmailSignupStep />} /> {/* Default route for /signup. */}
+        <Route path="password" element={<PasswordStep />} /> {/* Route for /signup/password. */}
+        <Route path="profile" element={<ProfileInfoStep />} /> {/* Route for /signup/profile. */}
+        <Route path="terms" element={<TermsAndConditionsStep />} /> {/* Route for /signup/terms. */}
+        <Route path="*" element={<EmailSignupStep />} /> {/* Fallback route for invalid paths. */}
       </Routes>
     </div>
   );
 };
 
-export default SignupFlow;
+export default SignupFlow; // Exports the component for use in the main application.
