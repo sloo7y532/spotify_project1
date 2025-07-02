@@ -148,7 +148,7 @@ const CreatePlaylistPage: React.FC = () => {
         console.error("Error fetching songs:", error);
         showToast(t("Failed to load songs. Please try again."), "error");
       });
-  }, []);
+  }, [showToast, t]);
 
   /**
    * Effect: Update current editing playlist data

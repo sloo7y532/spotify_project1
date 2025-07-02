@@ -1,8 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-<<<<<<< HEAD
-// import { NewPlaylist } from "../../firebase/playlistService.ts";
-=======
->>>>>>> 2c1b496cd20fa66e44e3b1461a48d29e98459f87
 
 /**
  * Song Interface

@@ -11,11 +11,6 @@ import {
   updateDoc,
   deleteDoc,
   getDoc,
-<<<<<<< HEAD
-  // arrayUnion,
-  // arrayRemove,
-=======
->>>>>>> 2c1b496cd20fa66e44e3b1461a48d29e98459f87
 } from "firebase/firestore";
 
 /**

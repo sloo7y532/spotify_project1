@@ -14,7 +14,7 @@ const LoginFlow: React.FC = () => {
   const navigate = useNavigate(); // Hook for programmatic navigation.
   const dispatch = useAppDispatch(); // Hook to dispatch Redux actions.
   const { user } = useAppSelector((state) => state.auth); // Selects user information from Redux auth slice.
-  const { t, i18n } = useTranslation(); // Translation function and i18n instance for language detection.
+  const { i18n } = useTranslation(); // Translation function and i18n instance for language detection.
 
   // Effect to redirect authenticated users to the home page.
   useEffect(() => {
