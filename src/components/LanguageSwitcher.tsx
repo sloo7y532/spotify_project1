@@ -60,10 +60,10 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         border: "1px solid #ccc",
         borderRadius: "6px",
         backgroundColor: "transparent",
-        color: "inherit", // Inherit color from parent
+        color: "inherit",
         cursor: "pointer",
         fontSize: "14px",
-        transition: "all 0.2s ease", // Smooth hover transitions
+        transition: "all 0.2s ease",
       }}
       onMouseOver={(e) => {
         e.currentTarget.style.backgroundColor = "#f0f0f0";

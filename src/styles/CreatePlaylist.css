@@ -138,19 +138,23 @@
   padding: 32px;
   gap: 32px;
   align-items: end;
+  width: 100%;
 }
 
 /* Cover image upload/display container */
 .cover-upload-container {
-  width: 232px !important;
+  width: 232px;
   height: 232px;
   background-color: #282828;
   border-radius: 8px;
-  position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Shadow for depth */
 }
 
+/* Playlist details container */
+.playlist-details {
+  width: 70%;
+}
 /* Default cover image styling */
 .img-cover {
   width: 100%;
@@ -165,7 +169,7 @@
   align-items: flex-start;
   gap: 12px;
   height: 80%;
-  width: 50%;
+  width: 40%;
 }
 
 /* Playlist type indicator */
@@ -644,6 +648,14 @@
   left: auto;
   right: 50%;
   transform: translate(50%, -50%);
+}
+[dir="rtl"] .user-playlist-item {
+  flex-direction: row;
+}
+
+[dir="rtl"] .user-playlist-item .playlist-cover-thumb {
+  margin-right: 0;
+  margin-left: 16px;
 }
 
 /* RTL responsive adjustments */

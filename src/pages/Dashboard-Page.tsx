@@ -10,7 +10,6 @@ import {
   fetchPlaylistsByUser,
   deletePlaylistFromFirebase,
 } from "../firebase/playlistService.ts";
-import { Link } from "react-router-dom";
 import { setIsPlaying, setCurrentSong } from "../store/slices/musicSlice.ts";
 import Footer from "../components/Footer.tsx";
 import { useTranslation } from "react-i18next";
@@ -145,13 +144,14 @@ export default function DashboardPage({ searchTerm = "" }) {
       <div className="dashboard-content">
         {/* Sidebar with user library and playlists */}
         <div className="dashboard-sidebar">
+          
           {/* Sidebar header with library title and add button */}
           <div className="dashboard-sidebar-header">
             <p>{t("Your Library")}</p>
             <div className="dashboard-sidebar-header-icon">
-              <Link to="/create-playlist">
+              <div onClick={handleCreatePlaylist} style={{ cursor: "pointer" }}>
                 <AddIcon />
-              </Link>
+              </div>
             </div>
           </div>
 
@@ -257,6 +257,22 @@ export default function DashboardPage({ searchTerm = "" }) {
 
             {/* Podcast discovery section for users with no playlists */}
             {userPlaylists.length === 0 && (
+              <div className="dashboard-sidebar-body-item">
+                <p className="dashboard-sidebar-body-item-title">
+                  {t("Let's find some podcasts to follow")}
+                </p>
+                <p className="dashboard-sidebar-body-item-description">
+                  {t("We'll keep you updated on new episodes")}
+                </p>
+                <button
+                  className="dashboard-sidebar-body-item-button"
+                  onClick={handleBrowsePodcasts}
+                >
+                  {t("Browse podcasts")}
+                </button>
+              </div>
+            )}
+            {!user && (
               <div className="dashboard-sidebar-body-item">
                 <p className="dashboard-sidebar-body-item-title">
                   {t("Let's find some podcasts to follow")}

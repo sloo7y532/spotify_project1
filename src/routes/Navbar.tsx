@@ -1,6 +1,6 @@
 // src/components/Navbar.tsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavBar.css";
 import logo from "../assets/spotify-icon.png";
@@ -45,6 +45,8 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
   // =============== STATE MANAGEMENT ===============
   // Mobile menu toggle state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Mobile search toggle state
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   // Redux state for user authentication
   const user = useSelector((state: RootState) => state.auth.user);
@@ -52,6 +54,37 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
   // Navigation and Redux dispatch
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // =============== EFFECT HOOKS ===============
+
+  /**
+   * Close mobile menu when clicking outside of navbar
+   */
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const navbar = document.querySelector(".navbar");
+      if (navbar && !navbar.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    const handleResize = () => {
+      // Close mobile menu when window is resized to desktop size
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      window.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isMobileMenuOpen]);
 
   // =============== EVENT HANDLERS ===============
 
@@ -69,7 +102,22 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
    */
   const handleLogout = async () => {
     await logoutUser(dispatch);
+    setIsMobileMenuOpen(false);
     navigate("/", { replace: true });
+  };
+
+  /**
+   * Closes mobile menu when clicking on navigation links
+   */
+  const handleLinkClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  /**
+   * Toggles mobile search visibility
+   */
+  const toggleMobileSearch = () => {
+    setIsMobileSearchOpen(!isMobileSearchOpen);
   };
 
   // =============== RENDER ===============
@@ -113,6 +161,21 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
           <hr className="search-divider" />
           <SplitscreenIcon className="splitscreen-icon" />
         </div>
+
+        {/* Mobile search container */}
+        <div
+          className={`mobile-search-container ${isMobileSearchOpen ? "open" : ""}`}
+        >
+          <SearchIcon className="search-icon-N" />
+          <input
+            type="text"
+            placeholder={t("What do you want to listen to?")}
+            className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            autoFocus={isMobileSearchOpen}
+          />
+        </div>
       </div>
 
       {/* Right section: Language switcher, menu, and authentication */}
@@ -122,8 +185,23 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
           <LanguageSwitcher />
         </div>
 
+        {/* Mobile search toggle button */}
+        <button
+          className={`mobile-search-button ${isMobileSearchOpen ? "active" : ""}`}
+          onClick={toggleMobileSearch}
+          aria-label={t("Toggle search")}
+          aria-expanded={isMobileSearchOpen}
+        >
+          <SearchIcon />
+        </button>
+
         {/* Mobile menu toggle button */}
-        <button className="mobile-menu-button" onClick={toggleMobileMenu}>
+        <button
+          className={`mobile-menu-button ${isMobileMenuOpen ? "active" : ""}`}
+          onClick={toggleMobileMenu}
+          aria-label={t("Toggle mobile menu")}
+          aria-expanded={isMobileMenuOpen}
+        >
           <MenuIcon />
         </button>
 
@@ -133,13 +211,19 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
         >
           {/* Main navigation links */}
           <li>
-            <Link to="/">{t("Home")}</Link>
+            <Link to="/" onClick={handleLinkClick}>
+              {t("Home")}
+            </Link>
           </li>
           <li>
-            <Link to="/premium">{t("Premium")}</Link>
+            <Link to="/premium" onClick={handleLinkClick}>
+              {t("Premium")}
+            </Link>
           </li>
           <li>
-            <Link to="/download">{t("Download")}</Link>
+            <Link to="/download" onClick={handleLinkClick}>
+              {t("Download")}
+            </Link>
           </li>
 
           {/* Visual divider */}
@@ -159,10 +243,12 @@ const Navbar = ({ searchTerm, setSearchTerm }: NavbarProps) => {
             // Signup and login links for unauthenticated users
             <>
               <li>
-                <Link to="/signup">{t("Signup")}</Link>
+                <Link to="/signup" onClick={handleLinkClick}>
+                  {t("Signup")}
+                </Link>
               </li>
               <li>
-                <Link to="/login">
+                <Link to="/login" onClick={handleLinkClick}>
                   <button className="login-button">{t("Login")}</button>
                 </Link>
               </li>

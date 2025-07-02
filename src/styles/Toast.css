@@ -1,33 +1,56 @@
 .toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
   padding: 12px 20px;
   border-radius: 8px;
-  color: #fff;
+  color: #fff !important;
   font-weight: bold;
-  z-index: 9999;
-  animation: fadein 0.3s, fadeout 0.3s 2.7s;
+  z-index: 999999 !important;
+  animation:
+    fadein 0.3s,
+    fadeout 0.3s 2.7s;
+  max-width: 300px;
+  word-wrap: break-word;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  pointer-events: auto;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .toast.success {
-  background-color: #4caf50;
+  background-color: #4caf50 !important;
 }
 
 .toast.error {
-  background-color: #f44336;
+  background-color: #f44336 !important;
 }
 
 .toast.info {
-  background-color: #2196f3;
+  background-color: #2196f3 !important;
 }
 
 @keyframes fadein {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeout {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(20px); }
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 }

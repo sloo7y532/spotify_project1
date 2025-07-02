@@ -153,9 +153,18 @@
   text-align: right;
 }
 [dir="rtl"] .music-player-right {
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
 }
+[dir="rtl"] .skipPreviousIcon,
+[dir="rtl"] .music-player-volume-icon {
+  transform: rotate(180deg);
+}
+[dir="rtl"] .skipNextIcon,
+[dir="rtl"] .music-player-volume-icon {
+  transform: rotate(180deg);
+}
+
 /* Media Queries */
 @media screen and (max-width: 1140px) {
   .music-player-center {
