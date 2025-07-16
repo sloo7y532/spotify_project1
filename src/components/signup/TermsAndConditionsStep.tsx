@@ -1,96 +1,92 @@
 // src/components/auth/TermsAndConditionsStep.tsx
 
+// Import React and core hooks for component state.
 import React, { useState } from 'react';
+// Imports for navigation (react-router-dom) and Redux state management (hooks and auth slice actions).
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 import { signupStart, signupSuccess, signupFailure, setError } from '../../store/slices/authSlice.ts';
+// Imports for Firebase authentication.
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { app } from '../../firebase/firebase.js';
-import { useTranslation } from 'react-i18next'; // تم إضافة هذا الاستيراد
+// Import for internationalization (i18n).
+import { useTranslation } from 'react-i18next';
 
+// TermsAndConditionsStep component for the final step of user signup.
 const TermsAndConditionsStep: React.FC = () => {
+  // States for checkbox selections (marketing messages and data sharing).
   const [receiveMarketing, setReceiveMarketing] = useState(false);
   const [shareData, setShareData] = useState(false);
-  const { loading, signupEmail, signupPassword, error } = useAppSelector(state => state.auth); // <--- جلب البيانات من Redux
+  // Redux state selectors for loading status, signup credentials, and error messages.
+  const { loading, signupEmail, signupPassword, error } = useAppSelector(state => state.auth);
+  // Redux dispatch hook to send actions.
   const dispatch = useAppDispatch();
+  // Navigation hook for programmatic routing.
   const navigate = useNavigate();
-  const { t } = useTranslation(); // تم تعريف دالة الترجمة هنا
+  // Translation hook for i18n.
+  const { t } = useTranslation();
 
+  // Handler for the "Sign up" button click.
   const handleSignup = async () => {
-    // Clear any previous error before attempting signup
-    dispatch(setError(null));
+    dispatch(setError(null)); // Clear any previous errors.
 
+    // Basic validation: ensure email/password are available from previous steps.
     if (!signupEmail || !signupPassword) {
-      // تم تعريب رسالة الخطأ
       dispatch(signupFailure(t("Missing email or password information. Please go back and fill them.")));
       return;
     }
 
+    // Validation: ensure both checkboxes are checked.
     if (!receiveMarketing || !shareData) {
-      // تم تعريب رسالة الخطأ
       dispatch(setError(t("Please check all the boxes.")));
       return;
     }
 
-    dispatch(signupStart());
-    const auth = getAuth(app);
+    dispatch(signupStart()); // Dispatch signup start action to set loading state.
+    const auth = getAuth(app); // Get Firebase Auth instance.
 
     try {
+      // Create user with email and password using Firebase Auth.
       const userCredential = await createUserWithEmailAndPassword(auth, signupEmail, signupPassword);
       const user = userCredential.user;
 
-      // إضافة بيانات المستخدم إلى Firestore بعد التسجيل
-      // تأكد من أن authService.ts هو المسؤول عن هذه العملية بعد التسجيل بنجاح
-      // بما أننا نستخدم registerUser في authService، يمكننا استدعاؤه هنا
-      // أو التأكد من أن Logic لـ setDoc موجود في registerUser
-      // هنا سنفترض أن signupSuccess يكفي لأننا نستخدم authService
-      // و authService هو من يقوم بـ setDoc
-      
-      // هنا سنقوم بتمرير البيانات المطلوبة للوظيفة registerUser في authService
-      // ملاحظة: الأفضل أن يتم استدعاء registerUser من authService مباشرةً
-      // بدلاً من تكرار منطق Firebase هنا.
-      // لكن بما أن الكود الأصلي استخدم createUserWithEmailAndPassword مباشرةً هنا،
-      // سأضيف استدعاء to registerUser بعده، أو نعدل على authService ليتم استخدامه هنا بشكل كامل.
-      // لتجنب تعقيد الأمور الآن، سأتبع نفس نمطك، مع ملاحظة أنه يجب أن يتم التعامل مع
-      // تسجيل بيانات المستخدم في Firestore عبر authService إذا كانت هذه هي الطريقة المعتمدة.
-
-      // بما أنك قمت بتضمين Firebase authService الذي يحتوي على registerUser،
-      // الأفضل أن تستدعيها هنا لتجنب تكرار الكود ولضمان أن يتم تسجيل بيانات الملف الشخصي.
-      // ولكن للالتزام بالطلب وتعديل هذا الملف فقط، سأركز على تعريب النصوص فقط
-      // وأبقي على منطق Firebase المباشر الذي كان موجودًا.
-      // سأفترض أن setDoc تتم معالجته في مكان آخر أو أنك ستدمج ذلك لاحقًا.
-
+      // Dispatch signup success with user details and navigate to dashboard.
       dispatch(signupSuccess({ id: user.uid, email: user.email, token: await user.getIdToken() }));
-      // بعد التسجيل بنجاح، قد تحتاج إلى إعادة توجيه المستخدم
       navigate('/dashboard', { replace: true });
 
     } catch (err: any) {
-      console.error("Firebase Signup Error:", err.message);
-      let errorMessage = t("An error occurred during signup. Please try again."); // تم تعريب الرسالة العامة
+      console.error("Firebase Signup Error:", err.message); // Log Firebase error for debugging.
+
+      // Determine the specific error message based on Firebase error code and translate it.
+      let errorMessage = t("An error occurred during signup. Please try again.");
       if (err.code === 'auth/email-already-in-use') {
-        errorMessage = t("This email is already in use. Please log in or use another email."); // تم تعريب الرسالة
+        errorMessage = t("This email is already in use. Please log in or use another email.");
       } else if (err.code === 'auth/invalid-email') {
-        errorMessage = t("The email entered is invalid."); // تم تعريب الرسالة
+        errorMessage = t("The email entered is invalid.");
       } else if (err.code === 'auth/weak-password') {
-        errorMessage = t("The password is too weak."); // تم تعريب الرسالة
+        errorMessage = t("The password is too weak.");
       }
-      dispatch(signupFailure(errorMessage));
+      dispatch(signupFailure(errorMessage)); // Dispatch signup failure with the translated error message.
     }
   };
 
+  // Renders the terms and conditions form with checkboxes and relevant links.
   return (
     <div className="signup-step-content">
+      {/* Header section with back arrow and step title. */}
       <div className="signup-step-header">
         <span onClick={() => navigate('/signup/profile')} className="back-arrow">&#8249;</span>
         <h2 className="step-title">
           {t('Step 3 of 3')}
           <br/>
-          {t('Terms and Conditions')} {/* تم تعريب العنوان */}
+          {t('Terms and Conditions')}
         </h2>
       </div>
 
+      {/* Displays general error message if present. */}
       {error && <p className="error-message">{error}</p>}
 
+      {/* Checkbox for marketing messages. */}
       <div className="checkbox-option">
         <input
           type="checkbox"
@@ -98,9 +94,10 @@ const TermsAndConditionsStep: React.FC = () => {
           checked={receiveMarketing}
           onChange={(e) => setReceiveMarketing(e.target.checked)}
         />
-        <label htmlFor="receiveMarketing">{t('I do not want to receive marketing messages from Spotify')}</label> {/* تم تعريب الليبل */}
+        <label htmlFor="receiveMarketing">{t('I do not want to receive marketing messages from Spotify')}</label>
       </div>
 
+      {/* Checkbox for data sharing. */}
       <div className="checkbox-option">
         <input
           type="checkbox"
@@ -108,9 +105,10 @@ const TermsAndConditionsStep: React.FC = () => {
           checked={shareData}
           onChange={(e) => setShareData(e.target.checked)}
         />
-        <label htmlFor="shareData">{t('I agree to let Spotify share my registration data with content providers for marketing purposes.')}</label> {/* تم تعريب الليبل */}
+        <label htmlFor="shareData">{t('I agree to let Spotify share my registration data with content providers for marketing purposes.')}</label>
       </div>
 
+      {/* Terms and privacy policy text with translated links. */}
       <p className="terms-text">
         {t('After clicking the signup button, you agree to')}
         {' '}
@@ -121,13 +119,16 @@ const TermsAndConditionsStep: React.FC = () => {
         <a href="/privacy-policy">{t("Spotify's Privacy Policy")}</a>.
       </p>
 
+      {/* "Sign up" button, disabled during loading or if checkboxes are not checked. */}
       <button
         onClick={handleSignup}
         className="primary-button"
-        disabled={loading || !receiveMarketing || !shareData} // إضافة شروط التعطيل للتشيك بوكس
+        disabled={loading || !receiveMarketing || !shareData}
       >
-        {loading ? t('Signing up...') : t('Sign up')} {/* تم تعريب نص الزر */}
+        {loading ? t('Signing up...') : t('Sign up')}
       </button>
+
+      {/* reCAPTCHA disclaimer text with translated links. */}
       <p className="recapcha-text">
         {t('This site is protected by reCAPTCHA and the Google')}
         {' '}
@@ -141,4 +142,5 @@ const TermsAndConditionsStep: React.FC = () => {
   );
 };
 
+// Export the component for use in the signup flow.
 export default TermsAndConditionsStep;

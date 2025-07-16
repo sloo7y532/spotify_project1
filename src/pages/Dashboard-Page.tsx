@@ -295,12 +295,12 @@ export default function DashboardPage({ searchTerm = "" }) {
         <div className="dashboard-main-container">
           {/* Main content header */}
           <div className="dashboard-main-container-header">
-            <a href="#" className="dashboard-main-container-header-title">
+            <p className="dashboard-main-container-header-title">
               {t("Trending songs")}
-            </a>
-            <a href="#" className="dashboard-main-container-header-see-all">
+            </p>
+            <p className="dashboard-main-container-header-see-all">
               {t("See all")}
-            </a>
+            </p>
           </div>
 
           {/* Songs display component with search functionality */}
