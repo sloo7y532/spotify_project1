@@ -38,7 +38,7 @@ const MusicPlayer = () => {
   const { t } = useTranslation();
 
   // =============== REDUX STATE ===============
-  const { currentSong, isPlaying } = useSelector(
+  const { currentSong, isPlaying, playlist } = useSelector(
     (state: RootState) => state.music
   );
   const dispatch = useDispatch();
@@ -166,6 +166,58 @@ const MusicPlayer = () => {
     audioRef.current.currentTime = parseFloat(e.target.value);
   };
 
+  // =============== NAVIGATION FUNCTIONS ===============
+
+  /**
+   * Plays the next song in the playlist
+   * If at the end of playlist, stops playback
+   */
+  const playNextSong = () => {
+    if (!playlist || playlist.length === 0) return;
+
+    const currentIndex = playlist.findIndex(
+      (song) => song.id === currentSong?.id
+    );
+    const nextIndex = currentIndex + 1;
+
+    if (nextIndex < playlist.length) {
+      // Play next song
+      dispatch(setCurrentSong(playlist[nextIndex]));
+      dispatch(setIsPlaying(true));
+    } else {
+      // End of playlist - stop playback
+      dispatch(setIsPlaying(false));
+      dispatch(setCurrentSong(null));
+    }
+  };
+
+  /**
+   * Plays the previous song in the playlist
+   * If at the beginning of playlist, plays first song
+   */
+  const playPreviousSong = () => {
+    if (!playlist || playlist.length === 0) return;
+
+    const currentIndex = playlist.findIndex(
+      (song) => song.id === currentSong?.id
+    );
+    const previousIndex = currentIndex - 1;
+
+    if (previousIndex >= 0) {
+      // Play previous song
+      dispatch(setCurrentSong(playlist[previousIndex]));
+      dispatch(setIsPlaying(true));
+    } else {
+      // At beginning - restart current song or play first song
+      if (currentSong) {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+        }
+        dispatch(setIsPlaying(true));
+      }
+    }
+  };
+
   // =============== UTILITY FUNCTIONS ===============
 
   /**
@@ -192,9 +244,8 @@ const MusicPlayer = () => {
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => {
-          // Reset player state when song ends
-          dispatch(setIsPlaying(false));
-          dispatch(setCurrentSong(null));
+          // Auto-play next song when current song ends
+          playNextSong();
         }}
       />
 
@@ -234,7 +285,11 @@ const MusicPlayer = () => {
         {/* Control buttons row */}
         <div className="music-player-controls">
           <ShuffleIcon />
-          <SkipPreviousIcon  className="skipPreviousIcon"/>
+          <SkipPreviousIcon
+            className="skipPreviousIcon"
+            onClick={playPreviousSong}
+            style={{ cursor: "pointer" }}
+          />
           <button onClick={togglePlayPause} className="music-player-play-btn">
             {isPlaying ? (
               <PauseIcon fontSize="large" />
@@ -242,7 +297,11 @@ const MusicPlayer = () => {
               <PlayArrowIcon fontSize="large" />
             )}
           </button>
-          <SkipNextIcon className="skipNextIcon" />
+          <SkipNextIcon
+            className="skipNextIcon"
+            onClick={playNextSong}
+            style={{ cursor: "pointer" }}
+          />
           <RepeatIcon />
         </div>
 
