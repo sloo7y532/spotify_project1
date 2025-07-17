@@ -293,5 +293,21 @@
   "alreadySubscribed": {
     "modalTitle": "مشترك بالفعل",
     "modalMessage": "لديك اشتراك نشط بالفعل. يرجى إدارة اشتراكك في إعدادات حسابك."
+  },
+
+  "footer": {
+    "freeApp": "تطبيق مجاني",
+    "appStore": "آب ستور",
+    "googlePlay": "جوجل بلاي",
+    "microsoftStore": "مايكروسوفت ستور",
+    "company": "الشركة",
+    "location": "الموقع",
+    "jobs": "الوظائف",
+    "about": "حول",
+    "language": "العربية",
+    "copyright": "© 2024 Spotify AB",
+    "legal": "القانونية",
+    "privacy": "الخصوصية",
+    "accessibility": "إمكانية الوصول"
   }
 }

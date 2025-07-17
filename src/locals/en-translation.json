@@ -294,5 +294,21 @@
   "alreadySubscribed": {
     "modalTitle": "Already Subscribed",
     "modalMessage": "You already have an active subscription. Please manage your subscription in your account settings."
+  },
+
+  "footer": {
+    "freeApp": "Free app",
+    "appStore": "App Store",
+    "googlePlay": "Google Play",
+    "microsoftStore": "Microsoft Store",
+    "company": "Company",
+    "location": "Location",
+    "jobs": "Jobs",
+    "about": "About",
+    "language": "English",
+    "copyright": "© 2024 Spotify AB",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "accessibility": "Accessibility"
   }
 }
