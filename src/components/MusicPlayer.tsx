@@ -14,7 +14,7 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import DevicesIcon from "@mui/icons-material/Devices";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import musicPlaceholder from "../assets/music-player.png";
+import musicPlaceholder from "../assets/music-player-1.png";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -55,7 +55,30 @@ const MusicPlayer = () => {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
+  // Add loading and error states
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [buffered, setBuffered] = useState(0);
+
   // =============== AUDIO MANAGEMENT EFFECTS ===============
+
+  /**
+   * Effect: Preload audio when song changes
+   * This helps reduce the loading time when user presses play
+   */
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !currentSong?.audioUrl) return;
+
+    // Set preload attribute to load metadata and some audio data
+    audio.preload = "metadata";
+
+    // Only load if it's a different song
+    if (audio.src !== currentSong.audioUrl) {
+      audio.src = currentSong.audioUrl;
+      audio.load();
+    }
+  }, [currentSong]);
 
   /**
    * Effect: Manage audio playback based on Redux state
@@ -70,16 +93,22 @@ const MusicPlayer = () => {
     if (currentSong?.audioUrl) {
       // Load new song if URL has changed
       if (audio.src !== currentSong.audioUrl) {
+        setIsLoading(true);
+        setHasError(false);
         audio.src = currentSong.audioUrl;
         audio.load();
       }
 
       // Handle play/pause based on Redux state
       if (isPlaying) {
+        setIsLoading(true);
         audio.play().catch((err) => {
           // Handle audio play errors gracefully
           if (err.name !== "AbortError") {
             console.warn("Audio play interrupted:", err);
+            setHasError(true);
+            setIsLoading(false);
+            dispatch(setIsPlaying(false));
           }
         });
       } else {
@@ -89,8 +118,10 @@ const MusicPlayer = () => {
       // Clear audio when no song is selected
       audio.pause();
       audio.src = "";
+      setIsLoading(false);
+      setHasError(false);
     }
-  }, [currentSong, isPlaying]);
+  }, [currentSong, isPlaying, dispatch]);
 
   // =============== PLAYBACK CONTROL FUNCTIONS ===============
 
@@ -125,6 +156,46 @@ const MusicPlayer = () => {
     if (!audioRef.current) return;
     setCurrentTime(audioRef.current.currentTime);
     setDuration(audioRef.current.duration);
+  };
+
+  /**
+   * Audio event handlers for loading states
+   */
+  const handleLoadStart = () => {
+    setIsLoading(true);
+    setHasError(false);
+  };
+
+  const handleCanPlay = () => {
+    setIsLoading(false);
+    setHasError(false);
+  };
+
+  const handleError = () => {
+    setIsLoading(false);
+    setHasError(true);
+    dispatch(setIsPlaying(false));
+  };
+
+  const handleWaiting = () => {
+    setIsLoading(true);
+  };
+
+  const handlePlaying = () => {
+    setIsLoading(false);
+  };
+
+  const handleProgress = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.buffered.length > 0) {
+      const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+      const duration = audio.duration;
+      if (duration > 0) {
+        setBuffered((bufferedEnd / duration) * 100);
+      }
+    }
   };
 
   // =============== VOLUME CONTROL FUNCTIONS ===============
@@ -243,6 +314,12 @@ const MusicPlayer = () => {
       <audio
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
+        onLoadStart={handleLoadStart}
+        onCanPlay={handleCanPlay}
+        onError={handleError}
+        onWaiting={handleWaiting}
+        onPlaying={handlePlaying}
+        onProgress={handleProgress}
         onEnded={() => {
           // Auto-play next song when current song ends
           playNextSong();

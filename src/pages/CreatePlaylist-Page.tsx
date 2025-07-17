@@ -104,7 +104,7 @@ const CreatePlaylistPage: React.FC = () => {
 
   /**
    * Effect: Fetch all available songs from Firebase
-   * Loads song library and calculates durations for audio files
+   * Loads song library with duration directly from Firebase
    * This provides the song pool for adding to playlists
    */
   useEffect(() => {
@@ -112,7 +112,6 @@ const CreatePlaylistPage: React.FC = () => {
       .then((response) => {
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
-        showToast(t("Songs loaded successfully."), "success");
         return response.json();
       })
       .then((data) => {
@@ -121,28 +120,9 @@ const CreatePlaylistPage: React.FC = () => {
           ...data[key],
         }));
 
-        // Calculate audio duration for each song
-        const fetchDurations = loadedSongs.map(
-          (song) =>
-            new Promise<Song>((resolve) => {
-              if (song.audioUrl) {
-                const audio = new window.Audio();
-                audio.src = song.audioUrl;
-                audio.addEventListener("loadedmetadata", () => {
-                  resolve({ ...song, duration: audio.duration });
-                });
-                audio.addEventListener("error", () => {
-                  resolve(song); // fallback if audio fails to load
-                });
-              } else {
-                resolve(song);
-              }
-            })
-        );
-
-        Promise.all(fetchDurations).then((songsWithDurations) => {
-          setSongs(songsWithDurations);
-        });
+        // ✅ Songs now include duration from Firebase directly
+        setSongs(loadedSongs);
+        showToast(t("Songs loaded successfully."), "success");
       })
       .catch((error) => {
         console.error("Error fetching songs:", error);

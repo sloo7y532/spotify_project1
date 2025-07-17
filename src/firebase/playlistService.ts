@@ -254,22 +254,27 @@ export async function removeSongFromPlaylist(playlistId: string, song: Song) {
 export async function fetchPlaylistsByUser(
   userId: string
 ): Promise<Playlist[]> {
-  const q = query(collection(db, "playlists"), where("userId", "==", userId));
-  const snapshot = await getDocs(q);
+  try {
+    const q = query(collection(db, "playlists"), where("userId", "==", userId));
+    const snapshot = await getDocs(q);
 
-  return snapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      name: data.name || "",
-      description: data.description || "",
-      coverUrl: data.coverUrl || "",
-      userId: data.userId || "",
-      ownerEmail: data.ownerEmail || "",
-      songs: data.songs || [],
-      createdAt: (data.createdAt as Timestamp)?.toDate().toISOString() || "",
-    };
-  });
+    return snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name || "",
+        description: data.description || "",
+        coverUrl: data.coverUrl || "",
+        userId: data.userId || "",
+        ownerEmail: data.ownerEmail || "",
+        songs: data.songs || [],
+        createdAt: (data.createdAt as Timestamp)?.toDate().toISOString() || "",
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching playlists:", error);
+    throw new Error(`Failed to fetch playlists: ${error}`);
+  }
 }
 
 /**
@@ -302,21 +307,26 @@ export async function deletePlaylistFromFirebase(playlistId: string) {
 export async function fetchPlaylistById(
   playlistId: string
 ): Promise<Playlist | null> {
-  const playlistRef = doc(db, "playlists", playlistId);
-  const docSnap = await getDoc(playlistRef);
+  try {
+    const playlistRef = doc(db, "playlists", playlistId);
+    const docSnap = await getDoc(playlistRef);
 
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    return {
-      id: docSnap.id,
-      name: data.name || "",
-      description: data.description || "",
-      coverUrl: data.coverUrl || "",
-      userId: data.userId || "",
-      ownerEmail: data.ownerEmail || "",
-      songs: data.songs || [],
-      createdAt: (data.createdAt as Timestamp)?.toDate().toISOString() || "",
-    };
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return {
+        id: docSnap.id,
+        name: data.name || "",
+        description: data.description || "",
+        coverUrl: data.coverUrl || "",
+        userId: data.userId || "",
+        ownerEmail: data.ownerEmail || "",
+        songs: data.songs || [],
+        createdAt: (data.createdAt as Timestamp)?.toDate().toISOString() || "",
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching playlist:", error);
+    throw new Error(`Failed to fetch playlist: ${error}`);
   }
-  return null;
 }
