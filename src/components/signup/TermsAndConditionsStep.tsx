@@ -94,7 +94,7 @@ const TermsAndConditionsStep: React.FC = () => {
           checked={receiveMarketing}
           onChange={(e) => setReceiveMarketing(e.target.checked)}
         />
-        <label htmlFor="receiveMarketing">{t('I do not want to receive marketing messages from Spotify')}</label>
+        <label htmlFor="receiveMarketing">{t('I want to receive marketing messages from Spotify')}</label>
       </div>
 
       {/* Checkbox for data sharing. */}

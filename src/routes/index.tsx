@@ -68,6 +68,7 @@ export default function AppRoutes() {
         <Route path="/signup/*" element={<SignupFlow />} />
         <Route path="/premium" element={<PremiumPage />} />
         <Route path="/download" element={<DownloadPage />} />
+        
 
         <Route path="/CreatePlaylist-Page" element={<CreatePlaylistPage />} />
         <Route path="/about" element={<AboutPage />} /> 

@@ -1,4 +1,5 @@
 /* === General Page Styling === */
+/* Sets global font and resets default margin/padding */
 div {
   font-family: "Teko", sans-serif;
   color: #fff;
@@ -7,6 +8,7 @@ div {
 }
 
 /* === Hero Section === */
+/* Styles the main promotional section with a split background */
 .hero-section {
   display: flex;
   flex-wrap: wrap;
@@ -15,16 +17,19 @@ div {
   background: linear-gradient(to right, #000 50%, #e7c6d4 100%);
 }
 
+/* Restricts image size and applies rounding */
 .hero-images img {
   max-width: 500px;
   border-radius: 10px;
   margin-right: 40px;
 }
 
+/* Container for promotional text */
 .hero-text {
   flex: 1;
 }
 
+/* Large, bold heading with stroke effect */
 .hero-text h1 {
   font-size: 3rem;
   font-weight: 700;
@@ -33,12 +38,14 @@ div {
   -webkit-text-stroke: 0.35px rgb(15, 15, 15);
 }
 
+/* Hero paragraph text styling */
 .hero-text p {
   font-size: 1.4rem;
   margin-bottom: 1rem;
   color: aliceblue;
 }
 
+/* Hero subheading with background color */
 .hero-text h3 {
   display: flex;
   gap: 1rem;
@@ -46,6 +53,7 @@ div {
   background-color: #1db954;
 }
 
+/* Shared button styles */
 .start-btn,
 .plans-btn {
   padding: 10px 25px;
@@ -55,23 +63,27 @@ div {
   cursor: pointer;
 }
 
+/* White background button */
 .start-btn {
   background-color: #fff;
   color: #000;
 }
 
+/* Transparent button with white border */
 .plans-btn {
   background-color: transparent;
   color: #fff;
   border: 1px solid #fff;
 }
 
+/* Note under hero section */
 .note {
   font-size: 0.85rem;
   color: #ccc;
 }
 
 /* === Premium Hero Text Section === */
+/* Centered text section under plans */
 .premium-hero {
   text-align: center;
   padding: 60px 20px;
@@ -99,6 +111,9 @@ div {
   border-radius: 25px;
   cursor: pointer;
 }
+
+/* === Plan Feature List === */
+/* Custom list style for features shown below plans */
 .mylist {
   max-width: 500px;
   font-size: 1.3rem;
@@ -127,9 +142,13 @@ div {
   color: #f6f9f7;
   margin-right: 100px;
 }
+
+/* Highlight item on hover */
 .mylist :hover {
   background-color: #333;
 }
+
+/* === Payment Icons Styling === */
 .payment-icon {
   height: 40px;
   margin: 15px;
@@ -137,10 +156,12 @@ div {
   transition: transform 0.2s ease;
   filter: none !important;
 }
+
 .payment-icon:hover {
   transform: scale(1.9);
 }
 
+/* Wrapper for more payment options */
 .more-payment-wrapper {
   position: relative;
   display: inline-block;
@@ -152,6 +173,7 @@ div {
   justify-content: center;
 }
 
+/* Toggle text for showing more icons */
 .hover-text {
   font-size: 18px;
   color: #f5f5f7;
@@ -159,6 +181,7 @@ div {
   text-decoration: underline;
 }
 
+/* Extra icons shown on hover */
 .image-box {
   display: flex;
   justify-content: center;
@@ -173,7 +196,7 @@ div {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* === Plans Section === */
+/* === Plans Section Styling === */
 .new-style-plans {
   background-color: #000;
   padding: 60px 20px;
@@ -184,6 +207,7 @@ div {
   direction: rtl;
 }
 
+/* Individual plan card */
 .arabic-plan-card {
   width: 280px;
   height: 500px;
@@ -193,10 +217,12 @@ div {
   transition: transform 0.3s ease;
 }
 
+/* Lift card slightly on hover */
 .arabic-plan-card:hover {
   transform: translateY(-5px);
 }
 
+/* Container inside the plan card */
 .plan-box {
   display: flex;
   flex-direction: column;
@@ -210,18 +236,12 @@ div {
 }
 
 .plan-box h5 {
-  color: #111111;
-
+  color: white;
   font-weight: bolder;
   border-radius: 10px;
-  padding-top: 0px;
   padding-bottom: 10px;
-  color: white;
 }
-.fa-brands {
-  margin-right: 5px;
-  margin-top: 5px;
-}
+
 .plan-box h4 {
   font-size: 25px;
   color: #ffffff;
@@ -238,6 +258,7 @@ div {
   color: #fff;
 }
 
+/* Primary button for selecting a plan */
 .plan-main-btn {
   font-size: 0.95rem;
   padding: 12px 16px;
@@ -249,6 +270,7 @@ div {
   filter: brightness(1.1);
 }
 
+/* Outline button used as secondary action */
 .btn-outline-light {
   font-size: 0.95rem;
   padding: 12px 16px;
@@ -261,7 +283,7 @@ div {
   color: #000;
 }
 
-/* === Selected Plan Confirmation === */
+/* === Plan Selection Result === */
 .selected-plan {
   text-align: center;
   padding: 20px;
@@ -270,6 +292,7 @@ div {
   background-color: #000;
 }
 
+/* === FAQ Section === */
 .faq-section {
   background-color: #111;
   padding: 60px 20px;
@@ -282,18 +305,21 @@ div {
   margin-bottom: 10px;
 }
 
+/* FAQ layout wrapper */
 .accordion-wrapper {
   max-width: 650px;
   margin: 0 auto;
   text-align: center;
 }
 
+/* FAQ accordion base styling */
 .faq-accordion .accordion-item {
   background-color: transparent;
   border: none;
   border-bottom: 1px solid #ffffff;
 }
 
+/* FAQ button styling */
 .faq-accordion .accordion-button {
   background-color: transparent;
   color: #fff;
@@ -301,17 +327,46 @@ div {
   box-shadow: none;
   padding: 1rem;
   font-size: 1.3rem;
-}
-.faq-accordion .accordion-button:hover {
-  background-color: #232323;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
+/* RTL adjustments for arrow and text alignment */
+.faq-section[dir="rtl"] .accordion-button {
+  direction: rtl;
+  text-align: right;
+  font-style: italic;
+}
+
+.faq-section[dir="rtl"] .accordion-button::after {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  position: absolute;
+  left: 1rem;
+}
+
+/* LTR adjustments for arrow and text alignment */
+.faq-section[dir="ltr"] .accordion-button {
+  direction: ltr;
+  text-align: left;
+  font-style: normal;
+  position: relative;
+}
+
+.faq-section[dir="ltr"] .accordion-button::after {
+  margin-left: end;
+}
+
+/* Hover and active styles for accordion */
+.faq-accordion .accordion-button:hover,
 .faq-accordion .accordion-button:not(.collapsed) {
   background-color: #232323;
   color: white;
 }
+
 .faq-accordion .accordion-button::after {
-  filter: invert(100%); /* Makes arrow white */
+  filter: invert(100%);
   border: #000;
 }
 
@@ -320,15 +375,19 @@ div {
   color: #ccc;
   font-size: 1rem;
 }
+
 .faq-accordion .accordion-button:focus {
   outline: none;
   box-shadow: none;
 }
 
+/* === Payment Section Background === */
 .affordable-section {
   background-color: #121212;
+  direction: inherit;
 }
 
+/* Payment icons (visa, paypal, etc.) */
 .payment-methods .payment-icon {
   height: 40px;
   filter: brightness(0) invert(1);
@@ -339,6 +398,7 @@ div {
   transform: scale(1.1);
 }
 
+/* === Comparison Table === */
 .comparison-section {
   display: flex;
   justify-content: center;
@@ -361,23 +421,16 @@ div {
   border-bottom: 1px solid #444;
   cursor: pointer;
 }
-.comparison-table th.text-start:hover {
-  background-color: #333;
+
+/* Highlight feature column on hover */
+.comparison-table th.text-start:hover,
+.comparison-table td.text-start:hover {
+  background-color: #3b3a3a;
 }
 
 .comparison-table th.text-start,
 .comparison-table td.text-start {
   text-align: left;
-  color: white;
-  background-color: #000;
-}
-.comparison-table th.text-start {
-  color: white;
-  background-color: #000;
-}
-
-.comparison-table th.text-center,
-.comparison-table td.text-center {
   color: white;
   background-color: #000;
 }
@@ -389,10 +442,8 @@ div {
   color: white;
   background-color: #000;
 }
-.comparison-table th.text-start:hover,
-.comparison-table td.text-start:hover {
-  background-color: #3b3a3a;
-}
+
+/* === Footer Links === */
 .footer-link {
   text-decoration: none;
   color: white;
@@ -408,9 +459,61 @@ div {
 .custom-footer a:hover {
   color: #1db954;
   cursor: pointer;
+}
 
-}.payment-form {
+/* === Payment Form === */
+.payment-form {
   max-width: 500px;
   margin: 0 auto;
-  border: 1px solid #ddd;
+  border: 1px solid #747474;
+  background-color: #171616 !important;
 }
+
+/* === Plan Direction Based on Language === */
+.plans-section[dir="rtl"] .arabic-plan-card {
+  text-align: right;
+}
+
+.plans-section[dir="ltr"] .arabic-plan-card {
+  text-align: left;
+}
+
+/* === Features List === */
+.features-list {
+  max-width: 600px;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  line-height: 2.2;
+  direction: inherit;
+  text-align: start;
+}
+
+.features-list li {
+  position: relative;
+  background-color: #222;
+  color: #fff;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  text-align: inherit;
+}
+.custom-modal-backdrop {
+  background-color: rgba(130, 122, 122, 0.6);
+  z-index: 1050;
+  
+}
+
+.custom-modal-content {
+  
+
+  border-radius: 12px;
+  color: white;
+  padding: 20px;
+  border: 2px solid #eaeae9;
+  
+}
+
+
+

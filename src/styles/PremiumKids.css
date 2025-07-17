@@ -1,0 +1,17 @@
+.premium-kids-banner {
+  background-image: url('https://breastfeedingneeds.com/wp-content/uploads/2018/07/Children-learning-music.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 350px;
+  border-radius: 16px;
+  margin-top: 2rem;
+  padding: 2rem;
+  position: relative;
+}
+
+.premium-kids-text {
+  position: absolute;
+  bottom: 1rem;
+  left: 2rem;
+  color: rgb(0, 0, 0);
+  text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.6);}

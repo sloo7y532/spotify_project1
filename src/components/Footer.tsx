@@ -1,104 +1,65 @@
+
+// Importing core libraries and dependencies
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "../styles/Premium-Page.css";
+import "../styles/Footer.css"; 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="custom-footer bg-black text-white py-5">
       <div className="container">
         <div className="row align-items-start mb-4">
-          {/* Brand */}
+          {/* Logo */}
           <div className="col-md-3 mb-4 mb-md-0">
-            <div className="d-flex align-items-center">
-              <i className="fab fa-spotify fa-2x me-2"></i>
-              <span className="fs-3 fw-bold">Spotify</span>
+            <div className="brand-spotify">
+              <i className="fab fa-spotify fa-2x"></i>
+              <span className="ms-1 fs-3 fw-bold">Spotify</span>
             </div>
           </div>
 
-          {/* Footer Columns */}
+          {/* Footer columns */}
           <div className="col-md-6">
             <div className="row">
               <div className="col-6">
-                <h6 className="text-uppercase fw-bold mb-3">Free Mobile App</h6>
+                <h6 className="text-uppercase fw-bold mb-3">{t("footer.freeApp")}</h6>
                 <ul className="list-unstyled">
-                  <li>
-                    <a
-                      href="https://apps.apple.com/us/app/spotify-music-and-podcasts/id324684580?label=sp_cid%3Ab5db45efe9d5f848f78a33c6f10952fc&_branch_match_id=1458427087535417026&utm_source=Web&utm_campaign=DEFAULT&utm_medium=%2Fdownload+page&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXLy7IL8lMq9TLyczL1s8wDUlKdvfxyc5Iss9JTErNsS0uiE%2FOTFE1dkwyTUkyMU1NS7VMMU2zMLFIM7dINDZONkszNLA0NUpLVqsrAkoWFWXmpccnFeWXF6cW2TpnFOXnpgIAWkwVQGoAAAA%3D"
-                      className="footer-link"
-                    >
-                      App Store
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://play.google.com/store/apps/details?id=com.spotify.music&hl=en_US&gl=US&label=sp_cid%3Ab5db45efe9d5f848f78a33c6f10952fc&_branch_match_id=1458427087535417026&utm_source=Web&utm_campaign=DEFAULT&utm_medium=%2Fdownload%20page&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXLy7IL8lMq9TLyczL1g8xLPP2MPMussxMss9JTErNsS0uiE%2FOTFE1dkwyTUkyMU1NS7VMMU2zMLFIM7dINDZONkszNLA0NUpLVqsrAkoWFWXmpccnFeWXF6cW2TpnFOXnpgIAnRIYAWoAAAA%3D"
-                      className="footer-link"
-                    >
-                      Google Play
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://apps.microsoft.com/detail/9ncbcszsjrsb?launch=true&mode=mini&cid=spotifyweb-store-button&hl=en-US&gl=SA"
-                      className="footer-link"
-                    >
-                      Microsoft Store
-                    </a>
-                  </li>
+                  <li><a href="https://apps.apple.com/..." className="footer-link">{t("footer.appStore")}</a></li>
+                  <li><a href="https://play.google.com/..." className="footer-link">{t("footer.googlePlay")}</a></li>
+                  <li><a href="https://apps.microsoft.com/..." className="footer-link">{t("footer.microsoftStore")}</a></li>
                 </ul>
               </div>
               <div className="col-6">
-                <h6 className="text-uppercase fw-bold mb-3">Company</h6>
+                <h6 className="text-uppercase fw-bold mb-3">{t("footer.company")}</h6>
                 <ul className="list-unstyled">
-                  <li>
-                    <Link to="/location" className="footer-link">
-                      Location
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/job" className="footer-link">
-                      Jobs
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/about" className="footer-link">
-                      About
-                    </Link>
-                  </li>
+                  <li><Link to="/location" className="footer-link">{t("footer.location")}</Link></li>
+                  <li><Link to="/job" className="footer-link">{t("footer.jobs")}</Link></li>
+                  <li><Link to="/about" className="footer-link">{t("footer.about")}</Link></li>
                 </ul>
               </div>
             </div>
           </div>
 
+          {/* Social Icons */}
           <div className="col-md-3 d-flex justify-content-md-end justify-content-center gap-3">
-            <a href="https://facebook.com/spotify" className="text-white fs-4">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://x.com/spotify" className="text-white fs-4">
-              <i className="fab fa-x-twitter"></i>
-            </a>
-            <a href="https://instagram.com/spotify" className="text-white fs-4">
-              <i className="fab fa-instagram"></i>
-            </a>
+            <a href="https://facebook.com/spotify" className="text-white fs-4"><i className="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/spotify" className="text-white fs-4"><i className="fab fa-x-twitter"></i></a>
+            <a href="https://instagram.com/spotify" className="text-white fs-4"><i className="fab fa-instagram"></i></a>
           </div>
         </div>
 
+        {/* Footer bottom */}
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center border-top pt-3 mt-4">
-          <p className="mb-2 mb-md-0 small">Saudi Arabia (English)</p>
-          <p className="mb-2 mb-md-0 small">© Spotify AB 2025</p>
+          <p className="mb-2 mb-md-0 small">{t("footer.language")}</p>
+          <p className="mb-2 mb-md-0 small">{t("footer.copyright")}</p>
           <div className="d-flex gap-3 small flex-wrap justify-content-center">
-            <a href="https://www.spotify.com/sa-ar/legal/end-user-agreement/">
-              {" "}
-              <span>Legal</span>
-            </a>
-            <a href="https://www.spotify.com/sa-ar/legal/privacy-policy/">
-              <span>Privacy Center</span>
-            </a>
-            <a href="https://www.spotify.com/sa-ar/accessibility">
-              <span>Accessibility</span>
-            </a>
+            <a href="https://www.spotify.com/sa-ar/legal/end-user-agreement/"><span>{t("footer.legal")}</span></a>
+            <a href="https://www.spotify.com/sa-ar/legal/privacy-policy/"><span>{t("footer.privacy")}</span></a>
+            <a href="https://www.spotify.com/sa-ar/accessibility"><span>{t("footer.accessibility")}</span></a>
           </div>
         </div>
       </div>

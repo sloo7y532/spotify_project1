@@ -1,30 +1,68 @@
+/* ===== General Fixes for RTL & LTR ===== */
+
+.custom-footer {
+  direction: ltr; /* اتجاه عام ثابت */
+}
+
+html[lang="ar"] .custom-footer {
+  direction: ltr; /* نمنع قلب الاتجاه */
+}
+
+/* ثبات ترتيب الأعمدة */
+.custom-footer .row > .col-6:first-child {
+  order: 1;
+}
+.custom-footer .row > .col-6:last-child {
+  order: 2;
+}
+
+/* ضبط النص حسب اللغة */
+html[lang="ar"] .custom-footer .col-6,
+html[lang="ar"] .custom-footer p,
+html[lang="ar"] .custom-footer .footer-link {
+  text-align: right;
+}
+
+html[lang="en"] .custom-footer .col-6,
+html[lang="en"] .custom-footer p,
+html[lang="en"] .custom-footer .footer-link {
+  text-align: left;
+}
+
+/* أيقونة Spotify دائمًا على اليسار */
+.brand-spotify {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.brand-spotify i {
+  margin-left: 8px;
+}
+
+/* روابط */
 .footer-link {
-  color: white;
+  color: #fff;
   text-decoration: none;
-  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+.footer-link {
+  text-decoration: none;
+  color: white;
+  transition: color 0.2s ease;
 }
 
 .footer-link:hover {
   color: #1db954;
-  text-decoration: underline;
 }
 
-.custom-footer ul li {
-  margin-bottom: 8px;
-}
+.custom-footer span:hover,
+.custom-footer li:hover,
+.custom-footer a:hover {
+  color: #1db954;
+  cursor: pointer;
 
-.custom-footer h6 {
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-}
-
-.custom-footer i:hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease;
-}
-
-.custom-footer {
-  margin-top: auto;
-  width: 100%;
-  z-index: 1000;
 }

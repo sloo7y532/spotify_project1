@@ -1,0 +1,22 @@
+.subscription-badge {
+  
+  padding: 20px 22px;
+  font-weight: bold;
+  font-size: large;
+  position: relative;
+ 
+  
+}
+
+.subscription-badge.premium {
+ 
+  color: white;
+}
+
+.subscription-badge.kids {
+  
+  color: white;
+}
+.fas {
+ margin-left: 7px;
+}
