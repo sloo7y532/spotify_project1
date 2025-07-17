@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../styles/showSongs.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentSong, setIsPlaying } from "../store/slices/musicSlice.ts";
+import { RootState } from "../store/index.ts";
+import LoginPromptModal from "./LoginPrompt.tsx";
 
 /**
  * Song interface for local component use
@@ -41,12 +43,16 @@ interface ShowSongsProps {
 export default function ShowSongs({ searchTerm = "" }: ShowSongsProps) {
   // =============== STATE MANAGEMENT ===============
   const [songs, setSongs] = useState<Song[]>([]);
+  const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
 
   // Reference for horizontal scroll container
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Redux dispatch for updating global music state
   const dispatch = useDispatch();
+
+  // Get user authentication state from Redux
+  const user = useSelector((state: RootState) => state.auth.user);
 
   // =============== DATA FETCHING EFFECT ===============
 
@@ -95,51 +101,67 @@ export default function ShowSongs({ searchTerm = "" }: ShowSongsProps) {
 
   // =============== RENDER ===============
   return (
-    <div className="songs-wrapper">
-      {/* Left scroll arrow button */}
-      <button className="scroll-button left" onClick={() => scroll("left")}>
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-        </svg>
-      </button>
+    <>
+      {/* Login prompt modal for unauthenticated users */}
+      {isLoginPromptOpen && (
+        <LoginPromptModal
+          isOpen={isLoginPromptOpen}
+          setOpen={setIsLoginPromptOpen}
+        />
+      )}
 
-      {/* Horizontally scrollable song container */}
-      <div className="songs-container" ref={scrollContainerRef}>
-        {filteredSongs.map((song, index) => (
-          <div key={index} className="song-card">
-            {/* Song cover image with play button overlay */}
-            <div className="song-image">
-              <img src={song.image} alt={song.title || "Song cover"} />
+      <div className="songs-wrapper">
+        {/* Left scroll arrow button */}
+        <button className="scroll-button left" onClick={() => scroll("left")}>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+          </svg>
+        </button>
 
-              {/* Play button that appears on hover */}
-              <div
-                className="play-button-1"
-                onClick={() => {
-                  dispatch(setCurrentSong(song));
-                  dispatch(setIsPlaying(true));
-                }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+        {/* Horizontally scrollable song container */}
+        <div className="songs-container" ref={scrollContainerRef}>
+          {filteredSongs.map((song, index) => (
+            <div key={index} className="song-card">
+              {/* Song cover image with play button overlay */}
+              <div className="song-image">
+                <img src={song.image} alt={song.title || "Song cover"} />
+
+                {/* Play button that appears on hover */}
+                <div
+                  className="play-button-1"
+                  onClick={() => {
+                    if (!user) {
+                      // Show login prompt if user is not authenticated
+                      setIsLoginPromptOpen(true);
+                      return;
+                    }
+                    // Play song if user is authenticated
+                    dispatch(setCurrentSong(song));
+                    dispatch(setIsPlaying(true));
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Song metadata display */}
+              <div className="song-info">
+                <h3 className="song-title">{song.title || "Unknown Title"}</h3>
+                <p className="song-artist">{song.artist || "Unknown Artist"}</p>
               </div>
             </div>
+          ))}
+        </div>
 
-            {/* Song metadata display */}
-            <div className="song-info">
-              <h3 className="song-title">{song.title || "Unknown Title"}</h3>
-              <p className="song-artist">{song.artist || "Unknown Artist"}</p>
-            </div>
-          </div>
-        ))}
+        {/* Right scroll arrow button */}
+        <button className="scroll-button right" onClick={() => scroll("right")}>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
+          </svg>
+        </button>
       </div>
-
-      {/* Right scroll arrow button */}
-      <button className="scroll-button right" onClick={() => scroll("right")}>
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
-        </svg>
-      </button>
-    </div>
+    </>
   );
 }

@@ -312,9 +312,6 @@ export default function DashboardPage({ searchTerm = "" }) {
             <p className="dashboard-main-container-header-title">
               {t("Trending songs")}
             </p>
-            <p className="dashboard-main-container-header-see-all">
-              {t("See all")}
-            </p>
           </div>
 
           {/* Songs display component with search functionality */}
