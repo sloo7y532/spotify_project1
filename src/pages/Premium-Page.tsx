@@ -247,14 +247,12 @@ export default function PremiumPage() {
         </div>
 
         {/* Hover-reveal additional payment methods */}
-        <div className="hover-area text-center my-5">
-          <p
-            className="hover-text"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-          >
-            {t("affordable.more")}
-          </p>
+        <div
+          className="hover-area text-center my-5"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          <p className="hover-text">{t("affordable.more")}</p>
           {hovered && (
             <div className="image-box mt-3">
               <img

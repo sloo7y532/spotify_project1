@@ -153,12 +153,18 @@ div {
   height: 40px;
   margin: 15px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
   filter: none !important;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .payment-icon:hover {
-  transform: scale(1.9);
+  transform: scale(1.2) translateY(-5px);
+  filter: brightness(1.2) drop-shadow(0 8px 20px rgba(29, 185, 84, 0.4));
+  background-color: rgba(29, 185, 84, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* Wrapper for more payment options */
@@ -173,12 +179,31 @@ div {
   justify-content: center;
 }
 
+/* Hover area container to prevent payment methods from disappearing */
+.hover-area {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+}
+
 /* Toggle text for showing more icons */
 .hover-text {
   font-size: 18px;
   color: #f5f5f7;
   cursor: pointer;
   text-decoration: underline;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.hover-text:hover {
+  color: #1db954;
+  background-color: rgba(29, 185, 84, 0.1);
+  text-shadow: 0 0 10px rgba(29, 185, 84, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
 }
 
 /* Extra icons shown on hover */
@@ -186,7 +211,22 @@ div {
   display: flex;
   justify-content: center;
   gap: 15px;
-  transition: opacity 0.4s ease;
+  transition: all 0.4s ease;
+  animation: fadeInUp 0.5s ease-out;
+  position: relative;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .image-box img {
@@ -194,6 +234,17 @@ div {
   height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.image-box img:hover {
+  transform: scale(1.15) translateY(-3px);
+  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.3);
+  background-color: rgba(29, 185, 84, 0.1);
+  filter: brightness(1.1);
 }
 
 /* === Plans Section Styling === */
@@ -391,11 +442,18 @@ div {
 .payment-methods .payment-icon {
   height: 40px;
   filter: brightness(0) invert(1);
-  transition: transform 0.3s;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  margin: 10px;
 }
 
 .payment-methods .payment-icon:hover {
-  transform: scale(1.1);
+  transform: scale(1.2) translateY(-5px);
+  filter: brightness(0) invert(1) drop-shadow(0 5px 15px rgba(29, 185, 84, 0.5));
+  background-color: rgba(29, 185, 84, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* === Comparison Table === */
@@ -502,18 +560,11 @@ div {
 .custom-modal-backdrop {
   background-color: rgba(130, 122, 122, 0.6);
   z-index: 1050;
-  
 }
 
 .custom-modal-content {
-  
-
   border-radius: 12px;
   color: white;
   padding: 20px;
   border: 2px solid #eaeae9;
-  
 }
-
-
-
