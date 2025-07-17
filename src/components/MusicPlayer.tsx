@@ -16,6 +16,7 @@ import DevicesIcon from "@mui/icons-material/Devices";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import musicPlaceholder from "../assets/music-player-1.png";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 /**
  * MusicPlayer Component
@@ -36,7 +37,7 @@ import { useTranslation } from "react-i18next";
  */
 const MusicPlayer = () => {
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   // =============== REDUX STATE ===============
   const { currentSong, isPlaying, playlist } = useSelector(
     (state: RootState) => state.music
@@ -407,8 +408,18 @@ const MusicPlayer = () => {
       {/* Right section: Volume control and additional features */}
       <div className="music-player-right">
         {/* Additional feature icons */}
-        <QueueMusicIcon />
-        <DevicesIcon />
+        <QueueMusicIcon
+          className="queueMusicIcon"
+          onClick={() => {
+            navigate("/create-playlist");
+          }}
+        />
+        {/* <DevicesIcon
+          className="music-player-devices-icon"
+          onClick={() => {
+            navigate("/devices");
+          }}
+        /> */}
 
         {/* Volume control */}
         {isMuted ? (
@@ -441,9 +452,6 @@ const MusicPlayer = () => {
             className="music-player-volume-bar"
           />
         </div>
-
-        {/* Fullscreen mode button */}
-        <FullscreenIcon />
       </div>
     </div>
   );

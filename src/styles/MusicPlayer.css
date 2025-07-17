@@ -18,6 +18,14 @@
   gap: 15px;
   width: 25%;
 }
+.queueMusicIcon {
+  cursor: pointer;
+  color: #b3b3b3;
+  transition: all 0.2s ease;
+  &:hover {
+    color: #fff;
+  }
+}
 .music-player-cover {
   width: 55px;
   height: 55px;
@@ -163,6 +171,16 @@
 [dir="rtl"] .skipNextIcon,
 [dir="rtl"] .music-player-volume-icon {
   transform: rotate(180deg);
+}
+[dir="rtl"] .music-player-progress {
+  flex-direction: row-reverse;
+}
+
+/* RTL Volume Bar Support */
+[dir="rtl"] .music-player-volume-fill {
+  left: auto;
+  right: 0;
+  transform-origin: right;
 }
 
 /* Media Queries */

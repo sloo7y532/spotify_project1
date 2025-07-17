@@ -296,6 +296,22 @@
     "modalMessage": "You already have an active subscription. Please manage your subscription in your account settings."
   },
 
+  "download": {
+    "title": "Download Spotify",
+    "subtitle": "Play millions of songs and podcasts on your device.",
+    "link": "Download the app"
+  },
+
+  "platform": {
+    "title": "Take your music with you",
+    "description": "Spotify is available on all your favorite devices."
+  },
+
+  "devices": {
+    "title": "It's free on mobile",
+    "list": "Listen free on your phone • Speaker • Computer • Web player"
+  },
+
   "footer": {
     "freeApp": "Free app",
     "appStore": "App Store",
