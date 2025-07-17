@@ -144,7 +144,6 @@ export default function DashboardPage({ searchTerm = "" }) {
       <div className="dashboard-content">
         {/* Sidebar with user library and playlists */}
         <div className="dashboard-sidebar">
-          
           {/* Sidebar header with library title and add button */}
           <div className="dashboard-sidebar-header">
             <p>{t("Your Library")}</p>
@@ -157,7 +156,8 @@ export default function DashboardPage({ searchTerm = "" }) {
 
           {/* Sidebar content based on user authentication status */}
           <div className="dashboard-sidebar-body">
-            {user && (
+            {user ? (
+              // User is logged in
               <div className="user-playlists-section">
                 {loadingPlaylists ? (
                   <p className="loading-message">
@@ -166,23 +166,39 @@ export default function DashboardPage({ searchTerm = "" }) {
                 ) : errorPlaylists ? (
                   <p className="error-message">{errorPlaylists}</p>
                 ) : userPlaylists.length === 0 ? (
-                  // Empty state for new users
-                  <div className="dashboard-sidebar-body-item">
-                    <p className="dashboard-sidebar-body-item-title">
-                      {t("Create your first playlist")}
-                    </p>
-                    <p className="dashboard-sidebar-body-item-description">
-                      {t("It's easy, we'll help you")}
-                    </p>
-                    <button
-                      className="dashboard-sidebar-body-item-button"
-                      onClick={handleCreatePlaylist}
-                    >
-                      {t("Create playlist")}
-                    </button>
-                  </div>
+                  // Logged in user with no playlists: show both create playlist and browse podcasts
+                  <>
+                    <div className="dashboard-sidebar-body-item">
+                      <p className="dashboard-sidebar-body-item-title">
+                        {t("Create your first playlist")}
+                      </p>
+                      <p className="dashboard-sidebar-body-item-description">
+                        {t("It's easy, we'll help you")}
+                      </p>
+                      <button
+                        className="dashboard-sidebar-body-item-button"
+                        onClick={handleCreatePlaylist}
+                      >
+                        {t("Create playlist")}
+                      </button>
+                    </div>
+                    <div className="dashboard-sidebar-body-item">
+                      <p className="dashboard-sidebar-body-item-title">
+                        {t("Let's find some podcasts to follow")}
+                      </p>
+                      <p className="dashboard-sidebar-body-item-description">
+                        {t("We'll keep you updated on new episodes")}
+                      </p>
+                      <button
+                        className="dashboard-sidebar-body-item-button"
+                        onClick={handleBrowsePodcasts}
+                      >
+                        {t("Browse podcasts")}
+                      </button>
+                    </div>
+                  </>
                 ) : (
-                  // User's playlists list
+                  // Logged in user with playlists: show only playlists
                   <div className="user-playlists-list">
                     {userPlaylists.map((playlist) => (
                       <div
@@ -253,40 +269,38 @@ export default function DashboardPage({ searchTerm = "" }) {
                   </div>
                 )}
               </div>
-            )}
-
-            {/* Podcast discovery section for users with no playlists */}
-            {userPlaylists.length === 0 && (
-              <div className="dashboard-sidebar-body-item">
-                <p className="dashboard-sidebar-body-item-title">
-                  {t("Let's find some podcasts to follow")}
-                </p>
-                <p className="dashboard-sidebar-body-item-description">
-                  {t("We'll keep you updated on new episodes")}
-                </p>
-                <button
-                  className="dashboard-sidebar-body-item-button"
-                  onClick={handleBrowsePodcasts}
-                >
-                  {t("Browse podcasts")}
-                </button>
-              </div>
-            )}
-            {!user && (
-              <div className="dashboard-sidebar-body-item">
-                <p className="dashboard-sidebar-body-item-title">
-                  {t("Let's find some podcasts to follow")}
-                </p>
-                <p className="dashboard-sidebar-body-item-description">
-                  {t("We'll keep you updated on new episodes")}
-                </p>
-                <button
-                  className="dashboard-sidebar-body-item-button"
-                  onClick={handleBrowsePodcasts}
-                >
-                  {t("Browse podcasts")}
-                </button>
-              </div>
+            ) : (
+              // User is not logged in: show both create playlist and browse podcasts
+              <>
+                <div className="dashboard-sidebar-body-item">
+                  <p className="dashboard-sidebar-body-item-title">
+                    {t("Create your first playlist")}
+                  </p>
+                  <p className="dashboard-sidebar-body-item-description">
+                    {t("It's easy, we'll help you")}
+                  </p>
+                  <button
+                    className="dashboard-sidebar-body-item-button"
+                    onClick={handleCreatePlaylist}
+                  >
+                    {t("Create playlist")}
+                  </button>
+                </div>
+                <div className="dashboard-sidebar-body-item">
+                  <p className="dashboard-sidebar-body-item-title">
+                    {t("Let's find some podcasts to follow")}
+                  </p>
+                  <p className="dashboard-sidebar-body-item-description">
+                    {t("We'll keep you updated on new episodes")}
+                  </p>
+                  <button
+                    className="dashboard-sidebar-body-item-button"
+                    onClick={handleBrowsePodcasts}
+                  >
+                    {t("Browse podcasts")}
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../styles/showSongs.css";
 import { useDispatch } from "react-redux";
-import { setCurrentSong } from "../store/slices/musicSlice.ts";
+import { setCurrentSong, setIsPlaying } from "../store/slices/musicSlice.ts";
 
 /**
  * Song interface for local component use
@@ -114,7 +114,10 @@ export default function ShowSongs({ searchTerm = "" }: ShowSongsProps) {
               {/* Play button that appears on hover */}
               <div
                 className="play-button-1"
-                onClick={() => dispatch(setCurrentSong(song))}
+                onClick={() => {
+                  dispatch(setCurrentSong(song));
+                  dispatch(setIsPlaying(true));
+                }}
               >
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 5v14l11-7z" />
