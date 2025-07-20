@@ -46,7 +46,9 @@ A feature-rich music streaming application built with React, TypeScript, and Fir
 
 ## 🎬 Demo
 
-Experience the live application: [**View Demo**](#) _(Deploy link to be added)_
+Experience the live application: [**View Demo**](https://spotify-project-4dq2ezh00-salehs-projects-048dee6e.vercel.app/)
+
+**🌐 Live Website:** `YOUR_WEBSITE_URL_HERE` _(Replace with your actual deployment URL)_
 
 **Try these features:**
 
